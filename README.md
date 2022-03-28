@@ -3,6 +3,8 @@ title: "LACN Data Analysis"
 date: "2022"
 author: "St. Olaf Piper Center"
 output: html_notebook
+editor_options: 
+  chunk_output_type: inline
 ---
 
 
