@@ -44,6 +44,7 @@ File: **analysis.R**
 
 Now, we have a "list" object, which is a hierarchical structure containing the cleaned and summarised data for each type of question (single, multi, matrix, continuous, ranking). See the structure map below to get a sense of how the final data is stored. It can look a bit chaotic at first, but the basic idea is this: the master list contains different question types, which each contain the relevant questions, which each contain the actual variables and data for each summarised and aggregated response. 
 ```{r list structure, echo=FALSE}
+load("lacn.RData")
 lobstr::ref(all_list)
 ```
 
