@@ -2,7 +2,7 @@ lacn_dir <- "~/piper analysis/lacn"
 source(file.path(lacn_dir, "read_data.R"))
 source(file.path(lacn_dir, "lacn_functions.R"))
 
-#### ------- LIST of dfs for each question ------- ####
+#### -------- LIST of dfs for each question ------- ####
 
 # preallocate list vector
 question_list <- vector(mode = "list", length = 25)
