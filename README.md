@@ -83,7 +83,7 @@ size category, following Lauren’s style last year. We then deposit each
 of those question-specific dataframes (specified as
 **current\_question** in the for loop) into a “list,” which is an object
 capable of containing other objects (like dataframes) within it. Now, we
-have a nice portable object we can manipulation, explore, and use in
+have a nice portable object we can manipulate, explore, and use in
 later analysis. Without this list, we would have to repeat ourselves
 every time we wanted to extract a single question and analyze it.
 
