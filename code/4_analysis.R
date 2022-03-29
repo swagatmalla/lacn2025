@@ -40,5 +40,4 @@ ranking <- list('Q5' = rank_list)
 all_list[['ranking']] <- ranking
 
 
-# save global environment in project directory
-save.image(file = "lacn.RData")
+
