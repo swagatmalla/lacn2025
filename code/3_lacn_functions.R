@@ -28,7 +28,7 @@ key_function <- function(question, ...) {
 
 
 
-####----------------AGG FUNCTION------------------####
+####----------------SINGLE FUNCTION------------------####
 
 single_function <- function(list, element) {
   
