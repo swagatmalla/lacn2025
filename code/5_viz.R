@@ -34,7 +34,7 @@ multi_q <- 'Q10'
 {
   multi_data <- all_list$multi[[multi_q]]
   
-  title <- response_key |>
+  multi_title <- response_key |>
     dplyr::filter(main == multi_q) |>
     dplyr::select(Description_short) |>
     unique() |>
@@ -44,7 +44,7 @@ multi_q <- 'Q10'
   ggplot(data = multi_data, mapping = aes(reorder(value, freq), freq))+
     geom_bar(stat = 'identity', width = rel(0.5))+
     labs(
-      title = title,
+      title = multi_title,
       x = NULL,
       y = "Frequency"
     ) +
@@ -56,7 +56,16 @@ multi_q <- 'Q10'
 
 
 #### matrix viz ####
-matrix_data <- matrix_list[[1]]
+matrix_q <- "Q6"
+
+{
+matrix_data <- all_list$matrix[[matrix_q]]
+
+matrix_title <- response_key |>
+  dplyr::filter(main == matrix_q) |>
+  dplyr::select(Description_short) |>
+  unique() |>
+  deframe()
 
 matrix_data |>
   tidyr::pivot_longer(
@@ -68,10 +77,14 @@ matrix_data |>
            position = "dodge",
            stat = "identity")+
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 17.5))+
+  labs(
+    title = matrix_title,
+    x = NULL
+  )+
 
   piperr::theme_piper()
 
-  
+}
   
 
 
@@ -89,7 +102,7 @@ indiv <- question_list$Q5 |>
     names_to = "Question",
     values_to = "ranking"
   ) |>
-  dplyr::left_join(q5_key)
+  dplyr::left_join(rank_key)
 
 
 rank_compare <- all_list$ranking$Q5 |>
@@ -116,7 +129,7 @@ ggplot(rank_compare, aes(x = ranking, xend = ranking_avg, y = reorder(dim1, -ran
     plot.margin = unit(c(1,1,1,1), "cm")
   )
 
-
+ggsave("rank_plot.PNG", path = "output", width = 7.5, height = 5, units = "in")
 }
 
 
