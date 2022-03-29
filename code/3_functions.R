@@ -162,7 +162,7 @@ analyzeFunction <- function(type, list = "question_list") {
   questions <- selectFunction(type)
   
   list <- map(questions,
-                ~ get(paste0(type,"_function"))(
+                ~ get(paste0(type,"Function"))(
                   list,
                   element = .x
                 )

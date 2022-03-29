@@ -56,7 +56,7 @@ Script: **2_clean.R**
 
 One of the challenges with this data is how *wide* it is. The raw survey dataframe contains 257 variables. If we want to speed up our analysis, we need to break the dataset up by question. That way, when we want to analyze Q8, we can simply handle the Q8 dataset without having to sift through the entire 257-column raw dataset.
 
-**clean.R** loops through each question and extracts its columns from the master dataset, along with the name of each respondent and their size category, following Lauren's style last year. We then deposit each of those question-specific dataframes (specified as **current_question** in the for loop) into a "list," which is an object capable of containing other objects (like dataframes) within it. Now, we have a nice portable object we can manipulation, explore, and use in later analysis. Without this list, we would have to repeat ourselves every time we wanted to extract a single question and analyze it.
+**clean.R** loops through each question and extracts its columns from the master dataset, along with the name of each respondent and their size category, following Lauren's style last year. We then deposit each of those question-specific dataframes (specified as **current_question** in the for loop) into a "list," which is an object capable of containing other objects (like dataframes) within it. Now, we have a nice portable object we can manipulate, explore, and use in later analysis. Without this list, we would have to repeat ourselves every time we wanted to extract a single question and analyze it.
 
 Below is a representation of the structure of that list (called **question_list**). As you can see, **question_list**, represented by the top-most black rectangle, contains within it 
 
