@@ -1,8 +1,3 @@
-lacn_dir <- "~/piper analysis/lacn/code"
-source(file.path(lacn_dir, "read_data.R"))
-source(file.path(lacn_dir, "lacn_functions.R"))
-
-
 
 #### -------- ANALYZE responses ----- ####
 
@@ -10,7 +5,7 @@ source(file.path(lacn_dir, "lacn_functions.R"))
 all_questions <- unique(question_type$q_type)[c(2,3,5,6)]
 
 all_list <- map(all_questions,
-                ~ analyze_function(
+                ~ analyzeFunction(
                   .x
                 )
 )
@@ -20,9 +15,9 @@ names(all_list) <- all_questions
 
 #### Rank - summarise ####
 
-rank_questions <- select_function("ranking")
+rank_questions <- selectFunction("ranking")
 
-rank_key <- key_function(rank_questions, dim1) |>
+rank_key <- keyFunction(rank_questions, dim1) |>
   dplyr::slice(-12)
 
 rank_list <- question_list$Q5 |>

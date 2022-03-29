@@ -1,3 +1,4 @@
+library(ggalt)
 
 # select college to compare against averages
 colleges <- question_list$Q1$`Institution Name`
@@ -77,7 +78,6 @@ matrix_data |>
 
 
 #### ranked viz ####
-library(ggalt)
 
 {
 indiv <- question_list$Q5 |>
@@ -118,14 +118,5 @@ ggplot(rank_compare, aes(x = ranking, xend = ranking_avg, y = reorder(dim1, -ran
 
 
 }
-
-
-
-
-
-
-
-
-
 
 

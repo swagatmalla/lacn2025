@@ -4,7 +4,7 @@
 
 #### SELECTION FUNCTION ####
 
-select_function <- function(type) {
+selectFunction <- function(type) {
   
   question_type |>
     dplyr::filter(q_type == type) |>
@@ -16,7 +16,7 @@ select_function <- function(type) {
 
 ####-----------QUESTION KEY Function------------####
 
-key_function <- function(question, ...) {
+keyFunction <- function(question, ...) {
   key <- response_key |> 
     dplyr::filter(main == question) |> 
     dplyr::select(Question, ...) |>
@@ -30,7 +30,7 @@ key_function <- function(question, ...) {
 
 ####----------------SINGLE FUNCTION------------------####
 
-single_function <- function(list, element) {
+singleFunction <- function(list, element) {
   
   
   dplyr::count(get(list)[[element]], .data[[element]]) |>
@@ -42,7 +42,7 @@ single_function <- function(list, element) {
 
 ####-------------MULTI FUNCTION--------------------####
 
-multi_function <- function(list, element) {
+multiFunction <- function(list, element) {
   
   tidyr::pivot_longer(
     data = get(list)[[element]],
@@ -58,7 +58,7 @@ multi_function <- function(list, element) {
 
 ####-----------MATRIX FUNCTION-----------------####
 
-matrix_function <- function(list, element, sep = "_", cols_exclude = (1:2), method = "mean") {
+matrixFunction <- function(list, element, sep = "_", cols_exclude = (1:2), method = "mean") {
   
   
   
@@ -117,9 +117,9 @@ matrix_function <- function(list, element, sep = "_", cols_exclude = (1:2), meth
 
 ####-----------CONTINUOUS functions-------------####
 
-continuous_function <- function(list, element, method = "mean") {
+continuousFunction <- function(list, element, method = "mean") {
   
-  initial_key <- key_function(element, dim1, dim2)
+  initial_key <- keyFunction(element, dim1, dim2)
   
   if(length(unique(initial_key$dim1))==1) {
     q_key <- initial_key |>
@@ -156,10 +156,10 @@ continuous_function <- function(list, element, method = "mean") {
 ####---------ANALYZE Function--------------####
 
 
-analyze_function <- function(type, list = "question_list") {
+analyzeFunction <- function(type, list = "question_list") {
   
   
-  questions <- select_function(type)
+  questions <- selectFunction(type)
   
   list <- map(questions,
                 ~ get(paste0(type,"_function"))(
