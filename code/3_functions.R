@@ -58,7 +58,7 @@ multiFunction <- function(list, element) {
 
 ####-----------MATRIX FUNCTION-----------------####
 
-matrixFunction <- function(list, element, sep = "_", cols_exclude = (1:2), method = "mean") {
+matrixFunction <- function(list, element, sep = "_", cols_exclude = (1:2), method = "mean", ...) {
   
   
   
@@ -91,7 +91,8 @@ matrixFunction <- function(list, element, sep = "_", cols_exclude = (1:2), metho
     dplyr::summarise_at(
       dplyr::vars(vars_to_summarise[1]:vars_to_summarise[length(vars_to_summarise)]),
       get(method),
-      na.rm = TRUE)
+      na.rm = TRUE,
+      ...)
   
   q_key1 <- response_key |> 
     dplyr::filter(main == element) |> 
@@ -117,7 +118,7 @@ matrixFunction <- function(list, element, sep = "_", cols_exclude = (1:2), metho
 
 ####-----------CONTINUOUS functions-------------####
 
-continuousFunction <- function(list, element, method = "mean") {
+continuousFunction <- function(list, element, method = "mean", ...) {
   
   initial_key <- keyFunction(element, dim1, dim2)
   
@@ -138,13 +139,15 @@ continuousFunction <- function(list, element, method = "mean") {
     dplyr::left_join(q_key) |>
     dplyr::mutate(Response = as.numeric(Response))
   
-  columns <- colnames(joined_df)[ncol(joined_df)]
+  dim <- colnames(joined_df)[ncol(joined_df)]
   
   summed_df <- joined_df |>
-    dplyr::group_by(get(columns)) |>
-    dplyr::summarise(mean = get(method)(Response, na.rm = TRUE))
+    dplyr::group_by(get(dim)) |>
+    dplyr::summarise(stat = get(method)(Response, na.rm = TRUE, ...))
   
-  names(summed_df)[names(summed_df) == "get(columns)"] <- columns
+  names(summed_df)[names(summed_df) == "get(dim)"] <- dim
+  
+  names(summed_df)[names(summed_df) == "stat"] <- method
   
   return(summed_df)
 }
