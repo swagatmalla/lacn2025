@@ -40,6 +40,7 @@ The raw survey data ("lacn_2022.csv") resides in the data subdirectory of the la
 Next, we specify the Gooogle Sheets spreadsheet we want to connect with (this will come in handy a bit later).
 
 The next task is creating a reference lookup table for all the questions, their descriptions, and response descriptions. We will call this our "Response Key." First we create a somewhat messy version from the raw data (**response_key_messy**). Then we send it over to Sheets for some manual cleaning before bringing it back into R, now calling it **response_key**. This will be crucial for maintaining consistent references throughout analysis and visualization.
+
 ```{r response-key}
 cat('Reference Lookup Table:\n')
 head(response_key, 3)
@@ -205,5 +206,8 @@ all_list$multi$Q9
 Script: **5_viz.R**
 
 *In progress. Please check back later.*
+
+![example-plot](output/rank_plot.PNG)
+
 
 
