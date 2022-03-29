@@ -33,7 +33,7 @@ list.files("~/piper analysis/lacn/data")
 
 # Load Data
 
-File: **read_data.R**
+Script: **1_read_data.R**
 
 The raw survey data ("lacn_2022.csv") resides in the data subdirectory of the lacn folder. The first several lines of this script load this data and remove several redundant rows. 
 
@@ -51,7 +51,7 @@ Now we can move to analyzing each question on its own terms.
 
 # Cleaning 
 
-File: **clean.R**
+Script: **2_clean.R**
 
 One of the challenges with this data is how *wide* it is. The raw survey dataframe contains 257 variables. If we want to speed up our analysis, we need to break the dataset up by question. That way, when we want to analyze Q8, we can simply handle the Q8 dataset without having to sift through the entire 257-column raw dataset.
 
@@ -65,7 +65,7 @@ lobstr::ref(question_list)
 
 # Functions for Analysis
 
-File: **lacn_functions.R**
+Script: **3_functions.R**
 
 ## Motivation
 To get a sense for why the following custom functions are useful, let's inspect some of the raw data.
@@ -98,6 +98,8 @@ Our second option, then, is to build some functions that can deal with each of t
 The challenge with this approach is building those functions. Custom functions can be a bit intimidating at first, but what they lack in simplicity they make up for in speed.
 
 ## Functions
+
+Script: **3_functions.R**
 
 Note: the summarising method of the functions can be adjusted. Currently they return averages when relevant, but we can change this to, for example, sum with little difficulty.
 
@@ -157,7 +159,7 @@ Finally, the analyze function allows us to do all of the above analysis for each
 
 # Analysis
 
-File: **analysis.R**
+Script: **4_analysis.R**
 
 Next, we apply the functions we built to the original data we have stored in **question_list**. The analyzeFunction that we built above allows us analyze any set of questions. That is, if we choose only the "single" questions, it will apply the singleFunction to them.
 
@@ -188,19 +190,19 @@ lobstr::ref(all_list)
 
 Let's say you wanted to investigate conference attendance rates (Q9). You would note that Q9 is a multi-response question:
 
-```{r q9 type}
+```{r q9 type, echo=TRUE}
 question_type |> dplyr::filter(unique=="Q9")
 ```
 Next, you would key into the master list in the following order: master list --> question type --> question. The '$' in the code below are how R digs into a deeper level of some object, like a list or a dataframe. Think of it as opening a door into an inner room of a house.
 
-```{r list explore}
+```{r list explore, echo=TRUE}
 all_list$multi$Q9
 ```
 
 
 # Visualization
 
-File: **lacn_viz.R**
+Script: **5_viz.R**
 
 *In progress. Please check back later.*
 
