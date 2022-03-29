@@ -96,7 +96,7 @@ Here, we're faced with a choice. First, we could analyze each of the 23 question
 
 Our second option, then, is to build some functions that can deal with each of these question types efficiently. There are only five types: single, multi, matrix, continuous, and ranking. That is a much more manageable problem.
 
-The challenge with this approach is building those functions. Custom functions can be a bit intimidating at first, but what they lack in simplicity they make up for in speed.
+The challenge with this approach is building the functions. Custom functions can be a bit intimidating at first, but what they lack in simplicity they make up for in speed.
 
 ## Functions
 

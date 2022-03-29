@@ -9,6 +9,9 @@ lacn_master <- readr::read_csv(lacn_location) |>
 # specify google sheets location
 ss <- "17gmSm6hF_T10sGQAjzDxztzWBsFNpWdfxYZMkZwFvSQ"
 
+googlesheets4::gs4_auth(email = "gold1@stolaf.edu", token=ss)
+
+
 
 #### ---------- CREATE RESPONSE KEY ----------- ####
 response_key_messy <- lacn_master |>
