@@ -1,6 +1,6 @@
 ---
 title: "Custom Report Test"
-author: "Asa Gold"
+author: "St. Olaf Piper Center"
 date: "2022"
 output: html_document
 params:
@@ -27,6 +27,8 @@ load("lacn.RData")
 
 ### Matrix Questions
 
+Here's what your school said about Student Workers
+
 ```{r Q6}
 
 suppressMessages(
@@ -35,14 +37,13 @@ suppressMessages(
 
 ```
 
+Here's what your school said about Staff Responsibilities
 
 ```{r Q8}
 suppressMessages(
   matrixViz("Q8", params$college)
 )
 ```
-
-
 
 
 ### Single Questions
