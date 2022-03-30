@@ -1,0 +1,12 @@
+name: "LACN report"
+output_dir: "docs"
+navbar: 
+  title: "Report"
+  left:
+  - text: "Home"
+   href: index.html
+  - text: "Custom Report"
+   href: test_report.html
+output: 
+  html_document:
+ theme: flatly
