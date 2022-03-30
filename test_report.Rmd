@@ -1,5 +1,12 @@
 ---
 title: "Custom Report Test"
+knit: (function(input, ...) {
+    rmarkdown::render(
+      input,
+      output_dir = "docs/",
+      envir = globalenv()
+    )
+  })
 author: "St. Olaf Piper Center"
 date: "2022"
 output: 
