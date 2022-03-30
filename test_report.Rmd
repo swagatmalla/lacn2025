@@ -1,0 +1,48 @@
+---
+title: "Custom Report Test"
+author: "Asa Gold"
+date: "2022"
+output: html_document
+params:
+  college:
+    label: "College:"
+    value: Vassar College
+    input: select
+    choices: ['Vassar College', 'Williams College', 'Brandeis College', 'College of the Holy Cross', 'Franklin and Marshall College']
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+
+# load packages
+library(tidyverse)
+library(plyr)
+
+# load LACN analysis environment
+load("lacn.RData")
+```
+
+
+## Survey Results {.tabset}
+
+### Matrix Questions
+
+```{r Q6}
+
+suppressMessages(
+  matrixViz("Q6", params$college)
+)
+
+```
+
+
+```{r Q8}
+suppressMessages(
+  matrixViz("Q8", params$college)
+)
+```
+
+
+
+
+### Single Questions
