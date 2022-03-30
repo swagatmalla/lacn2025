@@ -1,9 +1,9 @@
 Question,main,sub1,sub2,Description,Description_short,dim1,dim2
 Q1_1,Q1,1,NA,"On behalf of the LACN Benchmarking Committee, thank you for taking the time to complete this requ...",NA,Name of person completing this survey,NA
 Q1_2,Q1,2,NA,"On behalf of the LACN Benchmarking Committee, thank you for taking the time to complete this requ...",NA,Institution,NA
-Q2,Q2,NA,NA,To whom do you report?,To whom do you report?,Selected Choice,NA
+Q2,Q2,NA,NA,To whom do you report?,Reporting Structure,Selected Choice,NA
 Q2_6_TEXT,Q2,6,TEXT,To whom do you report?,NA,Other:,Text
-Q3,Q3,NA,NA,How many steps removed from the institution’s president is the leadership (director) of your career center?,How many steps removed from the institution’s president is the leadership of your career center?,NA,NA
+Q3,Q3,NA,NA,How many steps removed from the institution’s president is the leadership (director) of your career center?,Steps Removed from the President's Office,NA,NA
 Q4_3,Q4,3,NA,"Which of the following types of advisory boards does your career center have (if any)? This could be either a stand-alone committee or a subcommittee of a university governance structure, e.g., a campus-wide advisory board for internships, a subcommittee of an alumni council, etc..  Select all that apply.",Advisory Board,Selected Choice,Student
 Q4_4,Q4,4,NA,"Which of the following types of advisory boards does your career center have (if any)? This could be either a stand-alone committee or a subcommittee of a university governance structure, e.g., a campus-wide advisory board for internships, a subcommittee of an alumni council, etc..  Select all that apply.",NA,Selected Choice,Alumni
 Q4_5,Q4,5,NA,"Which of the following types of advisory boards does your career center have (if any)? This could be either a stand-alone committee or a subcommittee of a university governance structure, e.g., a campus-wide advisory board for internships, a subcommittee of an alumni council, etc..  Select all that apply.",NA,Selected Choice,Employer

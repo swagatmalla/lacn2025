@@ -1,4 +1,4 @@
-library(ggalt)
+
 
 # select college to compare against averages
 colleges <- question_list$Q1$`Institution Name`
@@ -20,7 +20,7 @@ n <- 2
   ggplot(data = single_data, mapping = aes(.data[[names(single_data)[1]]], freq))+
     geom_bar(stat = 'identity', width = rel(0.5))+
     labs(
-      x = deframe(unique(response_key[response_key$main == q, 'Description_short'])),
+      x = tibble::deframe(unique(response_key[response_key$main == q, 'Description_short'])),
       y = "Frequency"
     )+
     piperr::theme_piper()
@@ -38,7 +38,7 @@ multi_q <- 'Q10'
     dplyr::filter(main == multi_q) |>
     dplyr::select(Description_short) |>
     unique() |>
-    deframe()
+    tibble::deframe()
   
   
   ggplot(data = multi_data, mapping = aes(reorder(value, freq), freq))+
@@ -65,7 +65,7 @@ matrix_title <- response_key |>
   dplyr::filter(main == matrix_q) |>
   dplyr::select(Description_short) |>
   unique() |>
-  deframe()
+  tibble::deframe()
 
 matrix_data |>
   tidyr::pivot_longer(
@@ -131,5 +131,12 @@ ggplot(rank_compare, aes(x = ranking, xend = ranking_avg, y = reorder(dim1, -ran
 
 ggsave("rank_plot.PNG", path = "output", width = 7.5, height = 5, units = "in")
 }
+
+
+
+
+View(question_list$Q6)
+all_list$matrix$Q6
+
 
 

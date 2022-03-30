@@ -11,7 +11,7 @@ for(i in seq_len(nrow(question_type))) {
   current_question <- lacn_master |>
     dplyr::select(
       `Institution Name`, 
-      `Institution size category`, 
+      `Undergraduate enrollment`, 
       dplyr::starts_with(question)
     ) |>
     dplyr::slice(-1)

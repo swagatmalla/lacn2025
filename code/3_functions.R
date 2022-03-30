@@ -181,6 +181,85 @@ analyzeFunction <- function(type, list = "question_list") {
 
 
 
+####-----------Viz Functions------------------####
+
+
+library(tidyverse)
+library(plyr)
+
+
+
+matrixViz <- function(q, college) {
+  key <- keyFunction(q, dim1,dim2)
+  
+  indiv <- question_list[[q]] |>
+    dplyr::filter(`Institution Name` == college)|>
+    tidyr::pivot_longer(
+      cols = !(1:2),
+      names_to = "Question",
+      values_to = "response"
+    ) |>
+    dplyr::left_join(key) |>
+    dplyr::mutate(response = as.numeric(response)) |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(n = sum(response, na.rm = TRUE))
+  
+  plot_title <- response_key |>
+    dplyr::filter(main == q) |>
+    dplyr::select(Description_short) |>
+    unique() |>
+    tibble::deframe()
+  
+  full <- question_list[[q]] |>
+    tidyr::pivot_longer(
+      cols = !(1:2),
+      names_to = "Question",
+      values_to = "response"
+    ) |>
+    dplyr::left_join(key) |>
+    dplyr::mutate(response = as.numeric(response)) |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(n = sum(response, na.rm = TRUE))
+  
+  max <- plyr::round_any(max(full$n), 10, f = ceiling)
+  by <- plyr::round_any(max/5, 10, f = ceiling)
+  seq <- seq(0, max, by = by)
+  
+  
+  plot <- ggplot2::ggplot(data = full, mapping = ggplot2::aes(reorder(`Institution Name`,n),n))+
+    ggplot2::geom_hline(yintercept = seq, colour = "grey")+
+    ggplot2::scale_y_continuous(breaks = seq)+
+    ggplot2::geom_bar(stat = 'identity')+
+    ggplot2::geom_bar(data = indiv, stat = 'identity', fill = "deepskyblue2")+
+    ggplot2::geom_label(data = indiv, aes(label = `Institution Name`))+
+    ggplot2::labs(
+      title = plot_title,
+      x = NULL,
+      y = "Total"
+    )+
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank(),
+      plot.margin = unit(c(1,1,1,1), "cm")
+    )
+  
+  return(plot)
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
