@@ -94,7 +94,7 @@ matrix_data |>
 
 {
 indiv <- question_list$Q5 |>
-  filter(`Institution Name` == current_college) |>
+  filter(`Institution Name` == college) |>
   dplyr::mutate_at(vars(Q5_6:Q5_13), as.numeric) |>
   dplyr::select(Q5_6:Q5_13) |>
   tidyr::pivot_longer(
@@ -129,7 +129,7 @@ ggplot(rank_compare, aes(x = ranking, xend = ranking_avg, y = reorder(dim1, -ran
     plot.margin = unit(c(1,1,1,1), "cm")
   )
 
-ggsave("rank_plot.PNG", path = "output", width = 7.5, height = 5, units = "in")
+#ggsave("rank_plot.PNG", path = "output", width = 7.5, height = 5, units = "in")
 }
 
 
