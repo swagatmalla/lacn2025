@@ -1,0 +1,9 @@
+name: "Test Report"
+navbar:
+  title: "Test Report"
+  left:
+    - text: "Home"
+      href: index.html
+    - text: "Report"
+      href: test_report.html
+output_dir: "docs"

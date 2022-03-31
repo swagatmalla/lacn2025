@@ -1,0 +1,43 @@
+---
+title: "MyLabJournal"
+output: html_document
+---
+
+<style type="text/css">
+.title {
+  display: none;
+}
+
+#getting-started img {
+  margin-right: 10px;
+}
+
+</style>
+
+<div class="row" style="padding-top: 30px;">
+<div class="col-sm-6">
+
+# **My Lab Journal**
+
+This is a template example for lab journaling. Students in Matt Crump's Human Cognition and Performance Lab will use this template to learn R, and other things. Students can replace this text with more fun things. People not in my lab can use this too.
+
+## How to use
+
+1. fork the repo for this website and follow instructions on read me to get set up. 
+
+2. Blog/journal what you are doing in R, by editing the Journal.Rmd. See the for an example of what to do to get started learning R.
+
+3. See the for lots of helpful links on learning R.
+
+4. Change everything to make it your own.
+
+
+</div>
+<div class="col-sm-6">
+
+### Crump Lab: Human Cognition and Performance
+
+<a href = "https://crumplab.github.io">
+![rank plot description](output/rank_plot.PNG)
+</a>
+</div>
