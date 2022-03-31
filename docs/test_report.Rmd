@@ -1,16 +1,15 @@
 ---
 title: "Custom Report Test"
-author: "St. Olaf Piper Center"
-date: "2022"
 output: 
   html_document:
+    css: "style.css"
     theme: flatly
+    toc: true
+    toc_depth: 3
+    toc_float:
+      collapsed: false
 params:
-  college:
-    label: "College:"
-    value: Vassar College
-    input: select
-    choices: ['Vassar College', 'Williams College', 'Brandeis College', 'College of the Holy Cross', 'Franklin and Marshall College']
+  college: college
 ---
 
 ```{r setup, include=FALSE}
@@ -24,14 +23,48 @@ library(plyr)
 load("../lacn.RData")
 ```
 
+##### LACN Operations Survey (2020-21) {#subtitle}
+## Survey Results 
 
-## Survey Results {.tabset}
+#{.tabset .tabset-fade .tabset-pills}
 
-### Matrix Questions
+### Introduction
 
-#### Here's what your school said about Student Workers
+#### Undergraduate Enrollment
 
-```{r Q6}
+```{r undergrad-enroll}
+plot(cars)
+```
+
+<hr/>
+
+#### Endowment
+
+```{r endowment}
+plot(cars)
+```
+
+
+
+### Reporting and Staffing
+
+#### Reporting Structure
+
+```{r reporting-struc}
+plot(cars)
+```
+
+
+#### Steps Removed from President's Office
+
+```{r steps-removed}
+plot(cars)
+```
+
+
+#### Student Staff (total)
+
+```{r student-staff-total}
 
 suppressMessages(
   matrixViz("Q6", params$college)
@@ -39,13 +72,108 @@ suppressMessages(
 
 ```
 
-#### Here's what your school said about Staff Responsibilities
+#### Professional (FTE)
 
-```{r Q8}
-suppressMessages(
-  matrixViz("Q8", params$college)
-)
+```{r prof-fte}
+plot(cars)
 ```
 
 
-### Single Questions
+#### Student to Professional Staff (FTE) Ratio
+
+```{r student-prof-ratio}
+plot(cars)
+```
+
+
+#### Professional Staff: Advising
+
+```{r prof-advising}
+plot(cars)
+```
+
+
+#### Professional Staff: Employer Relations
+
+```{r prof-employer}
+plot(cars)
+```
+
+
+
+### Student/Alum Engagement
+
+#### Student Engagement by Class Year
+
+```{r student-engage-year}
+plot(cars)
+```
+
+
+#### Student Engagement by Type of Engagement
+
+```{r student-engage-type}
+plot(cars)
+```
+
+
+#### Professional Staff Appt w/ Students (by class year) (distribution)
+
+```{r prof-appt-student-dist}
+plot(cars)
+```
+
+
+#### Professional Staff Appt w/ Students (by class year) (grouped bar)
+
+```{r prof-appt-student-group}
+plot(cars)
+```
+
+#### Professional Staff Appt w/ Alum
+
+```{r prof-appt-alum}
+plot(cars)
+```
+
+
+#### Professional Staff Appt (+ email) per Total FTE
+
+```{r prof-appt-fte}
+plot(cars)
+```
+
+
+#### Experiential Learning Participation
+
+```{r exper-learning}
+plot(cars)
+```
+
+
+
+### Budget
+
+#### Total Available Funding
+
+```{r total-funding}
+plot(cars)
+```
+
+
+#### Endowed Funds
+
+```{r endow-fund}
+plot(cars)
+```
+
+
+#### Expendable Gifts
+
+```{r expend-gift}
+plot(cars)
+```
+
+
+
+
