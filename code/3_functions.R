@@ -13,7 +13,6 @@ selectFunction <- function(type) {
 }
 
 
-
 ####-----------QUESTION KEY Function------------####
 
 keyFunction <- function(question, ...) {
@@ -24,8 +23,6 @@ keyFunction <- function(question, ...) {
   
   return(key)
 }
-
-
 
 
 ####----------------SINGLE FUNCTION------------------####
@@ -153,9 +150,6 @@ continuousFunction <- function(list, element, method = "mean", ...) {
 }
 
 
-
-
-
 ####---------ANALYZE Function--------------####
 
 
@@ -185,70 +179,6 @@ analyzeFunction <- function(type, list = "question_list") {
 
 
 library(tidyverse)
-library(plyr)
-
-
-
-matrixViz <- function(q, college) {
-  key <- keyFunction(q, dim1,dim2)
-  
-  indiv <- question_list[[q]] |>
-    dplyr::filter(`Institution Name` == college)|>
-    tidyr::pivot_longer(
-      cols = !(1:2),
-      names_to = "Question",
-      values_to = "response"
-    ) |>
-    dplyr::left_join(key) |>
-    dplyr::mutate(response = as.numeric(response)) |>
-    dplyr::group_by(`Institution Name`) |>
-    dplyr::summarise(n = sum(response, na.rm = TRUE))
-  
-  plot_title <- response_key |>
-    dplyr::filter(main == q) |>
-    dplyr::select(Description_short) |>
-    unique() |>
-    tibble::deframe()
-  
-  full <- question_list[[q]] |>
-    tidyr::pivot_longer(
-      cols = !(1:2),
-      names_to = "Question",
-      values_to = "response"
-    ) |>
-    dplyr::left_join(key) |>
-    dplyr::mutate(response = as.numeric(response)) |>
-    dplyr::group_by(`Institution Name`) |>
-    dplyr::summarise(n = sum(response, na.rm = TRUE))
-  
-  max <- plyr::round_any(max(full$n), 10, f = ceiling)
-  by <- plyr::round_any(max/5, 10, f = ceiling)
-  seq <- seq(0, max, by = by)
-  
-  
-  plot <- ggplot2::ggplot(data = full, mapping = ggplot2::aes(reorder(`Institution Name`,n),n))+
-    ggplot2::geom_hline(yintercept = seq, colour = "grey")+
-    ggplot2::scale_y_continuous(breaks = seq)+
-    ggplot2::geom_bar(stat = 'identity')+
-    ggplot2::geom_bar(data = indiv, stat = 'identity', fill = "deepskyblue2")+
-    ggplot2::geom_label(data = indiv, aes(label = `Institution Name`))+
-    ggplot2::labs(
-      title = plot_title,
-      x = NULL,
-      y = "Total"
-    )+
-    ggplot2::theme(
-      axis.text.x = ggplot2::element_blank(),
-      axis.ticks = ggplot2::element_blank(),
-      panel.background = ggplot2::element_blank(),
-      plot.margin = unit(c(1,1,1,1), "cm")
-    )
-  
-  return(plot)
-}
-
-
-
 
 rankViz <- function(college) {
   
@@ -287,12 +217,101 @@ rankViz <- function(college) {
       panel.background = element_blank(),
       plot.margin = unit(c(1,1,1,1), "cm")
     )
-
+  
 }
 
+matrixPlot <- function(data, college, title=NULL) {
+  
+  
+  seq <- c(0, 
+           ceiling(max(data['n'])/3), 
+           ceiling((2/3)*max(data['n'])), 
+           ceiling(max(data['n'])))
+  
+  plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes(reorder(`Institution Name`,n),n))+
+    ggplot2::geom_hline(yintercept = seq,
+                        colour = "grey")+
+    ggplot2::scale_y_continuous(breaks = seq)+
+    ggplot2::geom_bar(stat = 'identity', fill = "#7CBCE8")+
+    ggplot2::labs(
+      title = title,
+      x = NULL,
+      y = "Total"
+    )+
+    ggplot2::theme(
+      axis.text.x = ggplot2::element_blank(),
+      axis.ticks = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank(),
+      text = element_text(size = 15)
+    )
+  
+  
+  if(!missing(college)) {
+    
+    indiv <- data |>
+      dplyr::filter(`Institution Name` == college)
+    
+    return(
+      
+      plot + 
+        ggplot2::geom_bar(data = indiv, stat = 'identity', fill = "#217DBB")+
+        ggplot2::geom_label(data = indiv,
+                            ggplot2::aes(label = `Institution Name`))
+    )
+    
+    
+  } else {
+    
+    return(plot)
+    
+  }
+  
+}
 
-
-
+singlePlot <- function(data, q, title = NULL, college=NULL) {
+  
+  viz <- ggplot2::ggplot(data = data, 
+                         mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
+    ggplot2::geom_hline(yintercept = seq(0,1,by=0.2), colour = "grey")+
+    ggplot2::geom_col(width = rel(0.5), fill = "#7CBCE8")+
+    ggplot2::scale_y_continuous(limits=c(0,1), 
+                                breaks = seq(0,1,by=0.2))+
+    scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
+    ggplot2::coord_flip()+
+    ggplot2::labs(
+      title = title,
+      x = NULL,
+      y = "\nFrequency"
+    )+
+    ggplot2::theme(
+      axis.ticks = ggplot2::element_blank(),
+      panel.background = ggplot2::element_blank(),
+      text = element_text(size = 15)
+    )
+  
+  if(!missing(college)) {
+    
+    indiv <- question_list[q] |>
+      dplyr::filter(`Institution Name`== college) |>
+      dplyr::select(`Institution Name`,q) |>
+      dplyr::mutate(q = stringr::str_remove(q,":")) |>
+      dplyr::left_join(data)
+    
+    return(
+      viz + 
+        ggplot2::geom_col(data = indiv, fill = "#217DBB", width = rel(0.5))+
+        geom_label(data = indiv, 
+                   ggplot2::aes(label = `Institution Name`),
+                   nudge_y = .05)
+    )
+    
+  } else {
+    
+    return(viz)
+    
+  }
+  
+}
 
 tableViz <- function(data, var, college = NULL) {
   
@@ -340,8 +359,12 @@ tableViz <- function(data, var, college = NULL) {
   
 }
 
-
-
+nTab <- function(var) {
+  
+  glue::glue("N = {as.integer(sum(!is.na(var)))}")
+  
+  
+}
 
 
 

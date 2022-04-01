@@ -82,12 +82,12 @@ tableViz(endow_data, var = "endow")
 
 <div class="row">
 
-  <div class="col-sm-7">
-
 ### Reporting Structure
 
+  <div class="col-sm-7">
+
 ```{r reporting-plot}
-plot(cars)
+singlePlot(reporting_data, q = "Q2")
 ```
 
   </div>
@@ -95,31 +95,27 @@ plot(cars)
 
   <div class="col-sm-5">
 
-```{r reporting-table}
-plot(cars)
-```
+`r nTab(question_list$Q2['Institution Name'])`
 
   </div>
 
 </div>
 
-### Steps Removed from President's Office
-
 <div class="row">
+
+### Steps Removed from President's Office
 
   <div class="col-sm-7">
 
 ```{r steps-plot}
-plot(cars)
+singlePlot(steps_data, q = "Q3")
 ```
 
   </div>
 
 <div class="col-sm-5">
 
-```{r steps-table}
-plot(cars)
-```
+`r nTab(question_list$Q3['Institution Name'])`
 
   </div>
 
@@ -133,9 +129,7 @@ plot(cars)
 
 ```{r student-staff-plot}
 
-suppressMessages(
-  matrixViz("Q6", params$college)
-)
+matrixPlot(student_staff_data)
 
 ```
 
@@ -146,9 +140,7 @@ suppressMessages(
 
 ```{r student-staff-table}
 
-suppressMessages(
-  matrixViz("Q6", params$college)
-)
+tableViz(data = student_staff_data,'n')
 
 ```
 
@@ -163,7 +155,7 @@ suppressMessages(
   <div class="col-sm-7">
 
 ```{r prof-plot}
-plot(cars)
+matrixPlot(prof_staff_data)
 ```
 
   </div>
@@ -171,7 +163,7 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r prof-table}
-plot(cars)
+tableViz(prof_staff_data, var = 'n')
 ```
   
   </div>
@@ -185,7 +177,9 @@ plot(cars)
   <div class="col-sm-7">
 
 ```{r sp-ratio-plot}
-plot(cars)
+
+matrixPlot(student_prof_ratio)
+
 ```
 
   </div>
@@ -193,7 +187,9 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r sp-ratio-table}
-plot(cars)
+
+tableViz(student_prof_ratio, var='n')
+
 ```
 
   </div>
@@ -207,7 +203,7 @@ plot(cars)
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-plot(cars)
+matrixPlot(prof_advising_data)
 ```
 
   </div>
@@ -215,7 +211,7 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r prof-advising-table}
-plot(cars)
+tableViz(prof_advising_data, 'n')
 ```
   
   </div>

@@ -10,8 +10,9 @@ enrollPlot <- function(data = enroll_data, college = NULL, title = NULL) {
   
   enroll_viz <- enroll_data |>
     ggplot(mapping = aes(reorder(`Institution Name`,enroll), enroll))+
-    geom_hline(yintercept = c(0,1000,2000,3000,4000), colour = "grey")+
-    geom_bar(stat="identity")+
+    geom_hline(yintercept = c(0,1000,2000,3000,4000), 
+               colour = 'grey')+
+    geom_bar(stat="identity", fill = "#7CBCE8")+
     labs(
       title = title,
       x = NULL,
@@ -21,13 +22,16 @@ enrollPlot <- function(data = enroll_data, college = NULL, title = NULL) {
       axis.text.x = element_blank(),
       axis.ticks = element_blank(),
       panel.background = element_blank(),
-      plot.margin = unit(c(1,1,1,1), "cm")
+      plot.margin = unit(c(1,1,1,1), "cm"),
+      text = element_text(size = 15)
     )
   
-  if(!missing(college)){
+  if(!missing(college)) {
     return(enroll_viz + 
              geom_bar(data = subset(enroll_data, `Institution Name` == college),
-                      stat = 'identity', fill = "red")
+                      stat = 'identity', fill = "#217DBB") +
+             geom_label(data = subset(enroll_data, `Institution Name` == college), 
+                        aes(label = `Institution Name`))
            )
   } else {
     return(enroll_viz)
@@ -35,12 +39,6 @@ enrollPlot <- function(data = enroll_data, college = NULL, title = NULL) {
   
   
 }
-
-#### Enrollment Table ####
-
-tableViz(enroll_data, "enroll", college = "Franklin and Marshall College")
-
-
 
 
 #### Endowment Plot ####
@@ -61,7 +59,7 @@ endowPlot <- function(data = endow_data, college = NULL, title = NULL) {
   endow_viz <- endow_data |>
     ggplot(mapping = aes(reorder(`Institution Name`,endow_bil), endow_bil))+
     geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
-    geom_bar(stat="identity")+
+    geom_bar(stat="identity", fill = "#7CBCE8")+
     labs(
       title = title,
       x = NULL,
@@ -71,13 +69,13 @@ endowPlot <- function(data = endow_data, college = NULL, title = NULL) {
       axis.text.x = element_blank(),
       axis.ticks = element_blank(),
       panel.background = element_blank(),
-      #plot.margin = unit(c(1,1,1,1), "cm")
+      text = element_text(size = 15)
     )
   
   if(!missing(college)){
     return(endow_viz + 
              geom_bar(data = subset(endow_data, `Institution Name` == college),
-                      stat = 'identity', fill = "red") +
+                      stat = 'identity', fill = "#217DBB") +
              geom_label(data = subset(endow_data, `Institution Name` == college), 
                         aes(label = `Institution Name`))
     )
@@ -87,17 +85,4 @@ endowPlot <- function(data = endow_data, college = NULL, title = NULL) {
   
   
 }
-
-endowPlot(college="Vassar College", "Title")
-
-
-
-
-
-
-#### Endowment Table ####
-
-endow_table <- tableViz(endow_data, "endow")
-
-
 
