@@ -294,7 +294,33 @@ rankViz <- function(college) {
 
 
 
-
+tableViz <- function(df, var) {
+  
+  labels <- c('N','Mean','Median','Max','Min')
+  
+  N <- as.integer(nrow(df))
+  Mean <- mean(tibble::deframe(df[var]))
+  Median <- median(tibble::deframe(df[var]))
+  Max <- max(tibble::deframe(df[var]))
+  Min <- min(tibble::deframe(df[var]))
+  
+  stats <- c(N,Mean,Median,Max,Min)
+  
+  return(
+    data.frame(labels, stats) |>
+      gt::gt() |>
+      gt::tab_header("Summary") |>
+      gt::cols_label(labels="",stats="") |>
+      gt::fmt_number(
+        columns = stats,
+        decimals = 0
+      ) |>
+      gt::tab_options(
+        container.width = gt::pct(75)
+      )
+  )
+  
+}
 
 
 

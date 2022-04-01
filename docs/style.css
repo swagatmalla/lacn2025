@@ -2,11 +2,6 @@ h1 {
   text-align: center;
 }
 
-#subtitle {
-  text-align: center;
-  font-style: italic;
-}
-
 h4 {
   font-weight:bold;
 }
@@ -15,3 +10,14 @@ hr {
   height:1px;
   background-color:#433F3E;
 }
+
+#subtitle {
+  text-align: center;
+  font-style: italic;
+}
+
+.row {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+

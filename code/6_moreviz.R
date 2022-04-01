@@ -1,4 +1,4 @@
-
+library(tidyverse)
 
 colleges <- question_list$Q1$`Institution Name`
 
@@ -38,7 +38,7 @@ full <- question_list[[q]] |>
   dplyr::summarise(n = sum(response, na.rm = TRUE))
 
 max <- plyr::round_any(max(full$n), 10, f = ceiling)
-by <- round_any(max/5, 10, f = ceiling)
+by <- plyr::round_any(max/5, 10, f = ceiling)
 seq <- seq(0, max, by = by)
 
 

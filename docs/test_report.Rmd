@@ -1,13 +1,9 @@
 ---
-title: "Custom Report Test"
+title: "LACN General Report"
 output: 
   html_document:
     css: "style.css"
     theme: flatly
-    toc: true
-    toc_depth: 3
-    toc_float:
-      collapsed: false
 params:
   college: college
 ---
@@ -23,46 +19,80 @@ library(plyr)
 load("../lacn.RData")
 ```
 
-##### LACN Operations Survey (2020-21) {#subtitle}
-## Survey Results 
-
-#{.tabset .tabset-fade .tabset-pills}
-
-### Introduction
-
-#### Undergraduate Enrollment
-
-```{r undergrad-enroll}
-plot(cars)
-```
+#### 2020-21 Operations Survey {#subtitle}
 
 <hr/>
 
-#### Endowment
+# {.tabset .tabset-pills}
 
-```{r endowment}
-plot(cars)
+<div class="row">
+## Introduction
+</div>
+
+### Enrollment
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r enroll-plot}
+enroll_viz 
 ```
 
+  </div>
+
+  <div class="col-sm-5">
+
+```{r enroll-table}
+enroll_table
+```
+
+  </div>
+
+</div>
 
 
-### Reporting and Staffing
+### Endowment
 
-#### Reporting Structure
+<div class="row">
+
+<div class="col-sm-7">
+
+```{r endow-plot}
+endow_viz 
+```
+
+</div>
+
+<div class="col-sm-5">
+
+```{r endow-table}
+endow_table
+```
+
+</div>
+
+</div>
+
+<hr/>
+
+## Reporting and Staffing
+
+### Reporting Structure
 
 ```{r reporting-struc}
 plot(cars)
 ```
 
 
-#### Steps Removed from President's Office
+### Steps Removed from President's Office
 
 ```{r steps-removed}
 plot(cars)
 ```
 
 
-#### Student Staff (total)
+### Student Staff (total)
 
 ```{r student-staff-total}
 
@@ -72,28 +102,28 @@ suppressMessages(
 
 ```
 
-#### Professional (FTE)
+### Professional (FTE)
 
 ```{r prof-fte}
 plot(cars)
 ```
 
 
-#### Student to Professional Staff (FTE) Ratio
+### Student to Professional Staff (FTE) Ratio
 
 ```{r student-prof-ratio}
 plot(cars)
 ```
 
 
-#### Professional Staff: Advising
+### Professional Staff: Advising
 
 ```{r prof-advising}
 plot(cars)
 ```
 
 
-#### Professional Staff: Employer Relations
+### Professional Staff: Employer Relations
 
 ```{r prof-employer}
 plot(cars)
@@ -101,50 +131,50 @@ plot(cars)
 
 
 
-### Student/Alum Engagement
+## Student/Alum Engagement
 
-#### Student Engagement by Class Year
+### Student Engagement by Class Year
 
 ```{r student-engage-year}
 plot(cars)
 ```
 
 
-#### Student Engagement by Type of Engagement
+### Student Engagement by Type of Engagement
 
 ```{r student-engage-type}
 plot(cars)
 ```
 
 
-#### Professional Staff Appt w/ Students (by class year) (distribution)
+### Professional Staff Appt w/ Students (by class year) (distribution)
 
 ```{r prof-appt-student-dist}
 plot(cars)
 ```
 
 
-#### Professional Staff Appt w/ Students (by class year) (grouped bar)
+### Professional Staff Appt w/ Students (by class year) (grouped bar)
 
 ```{r prof-appt-student-group}
 plot(cars)
 ```
 
-#### Professional Staff Appt w/ Alum
+### Professional Staff Appt w/ Alum
 
 ```{r prof-appt-alum}
 plot(cars)
 ```
 
 
-#### Professional Staff Appt (+ email) per Total FTE
+### Professional Staff Appt (+ email) per Total FTE
 
 ```{r prof-appt-fte}
 plot(cars)
 ```
 
 
-#### Experiential Learning Participation
+### Experiential Learning Participation
 
 ```{r exper-learning}
 plot(cars)
@@ -152,23 +182,23 @@ plot(cars)
 
 
 
-### Budget
+## Budget
 
-#### Total Available Funding
+### Total Available Funding
 
 ```{r total-funding}
 plot(cars)
 ```
 
 
-#### Endowed Funds
+### Endowed Funds
 
 ```{r endow-fund}
 plot(cars)
 ```
 
 
-#### Expendable Gifts
+### Expendable Gifts
 
 ```{r expend-gift}
 plot(cars)
