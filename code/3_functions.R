@@ -49,9 +49,9 @@ multiFunction <- function(list, element) {
     cols = !(1:2),
   ) |>
     dplyr::filter(!is.na(value)) |>
-    group_by(value) |>
-    summarise(n = n()) |>
-    mutate(freq = n / n_distinct(get(list)[[element]][1]))
+    dplyr::group_by(value) |>
+    dplyr::summarise(n = dplyr::n()) |>
+    dplyr::mutate(freq = n / n_distinct(get(list)[[element]][1]))
   
 }
 
@@ -294,17 +294,35 @@ rankViz <- function(college) {
 
 
 
-tableViz <- function(df, var) {
+tableViz <- function(data, var, college = NULL) {
   
-  labels <- c('N','Mean','Median','Max','Min')
+  if(missing(college)){
+    labels <- c('N','Mean','Median','Max','Min')
+  } else {
+    labels <- c('N','Mean','Median','Max','Min', college)
+  }
+
+  variable <- tibble::deframe(data[var])
   
-  N <- as.integer(nrow(df))
-  Mean <- mean(tibble::deframe(df[var]))
-  Median <- median(tibble::deframe(df[var]))
-  Max <- max(tibble::deframe(df[var]))
-  Min <- min(tibble::deframe(df[var]))
+  N <- as.integer(sum(!is.na(variable)))
+  Mean <- mean(variable)
+  Median <- median(variable)
+  Max <- max(variable)
+  Min <- min(variable)
   
-  stats <- c(N,Mean,Median,Max,Min)
+  if(!missing(college)){
+    College <- data |> 
+      dplyr::filter(`Institution Name` == college) |>
+      dplyr::pull(.data[[var]])
+  }
+
+  
+  if(missing(college)){
+    stats <- c(N, Mean, Median, Max, Min)
+  } else {
+    stats <- c(N, Mean, Median, Max, Min, College)
+  }
+
   
   return(
     data.frame(labels, stats) |>
