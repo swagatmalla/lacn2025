@@ -37,7 +37,7 @@ load("../lacn.RData")
   <div class="col-sm-7">
 
 ```{r enroll-plot}
-enrollPlot() 
+enrollPlot(college = params$college) 
 ```
 
   </div>
@@ -60,7 +60,7 @@ tableViz(enroll_data, var = "enroll")
   <div class="col-sm-7">
 
 ```{r endow-plot}
-endowPlot() 
+endowPlot(college = params$college) 
 ```
 
   </div>
@@ -87,7 +87,12 @@ tableViz(endow_data, var = "endow")
   <div class="col-sm-7">
 
 ```{r reporting-plot}
-singlePlot(reporting_data, q = "Q2")
+suppressWarnings(
+  
+  singlePlot(reporting_data, q = "Q2", college = params$college,
+           string_rem = ":")
+)
+
 ```
 
   </div>
@@ -108,7 +113,13 @@ singlePlot(reporting_data, q = "Q2")
   <div class="col-sm-7">
 
 ```{r steps-plot}
-singlePlot(steps_data, q = "Q3")
+suppressWarnings(
+  
+  singlePlot(steps_data, q = "Q3", college = params$college,
+           string_rem = "[:blank:]\\(.+\\)")
+  
+)
+
 ```
 
   </div>
@@ -129,7 +140,7 @@ singlePlot(steps_data, q = "Q3")
 
 ```{r student-staff-plot}
 
-matrixPlot(student_staff_data)
+matrixPlot(student_staff_data, college = params$college)
 
 ```
 
@@ -155,7 +166,7 @@ tableViz(data = student_staff_data,'n')
   <div class="col-sm-7">
 
 ```{r prof-plot}
-matrixPlot(prof_staff_data)
+matrixPlot(prof_staff_data, college = params$college)
 ```
 
   </div>
@@ -178,7 +189,7 @@ tableViz(prof_staff_data, var = 'n')
 
 ```{r sp-ratio-plot}
 
-matrixPlot(student_prof_ratio)
+matrixPlot(student_prof_ratio, college = params$college)
 
 ```
 
@@ -203,7 +214,7 @@ tableViz(student_prof_ratio, var='n')
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data)
+matrixPlot(prof_advising_data, college = params$college)
 ```
 
   </div>
@@ -225,7 +236,7 @@ tableViz(prof_advising_data, 'n')
   <div class="col-sm-7">
 
 ```{r prof-employer-plot}
-plot(cars)
+matrixPlot(prof_employer_data, college = params$college)
 ```
 
   </div>
@@ -233,7 +244,7 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r prof-employer-table}
-plot(cars)
+tableViz(prof_employer_data, 'n')
 ```
 
   </div>

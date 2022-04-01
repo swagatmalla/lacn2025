@@ -268,7 +268,7 @@ matrixPlot <- function(data, college, title=NULL) {
   
 }
 
-singlePlot <- function(data, q, title = NULL, college=NULL) {
+singlePlot <- function(data, q, title = NULL, college=NULL, string_rem) {
   
   viz <- ggplot2::ggplot(data = data, 
                          mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
@@ -291,11 +291,26 @@ singlePlot <- function(data, q, title = NULL, college=NULL) {
   
   if(!missing(college)) {
     
-    indiv <- question_list[q] |>
-      dplyr::filter(`Institution Name`== college) |>
-      dplyr::select(`Institution Name`,q) |>
-      dplyr::mutate(q = stringr::str_remove(q,":")) |>
-      dplyr::left_join(data)
+    college_chr <- as.character(college)
+    
+    indiv <- question_list[[q]][
+      question_list[[q]]['Institution Name'] == college_chr,] |>
+      dplyr::select(`Institution Name`, tidyselect::all_of(q))
+    
+    if(!missing(string_rem)) {
+      suppressMessages(
+        
+        indiv[q] <- stringr::str_replace(string = indiv[q], pattern = string_rem, replacement = "")
+        
+      )
+      
+    }
+    
+    suppressMessages(
+      indiv <- indiv |>
+        dplyr::left_join(data)
+    )
+   
     
     return(
       viz + 

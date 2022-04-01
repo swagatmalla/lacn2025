@@ -67,5 +67,17 @@ prof_advising_data <- question_list$Q8 |>
 
 
 
+#### Professional Employer Relations ####
+
+prof_employer_data <- question_list$Q8 |>
+  dplyr::select(`Institution Name`, Q8_8_1:Q8_14_3) |>
+  dplyr::mutate_at(vars(Q8_8_1:Q8_14_3), as.numeric) |>
+  dplyr::rowwise() |>
+  dplyr::mutate(n = sum(Q8_8_1:Q8_14_3)) |>
+  dplyr::select(`Institution Name`, n)
+
+
+
+
 
 
