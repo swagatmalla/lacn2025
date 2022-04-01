@@ -316,7 +316,7 @@ tableViz <- function(df, var) {
         decimals = 0
       ) |>
       gt::tab_options(
-        container.width = gt::pct(50)
+        container.width = gt::pct(75)
       )
   )
   

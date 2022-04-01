@@ -60,7 +60,7 @@ endow_viz <- endow_data |>
     axis.text.x = element_blank(),
     axis.ticks = element_blank(),
     panel.background = element_blank(),
-    plot.margin = unit(c(1,1,1,1), "cm")
+    #plot.margin = unit(c(1,1,1,1), "cm")
   )
 
 
@@ -68,6 +68,5 @@ endow_viz <- endow_data |>
 
 endow_table <- tableViz(endow_data, "endow")
 
-gt::gtsave(endow_table, "endow.png", path = here::here("docs/images"))
 
 
