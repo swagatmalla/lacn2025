@@ -4,6 +4,9 @@ output:
   html_document:
     css: "style.css"
     theme: flatly
+    toc: true
+    toc_float: true
+    toc_depth: 3
 params:
   college: college
 ---
@@ -23,11 +26,9 @@ load("../lacn.RData")
 
 <hr/>
 
-# {.tabset .tabset-pills}
 
-<div class="row">
 ## Introduction
-</div>
+
 
 ### Enrollment
 
@@ -36,7 +37,7 @@ load("../lacn.RData")
   <div class="col-sm-7">
 
 ```{r enroll-plot}
-enroll_viz 
+enrollPlot() 
 ```
 
   </div>
@@ -44,7 +45,7 @@ enroll_viz
   <div class="col-sm-5">
 
 ```{r enroll-table}
-enroll_table
+tableViz(enroll_data, var = "enroll")
 ```
 
   </div>
@@ -56,45 +57,81 @@ enroll_table
 
 <div class="row">
 
-<div class="col-sm-7">
+  <div class="col-sm-7">
 
 ```{r endow-plot}
-endow_viz 
+endowPlot() 
 ```
 
-</div>
+  </div>
 
-<div class="col-sm-5">
+  <div class="col-sm-5">
 
 ```{r endow-table}
-endow_table
+tableViz(endow_data, var = "endow")
 ```
 
-</div>
+  </div>
 
 </div>
 
 <hr/>
 
+
 ## Reporting and Staffing
+
+<div class="row">
+
+  <div class="col-sm-7">
 
 ### Reporting Structure
 
-```{r reporting-struc}
+```{r reporting-plot}
 plot(cars)
 ```
 
+  </div>
+
+
+  <div class="col-sm-5">
+
+```{r reporting-table}
+plot(cars)
+```
+
+  </div>
+
+</div>
 
 ### Steps Removed from President's Office
 
-```{r steps-removed}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r steps-plot}
 plot(cars)
 ```
 
+  </div>
+
+<div class="col-sm-5">
+
+```{r steps-table}
+plot(cars)
+```
+
+  </div>
+
+</div>
 
 ### Student Staff (total)
 
-```{r student-staff-total}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r student-staff-plot}
 
 suppressMessages(
   matrixViz("Q6", params$college)
@@ -102,108 +139,343 @@ suppressMessages(
 
 ```
 
+  </div>
+
+
+  <div class="col-sm-5">
+
+```{r student-staff-table}
+
+suppressMessages(
+  matrixViz("Q6", params$college)
+)
+
+```
+
+  </div>
+
+</div>
+
 ### Professional (FTE)
 
-```{r prof-fte}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r prof-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r prof-table}
+plot(cars)
+```
+  
+  </div>
+  
+</div>
 
 ### Student to Professional Staff (FTE) Ratio
 
-```{r student-prof-ratio}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r sp-ratio-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r sp-ratio-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Professional Staff: Advising
 
-```{r prof-advising}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r prof-advising-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r prof-advising-table}
+plot(cars)
+```
+  
+  </div>
+
+</div>
 
 ### Professional Staff: Employer Relations
 
-```{r prof-employer}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r prof-employer-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r prof-employer-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
+
+<hr/>
 
 
 ## Student/Alum Engagement
 
 ### Student Engagement by Class Year
 
-```{r student-engage-year}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r sengage-year-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r sengage-year-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Student Engagement by Type of Engagement
 
-```{r student-engage-type}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r sengage-type-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r sengage-type-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Professional Staff Appt w/ Students (by class year) (distribution)
 
-```{r prof-appt-student-dist}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-student-dist-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-student-dist-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Professional Staff Appt w/ Students (by class year) (grouped bar)
 
-```{r prof-appt-student-group}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-student-group-plot}
 plot(cars)
 ```
+
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-student-group-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Professional Staff Appt w/ Alum
 
-```{r prof-appt-alum}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-alum-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-alum-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Professional Staff Appt (+ email) per Total FTE
 
-```{r prof-appt-fte}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-fte-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-fte-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Experiential Learning Participation
 
-```{r exper-learning}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r exper-learning-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
 
+```{r exper-learning-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
+
+<hr/>
 
 ## Budget
 
 ### Total Available Funding
 
-```{r total-funding}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r total-funding-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r total-funding-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Endowed Funds
 
-```{r endow-fund}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r endow-fund-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r endow-fund-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
 
 ### Expendable Gifts
 
-```{r expend-gift}
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r expend-gift-plot}
 plot(cars)
 ```
 
+  </div>
+  
+  <div class="col-sm-5">
 
+```{r expend-gift-table}
+plot(cars)
+```
+
+  </div>
+  
+</div>
+
+<hr/>
+
+
+Special thanks to **ACKNOWLEDGEMENTS HERE**
 
 
