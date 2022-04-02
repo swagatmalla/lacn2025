@@ -268,7 +268,7 @@ matrixPlot <- function(data, college, title=NULL) {
   
 }
 
-singlePlot <- function(data, q, title = NULL, college=NULL, string_rem) {
+singlePlot <- function(data, q, college=NULL, title = NULL, string_rem) {
   
   viz <- ggplot2::ggplot(data = data, 
                          mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
@@ -300,7 +300,7 @@ singlePlot <- function(data, q, title = NULL, college=NULL, string_rem) {
     if(!missing(string_rem)) {
       suppressMessages(
         
-        indiv[q] <- stringr::str_replace(string = indiv[q], pattern = string_rem, replacement = "")
+        indiv[q] <- stringr::str_replace(string = tibble::deframe(indiv[q]), pattern = string_rem, replacement = "")
         
       )
       

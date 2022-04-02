@@ -1,5 +1,5 @@
 ---
-title: "LACN General Report"
+title: "General Report"
 output: 
   html_document:
     css: "style.css"
@@ -16,13 +16,12 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE)
 
 # load packages
 library(tidyverse)
-library(plyr)
 
 # load LACN analysis environment
 load("../lacn.RData")
 ```
 
-#### 2020-21 Operations Survey {#subtitle}
+#### 2020-21 LACN Operations Survey {#subtitle}
 
 <hr/>
 
@@ -87,11 +86,9 @@ tableViz(endow_data, var = "endow")
   <div class="col-sm-7">
 
 ```{r reporting-plot}
-suppressWarnings(
-  
-  singlePlot(reporting_data, q = "Q2", college = params$college,
+
+singlePlot(reporting_data, q = "Q2", college = params$college,
            string_rem = ":")
-)
 
 ```
 
@@ -113,12 +110,9 @@ suppressWarnings(
   <div class="col-sm-7">
 
 ```{r steps-plot}
-suppressWarnings(
-  
+
   singlePlot(steps_data, q = "Q3", college = params$college,
            string_rem = "[:blank:]\\(.+\\)")
-  
-)
 
 ```
 
@@ -263,16 +257,74 @@ tableViz(prof_employer_data, 'n')
   <div class="col-sm-7">
 
 ```{r sengage-year-plot}
-plot(cars)
+
+suppressMessages(
+  
+question_list$Q21 |>
+  tidyr::pivot_longer(
+    cols = !(1:2),
+    names_to = c('main','sub1','sub2'),
+    values_to = "engage",
+    names_sep = "_"
+  ) |>
+  dplyr::filter(sub2==4) |>
+  dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
+    dplyr::left_join(
+      keyFunction('Q21',dim1)
+    ) |>
+  dplyr::select(!c(main:sub2,Question))  |>
+  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
+  dplyr::group_by(dim1) |>
+  dplyr::summarise(Mean = mean(engage), 
+                   Median = median(engage),
+                   Max = max(engage),
+                   #`Your School` = mean(engage[`Institution Name`==params$college])
+                   ) |>
+  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
+  tidyr::pivot_longer(
+    cols = !dim1,
+    names_to = "measure",
+    values_to = "engage"
+  ) |>
+  
+  ggplot2::ggplot(ggplot2::aes(dim1,engage))+
+  
+  ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = measure),
+                    position = "dodge",
+                    stat = "identity")+
+  ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
+  ggplot2::labs(
+    y = "Engagement (%)",
+    x = NULL
+  )+
+  ggplot2::scale_fill_manual(
+    values=c(Max = "#2C3E50", 
+             Mean = "#18BC9C",
+             Median = "#F39C12"
+             #, `Your School` = "#217DBB"
+             )
+    )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 15),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.position = "top"
+    )
+)
 ```
 
   </div>
   
   <div class="col-sm-5">
+  
+<!-- Q for Nate: what do we consider a missing value here? I'm only
+considering whether they answered total engagement for "TOTAL (all classes)"--> 
 
-```{r sengage-year-table}
-plot(cars)
-```
+`r nTab(question_list$Q21$Q21_5_4)`
+
+\n \n Note: Engagement \n includes appointments \n w/ professional staff \n and peer advisors and \n programs and events
 
   </div>
   

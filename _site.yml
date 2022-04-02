@@ -4,6 +4,6 @@ navbar:
   left:
     - text: "Home"
       href: index.html
-    - text: "Report"
+    - text: "General Report"
       href: test_report.html
 output_dir: "docs"
