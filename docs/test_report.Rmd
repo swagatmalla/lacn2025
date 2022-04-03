@@ -299,9 +299,9 @@ question_list$Q21 |>
     x = NULL
   )+
   ggplot2::scale_fill_manual(
-    values=c(Max = "#2C3E50", 
-             Mean = "#18BC9C",
-             Median = "#F39C12"
+    values=c(Max = "#76828E", 
+             Mean = "#6AD4BF",
+             Median = "#F7BF66"
              #, `Your School` = "#217DBB"
              )
     )+
@@ -337,7 +337,49 @@ considering whether they answered total engagement for "TOTAL (all classes)"-->
   <div class="col-sm-7">
 
 ```{r sengage-type-plot}
-plot(cars)
+sengage_type_data |>
+
+  dplyr::select(!c(main:sub2,Question))  |>
+  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
+  
+  dplyr::group_by(dim2) |>
+  dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
+                   Median = median(engage, na.rm = TRUE),
+                   Max = max(engage, na.rm = TRUE),
+                   #`Your School` = mean(engage[`Institution Name`== params$college], na.rm = TRUE)
+  ) |>
+  tidyr::pivot_longer(
+    cols = !dim2,
+    names_to = "measure",
+    values_to = "engage"
+  ) |>
+  
+  ggplot2::ggplot(ggplot2::aes(dim2,engage))+
+  
+  ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = measure),
+                    position = "dodge",
+                    stat = "identity")+
+  ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
+  scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
+  ggplot2::labs(
+    y = "Engagement (%)",
+    x = NULL
+  )+
+  ggplot2::scale_fill_manual(
+    values=c(Max = "#76828E", 
+             Mean = "#6AD4BF",
+             Median = "#F7BF66"
+             #, `Your School` = "#217DBB"
+    )
+  )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 14),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.position = "top"
+  )
 ```
 
   </div>
