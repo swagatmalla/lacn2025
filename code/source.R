@@ -9,6 +9,7 @@ source(file.path(code_location, "4_analysis.R"))
 
 source(file.path(code_location, "viz_intro.R"))
 source(file.path(code_location, "viz_reporting.R"))
+source(file.path(code_location, "viz_engagement.R"))
 
 # save global environment in project directory
 save.image(file = "lacn.RData")

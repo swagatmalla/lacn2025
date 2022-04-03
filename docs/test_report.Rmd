@@ -7,8 +7,6 @@ output:
     toc: true
     toc_float: true
     toc_depth: 3
-params:
-  college: college
 ---
 
 ```{r setup, include=FALSE}
@@ -401,7 +399,36 @@ plot(cars)
   <div class="col-sm-7">
 
 ```{r appt-student-dist-plot}
-plot(cars)
+appt_student_data |>
+ggplot2::ggplot(ggplot2::aes(`Institution Name`,Appt))+
+ggplot2::geom_hline(yintercept = seq, colour = "grey")+
+ggplot2::geom_bar(ggplot2::aes(fill = Year),
+position = "stack",
+stat = "identity") +
+#  ggrepel::geom_text_repel(data = subset(appt_student_data,
+#                                          `Institution Name` == params$college & Year == "Sophomore"),
+#                            mapping = ggplot2::aes(label = `Institution Name`),
+#                            min.segment.length = 0,
+#                            hjust = -10)+
+ggplot2::scale_y_continuous(breaks = seq) +
+ggplot2::labs(
+y = "Total",
+x = NULL
+)+
+ggplot2::scale_fill_manual(
+values=c(`First-Year` = "#76828E",
+Sophomore = "grey",
+Junior = "#6AD4BF",
+Senior = "#F7BF66"))+
+ggplot2::theme(
+text = ggplot2::element_text(size = 14),
+axis.text.x = ggplot2::element_blank(),
+axis.ticks = ggplot2::element_blank(),
+panel.background = ggplot2::element_blank(),
+legend.title = ggplot2::element_blank(),
+legend.position = "top"
+)
+
 ```
 
   </div>
@@ -409,7 +436,15 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r appt-student-dist-table}
-plot(cars)
+
+# How should we handle missing values?
+tableViz(
+  data = appt_student_data |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(Appt = sum(Appt)),
+  
+  var = "Appt"
+)
 ```
 
   </div>
