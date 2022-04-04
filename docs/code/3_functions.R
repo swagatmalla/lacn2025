@@ -328,7 +328,7 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem) {
   
 }
 
-tableViz <- function(data, var, college = NULL) {
+tableViz <- function(data, var, college = NULL, ...) {
   
   if(missing(college)){
     labels <- c('N','Mean','Median','Max','Min')
@@ -339,10 +339,10 @@ tableViz <- function(data, var, college = NULL) {
   variable <- tibble::deframe(data[var])
   
   N <- as.integer(sum(!is.na(variable)))
-  Mean <- mean(variable)
-  Median <- median(variable)
-  Max <- max(variable)
-  Min <- min(variable)
+  Mean <- mean(variable, ...)
+  Median <- median(variable, ...)
+  Max <- max(variable, ...)
+  Min <- min(variable, ...)
   
   if(!missing(college)){
     College <- data |> 

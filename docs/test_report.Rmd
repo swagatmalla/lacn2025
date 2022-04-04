@@ -34,7 +34,7 @@ load("../lacn.RData")
   <div class="col-sm-7">
 
 ```{r enroll-plot}
-enrollPlot(college = params$college) 
+enrollPlot() 
 ```
 
   </div>
@@ -57,7 +57,7 @@ tableViz(enroll_data, var = "enroll")
   <div class="col-sm-7">
 
 ```{r endow-plot}
-endowPlot(college = params$college) 
+endowPlot() 
 ```
 
   </div>
@@ -85,7 +85,7 @@ tableViz(endow_data, var = "endow")
 
 ```{r reporting-plot}
 
-singlePlot(reporting_data, q = "Q2", college = params$college,
+singlePlot(reporting_data, q = "Q2",
            string_rem = ":")
 
 ```
@@ -109,7 +109,7 @@ singlePlot(reporting_data, q = "Q2", college = params$college,
 
 ```{r steps-plot}
 
-  singlePlot(steps_data, q = "Q3", college = params$college,
+  singlePlot(steps_data, q = "Q3",
            string_rem = "[:blank:]\\(.+\\)")
 
 ```
@@ -132,7 +132,7 @@ singlePlot(reporting_data, q = "Q2", college = params$college,
 
 ```{r student-staff-plot}
 
-matrixPlot(student_staff_data, college = params$college)
+matrixPlot(student_staff_data)
 
 ```
 
@@ -158,7 +158,7 @@ tableViz(data = student_staff_data,'n')
   <div class="col-sm-7">
 
 ```{r prof-plot}
-matrixPlot(prof_staff_data, college = params$college)
+matrixPlot(prof_staff_data)
 ```
 
   </div>
@@ -181,7 +181,7 @@ tableViz(prof_staff_data, var = 'n')
 
 ```{r sp-ratio-plot}
 
-matrixPlot(student_prof_ratio, college = params$college)
+matrixPlot(student_prof_ratio)
 
 ```
 
@@ -206,7 +206,7 @@ tableViz(student_prof_ratio, var='n')
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data, college = params$college)
+matrixPlot(prof_advising_data)
 ```
 
   </div>
@@ -228,7 +228,7 @@ tableViz(prof_advising_data, 'n')
   <div class="col-sm-7">
 
 ```{r prof-employer-plot}
-matrixPlot(prof_employer_data, college = params$college)
+matrixPlot(prof_employer_data)
 ```
 
   </div>
@@ -400,34 +400,33 @@ plot(cars)
 
 ```{r appt-student-dist-plot}
 appt_student_data |>
-ggplot2::ggplot(ggplot2::aes(`Institution Name`,Appt))+
-ggplot2::geom_hline(yintercept = seq, colour = "grey")+
-ggplot2::geom_bar(ggplot2::aes(fill = Year),
-position = "stack",
-stat = "identity") +
+  ggplot2::ggplot(ggplot2::aes(`Institution Name`,Appt))+
+  ggplot2::geom_hline(yintercept = seq, colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = Year),
+                    position = "stack",
+                    stat = "identity") +
 #  ggrepel::geom_text_repel(data = subset(appt_student_data,
 #                                          `Institution Name` == params$college & Year == "Sophomore"),
 #                            mapping = ggplot2::aes(label = `Institution Name`),
 #                            min.segment.length = 0,
 #                            hjust = -10)+
-ggplot2::scale_y_continuous(breaks = seq) +
-ggplot2::labs(
-y = "Total",
-x = NULL
-)+
-ggplot2::scale_fill_manual(
-values=c(`First-Year` = "#76828E",
-Sophomore = "grey",
-Junior = "#6AD4BF",
-Senior = "#F7BF66"))+
-ggplot2::theme(
-text = ggplot2::element_text(size = 14),
-axis.text.x = ggplot2::element_blank(),
-axis.ticks = ggplot2::element_blank(),
-panel.background = ggplot2::element_blank(),
-legend.title = ggplot2::element_blank(),
-legend.position = "top"
-)
+  ggplot2::scale_y_continuous(breaks = seq) +
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  ggplot2::scale_fill_manual(
+    values=c(`First-Year` = "#76828E",
+             Sophomore = "grey",
+             Junior = "#6AD4BF",
+             Senior = "#F7BF66"))+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 14),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.position = "top"
+    )
 
 ```
 
@@ -437,7 +436,7 @@ legend.position = "top"
 
 ```{r appt-student-dist-table}
 
-# How should we handle missing values?
+# How should we handle missing values and zeros?
 tableViz(
   data = appt_student_data |>
     dplyr::group_by(`Institution Name`) |>
@@ -479,8 +478,32 @@ plot(cars)
 
   <div class="col-sm-7">
 
-```{r appt-alum-plot}
-plot(cars)
+```{r appt-alum-plot, warning=FALSE}
+appt_alum_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,engage),engage))+
+  ggplot2::geom_hline(yintercept = c(0,250,500,750,1000), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = dim2),
+                    position = "stack",
+                    stat = "identity")+
+  ggplot2::labs(
+    y = "Total",
+    x = NULL,
+    caption = "*In-Person, Phone, or Video Chat"
+  )+
+  ggplot2::scale_fill_manual(
+    values = c(
+      `Appointments*` = "#F7BF66",
+      `Email Consultations` = "#6AD4BF"
+    )
+  )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 15),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.position = "top"
+  )
 ```
 
   </div>
@@ -488,7 +511,14 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r appt-alum-table}
-plot(cars)
+tableViz(
+  data = appt_alum_data |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(engage = sum(engage)),
+  
+  var = "engage", 
+  na.rm = TRUE
+  )
 ```
 
   </div>
