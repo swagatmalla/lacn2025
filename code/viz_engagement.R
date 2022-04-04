@@ -4,6 +4,42 @@
 
 ## See sengage-year-plot code chunk
 
+sengage_year_data <- question_list$Q21 |>
+  tidyr::pivot_longer(
+    cols = !(1:2),
+    names_to = c('main','sub1','sub2'),
+    values_to = "engage",
+    names_sep = "_"
+  ) |>
+  dplyr::filter(sub2==4) |>
+  dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
+  dplyr::left_join(
+    keyFunction('Q21',dim1)
+  ) |>
+  dplyr::select(!c(main:sub2,Question))  |>
+  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
+  dplyr::group_by(dim1) |>
+  dplyr::summarise(Mean = mean(engage), 
+                   Median = median(engage),
+                   Max = max(engage),
+                   #`Your School` = mean(engage[`Institution Name`==params$college])
+  ) |>
+  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
+  tidyr::pivot_longer(
+    cols = !dim1,
+    names_to = "measure",
+    values_to = "engage"
+  ) |>
+  
+  dplyr::mutate(dim1 = factor(dim1, levels = c(
+    "First-Year",
+    "Sophomore",
+    "Junior",
+    "Senior",
+    "Total\n (all classes)"
+  )
+  )
+  )
 
 
 
@@ -110,7 +146,7 @@ appt_alum_data <- question_list$Q20 |>
   
   dplyr::mutate(dim2 = stringr::str_to_title(
     stringr::str_remove(dim2, "Total # of[:blank:]"))
-    )|>
+  )|>
   
   dplyr::mutate(dim2 = stringr::str_replace(dim2, "[:blank:]\\(In-Person, Phone, Video Chat\\)","\\*")) |>
   
@@ -119,9 +155,8 @@ appt_alum_data <- question_list$Q20 |>
   #filter to only alumni
   dplyr::filter(Year == "Alumni")
 
-  
-  
 
-  
-  
+
+
+
   

@@ -256,35 +256,7 @@ tableViz(prof_employer_data, 'n')
 
 ```{r sengage-year-plot}
 
-suppressMessages(
-  
-question_list$Q21 |>
-  tidyr::pivot_longer(
-    cols = !(1:2),
-    names_to = c('main','sub1','sub2'),
-    values_to = "engage",
-    names_sep = "_"
-  ) |>
-  dplyr::filter(sub2==4) |>
-  dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
-    dplyr::left_join(
-      keyFunction('Q21',dim1)
-    ) |>
-  dplyr::select(!c(main:sub2,Question))  |>
-  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
-  dplyr::group_by(dim1) |>
-  dplyr::summarise(Mean = mean(engage), 
-                   Median = median(engage),
-                   Max = max(engage),
-                   #`Your School` = mean(engage[`Institution Name`==params$college])
-                   ) |>
-  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
-  tidyr::pivot_longer(
-    cols = !dim1,
-    names_to = "measure",
-    values_to = "engage"
-  ) |>
-  
+sengage_year_data |>
   ggplot2::ggplot(ggplot2::aes(dim1,engage))+
   
   ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
@@ -310,7 +282,6 @@ question_list$Q21 |>
     legend.title = ggplot2::element_blank(),
     legend.position = "top"
     )
-)
 ```
 
   </div>
