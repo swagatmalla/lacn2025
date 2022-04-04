@@ -502,8 +502,24 @@ tableViz(
 
   <div class="col-sm-7">
 
-```{r appt-fte-plot}
-plot(cars)
+```{r appt-fte-plot, warning=FALSE}
+appt_fte_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
+  ggplot2::geom_hline(yintercept = c(0,200,400,600,800), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
+  
+  ggplot2::labs(
+    x = NULL,
+    y = "Appt. to FTE Ratio",
+    caption = "Note: includes only institutions that\n reported both appointments and FTE"
+  )+
+  
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 15),
+    panel.background = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank()
+  )
 ```
 
   </div>
@@ -511,9 +527,8 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r appt-fte-table}
-plot(cars)
+tableViz(appt_fte_data, var = "ratio", na.rm = TRUE)
 ```
-
   </div>
   
 </div>

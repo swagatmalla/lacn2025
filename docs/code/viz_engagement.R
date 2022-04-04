@@ -157,6 +157,25 @@ appt_alum_data <- question_list$Q20 |>
 
 
 
+#### Prof Staff Appts + Emails per FTE ####
+
+
+
+appt_fte_data <- question_list$Q20 |> 
+  tidyr::pivot_longer(
+    cols = !(1:2),
+    names_to = "Question",
+    values_to = "Appt"
+  ) |>
+  dplyr::mutate(Appt = as.numeric(Appt)) |>
+  
+  dplyr::group_by(`Institution Name`) |>
+  dplyr::summarise(Appt = sum(Appt)) |>
+  
+  dplyr::left_join(prof_staff_data) |>
+  
+  dplyr::mutate(ratio = Appt/n)
+  
 
 
   
