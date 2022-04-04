@@ -1,6 +1,6 @@
-name: "Test Report"
+name: "LACN Survey"
 navbar:
-  title: "Test Report"
+  title: "LACN Survey"
   left:
     - text: "Home"
       href: index.html
