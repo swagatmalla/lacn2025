@@ -207,7 +207,7 @@ Script: **5_viz.R**
 
 *In progress. Please check back later.*
 
-![example-plot](output/rank_plot.PNG)
+![example-plot](images/rank_plot.PNG)
 
 # IPEDS Data
 
