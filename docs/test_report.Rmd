@@ -371,8 +371,9 @@ plot(cars)
 
 ```{r appt-student-dist-plot}
 appt_student_data |>
-  ggplot2::ggplot(ggplot2::aes(`Institution Name`,Appt))+
-  ggplot2::geom_hline(yintercept = seq, colour = "grey")+
+  
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, Appt) ,Appt))+
+  ggplot2::geom_hline(yintercept = c(0,2000,4000,6000), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = Year),
                     position = "stack",
                     stat = "identity") +
@@ -381,7 +382,7 @@ appt_student_data |>
 #                            mapping = ggplot2::aes(label = `Institution Name`),
 #                            min.segment.length = 0,
 #                            hjust = -10)+
-  ggplot2::scale_y_continuous(breaks = seq) +
+  ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
   ggplot2::labs(
     y = "Total",
     x = NULL)+
@@ -451,8 +452,8 @@ plot(cars)
 
 ```{r appt-alum-plot}
 appt_alum_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,engage),engage))+
-  ggplot2::geom_hline(yintercept = c(0,250,500,750,1000), colour = "grey")+
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, engage), engage))+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = dim2),
                     position = "stack",
                     stat = "identity")+
@@ -505,7 +506,7 @@ tableViz(
 ```{r appt-fte-plot}
 appt_fte_data |>
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
-  ggplot2::geom_hline(yintercept = c(0,200,400,600,800), colour = "grey")+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
   ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
   
   ggplot2::labs(

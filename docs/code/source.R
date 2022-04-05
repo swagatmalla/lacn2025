@@ -9,13 +9,18 @@ code_location <- "~/piper analysis/lacn/code"
 source(file.path(code_location, "1_read_data.R"))
 source(file.path(code_location, "2_clean.R"))
 source(file.path(code_location, "3_functions.R"))
-source(file.path(code_location, "4_analysis.R"))
+
+source(file.path(code_location, "99_old_functions.R"))
+source(file.path(code_location, "99_old_analysis.R"))
 
 
 # source viz set-up scripts
-source(file.path(code_location, "viz_intro.R"))
-source(file.path(code_location, "viz_reporting.R"))
-source(file.path(code_location, "viz_engagement.R"))
+source(file.path(code_location, "4_viz_intro.R"))
+source(file.path(code_location, "5_viz_reporting.R"))
+source(file.path(code_location, "6_viz_engagement.R"))
+source(file.path(code_location, "7_viz_budget.R"))
+
+
 
 
 # save global environment in project directory

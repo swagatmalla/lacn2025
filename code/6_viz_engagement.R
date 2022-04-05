@@ -19,9 +19,9 @@ sengage_year_data <- question_list$Q21 |>
   dplyr::select(!c(main:sub2,Question))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
   dplyr::group_by(dim1) |>
-  dplyr::summarise(Mean = mean(engage), 
-                   Median = median(engage),
-                   Max = max(engage),
+  dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
+                   Median = median(engage, na.rm = TRUE),
+                   Max = max(engage, na.rm = TRUE),
                    #`Your School` = mean(engage[`Institution Name`==params$college])
   ) |>
   dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
@@ -100,17 +100,11 @@ appt_student_data <- question_list$Q20 |>
   
   # group and summarise total appts at each college by year
   dplyr::group_by(`Institution Name`, Year) |>
-  dplyr::summarise(Appt = sum(engage))
+  dplyr::summarise(Appt = sum(engage)) |>
+  dplyr::filter(Appt != 0 &!is.na(Appt))
 
 
 # stacked bar chart (see appt-student-dist-plot code chunk)
-
-# specify hline breaks
-seq <- c(0, 
-         ceiling((max(appt_student_data$Appt)*4)/3), 
-         ceiling((2/3)*max(appt_student_data$Appt)*4), 
-         ceiling(max(appt_student_data$Appt)*4)
-)
 
 
 
@@ -151,7 +145,9 @@ appt_alum_data <- question_list$Q20 |>
   dplyr::mutate(engage = as.numeric(engage)) |>
   
   #filter to only alumni
-  dplyr::filter(Year == "Alumni")
+  dplyr::filter(Year == "Alumni",
+                !is.na(engage)
+  )
 
 
 
@@ -171,6 +167,9 @@ appt_fte_data <- question_list$Q20 |>
   dplyr::summarise(Appt = sum(Appt)) |>
   
   dplyr::left_join(prof_staff_data) |>
+  
+  dplyr::filter(Appt != 0 & !is.na(Appt),
+                n != 0 & !is.na(n)) |>
   
   dplyr::mutate(ratio = Appt/n)
 

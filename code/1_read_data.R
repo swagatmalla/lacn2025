@@ -1,12 +1,59 @@
-library(plyr)
 library(tidyverse)
-library(ggalt)
 
 #### ---------- LOAD DATA ------------- ####
-lacn_location <- file.path("~/piper analysis/lacn/data/lacn_2022.csv")
+lacn_location <- file.path("~/piper analysis/lacn/data/lacn_2021.csv")
 
 lacn_master <- readr::read_csv(lacn_location) |>
-  dplyr::slice(-(2:3))
+  dplyr::slice(-(2:3)) |> 
+  dplyr::mutate(
+    `Institution Name` = dplyr::case_when(
+      is.na(`Institution Name`) ~ Q1_2,
+      TRUE ~ `Institution Name`
+    )
+  )
+
+jenny <- lacn_master[lacn_master$Q1_2 == "Mount Holyoke College",] |>
+  tidyr::pivot_longer(
+    cols = !Q1_1,
+    names_to = "questions",
+    values_to = "response"
+  ) |>
+  dplyr::filter(Q1_1 == "Jenny Watermill")
+
+roshonda <- lacn_master[lacn_master$Q1_2 == "Mount Holyoke College",] |>
+  tidyr::pivot_longer(
+    cols = !Q1_1,
+    names_to = "questions",
+    values_to = "response"
+  ) |>
+  dplyr::filter(Q1_1 == "Roshonda DeGraffenreid")
+
+holyoke <- jenny |>
+  dplyr::left_join(roshonda, by = "questions") |> 
+  dplyr::relocate(response.x, .after = "response.y") |>
+  dplyr::rename(roshonda_rep = "response.y",
+                jenny_rep = "response.x") |>
+  dplyr::mutate(
+    responses = dplyr::case_when(
+      stringr::str_detect(questions, "Q24") ~ jenny_rep,
+      TRUE ~ as.character(roshonda_rep)
+    )
+  ) |>
+  dplyr::select(questions,responses) |>
+  
+  tidyr::pivot_wider(
+    names_from = "questions",
+    values_from = "responses"
+  ) |>
+  cbind("Q1_1" = "Roshonda DeGraffenreid") |>
+  dplyr::relocate(Q1_1, .before = "Q1_2")
+
+lacn_master <- lacn_master |>
+  dplyr::filter(`Institution Name` != "Mount Holyoke College") |>
+  rbind(holyoke)
+
+remove(holyoke,jenny,roshonda)
+  
 
 # specify google sheets location
 ss <- "17gmSm6hF_T10sGQAjzDxztzWBsFNpWdfxYZMkZwFvSQ"

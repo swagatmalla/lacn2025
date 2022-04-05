@@ -30,8 +30,19 @@ enrollPlot <- function(data = enroll_data, college = NULL, title = NULL) {
     return(enroll_viz + 
              geom_bar(data = subset(enroll_data, `Institution Name` == college),
                       stat = 'identity', fill = "#217DBB") +
-             geom_label(data = subset(enroll_data, `Institution Name` == college), 
-                        aes(label = `Institution Name`))
+             ggrepel::geom_text_repel(
+               data = subset(
+                 enroll_data,
+                 `Institution Name` == college
+               ),
+               aes(
+                 label=`Institution Name`
+               ),
+               nudge_y=500,
+               color = "black",
+               size = 5
+             )
+             
            )
   } else {
     return(enroll_viz)
@@ -39,7 +50,6 @@ enrollPlot <- function(data = enroll_data, college = NULL, title = NULL) {
   
   
 }
-
 
 #### Endowment Plot ####
 
