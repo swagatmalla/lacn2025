@@ -10,7 +10,7 @@ output:
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = FALSE, message = FALSE)
+knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # load packages
 library(tidyverse)
@@ -449,7 +449,7 @@ plot(cars)
 
   <div class="col-sm-7">
 
-```{r appt-alum-plot, warning=FALSE}
+```{r appt-alum-plot}
 appt_alum_data |>
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,engage),engage))+
   ggplot2::geom_hline(yintercept = c(0,250,500,750,1000), colour = "grey")+
@@ -502,7 +502,7 @@ tableViz(
 
   <div class="col-sm-7">
 
-```{r appt-fte-plot, warning=FALSE}
+```{r appt-fte-plot}
 appt_fte_data |>
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
   ggplot2::geom_hline(yintercept = c(0,200,400,600,800), colour = "grey")+
@@ -540,7 +540,55 @@ tableViz(appt_fte_data, var = "ratio", na.rm = TRUE)
   <div class="col-sm-7">
 
 ```{r exper-learning-plot}
-plot(cars)
+exper_learning_data |>
+  
+  dplyr::mutate(dim1 = stringr::str_replace(dim1,
+                                           "Internship.+research\\)",
+                                           "Internship**")) |>
+  dplyr::group_by(dim1) |>
+  dplyr::summarise(Mean = mean(exper, na.rm = TRUE), 
+                   Median = median(exper, na.rm = TRUE),
+                   Max = max(exper, na.rm = TRUE)
+                   #, `Your School` = mean(exper[`Institution Name`==params$college])
+  ) |>
+  
+  tidyr::pivot_longer(
+    cols = !dim1,
+    names_to = "measure",
+    values_to = "exper"
+  ) |>
+  ggplot2::ggplot(ggplot2::aes(reorder(dim1,-exper),exper))+
+  
+  ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = measure),
+                    stat = "identity",
+                    position = "dodge")+
+  ggplot2::scale_x_discrete(
+    labels = function(x) stringr::str_wrap(x, width = 12)
+    )+
+  ggplot2::labs(
+    x = NULL,
+    y = "% of Students",
+    caption = "*Internship, pre-licensure field experience, mentored experience or similar professional experience\n **Including pre-licensure field experience, NOT including mentored undergraduate research"
+  )+
+  ggplot2::scale_fill_manual(
+    values=c(Max = "#76828E", 
+             Mean = "#6AD4BF",
+             Median = "#F7BF66"
+             #, `Your School` = "#217DBB"
+    )
+  )+
+  ggplot2::theme(
+    plot.caption = ggplot2::element_text(size = 10, 
+                                         margin = ggplot2::margin(t = "10")),
+    text = ggplot2::element_text(size = 15),
+    axis.text.x = ggplot2::element_text(size = 10),
+    panel.background = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    legend.position = "top",
+    legend.title = ggplot2::element_blank()
+  )
+
 ```
 
   </div>
@@ -548,7 +596,13 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r exper-learning-table}
-plot(cars)
+exper_learning_data |>
+  tidyr::pivot_wider(
+    names_from = dim1,
+    values_from = exper
+  ) |>
+  
+  tableViz(var = "Any Experiential Learning*",subtitle = "Any Experiential Learning Only",na.rm = TRUE)
 ```
 
   </div>

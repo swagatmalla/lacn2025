@@ -328,7 +328,7 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem) {
   
 }
 
-tableViz <- function(data, var, college = NULL, ...) {
+tableViz <- function(data, var, college = NULL, title = "Summary", subtitle = NULL, ...) {
   
   if(missing(college)){
     labels <- c('N','Mean','Median','Max','Min')
@@ -361,7 +361,7 @@ tableViz <- function(data, var, college = NULL, ...) {
   return(
     data.frame(labels, stats) |>
       gt::gt() |>
-      gt::tab_header("Summary") |>
+      gt::tab_header(title = title, subtitle = subtitle) |>
       gt::cols_label(labels="",stats="") |>
       gt::fmt_number(
         columns = stats,

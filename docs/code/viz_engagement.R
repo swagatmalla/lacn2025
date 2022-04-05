@@ -1,4 +1,4 @@
-
+library(tidyverse)
 #### Student Engagement by Class Year ####
 
 
@@ -36,10 +36,8 @@ sengage_year_data <- question_list$Q21 |>
     "Sophomore",
     "Junior",
     "Senior",
-    "Total\n (all classes)"
-  )
-  )
-  )
+    "Total\n (all classes)"))
+    )
 
 
 
@@ -175,7 +173,26 @@ appt_fte_data <- question_list$Q20 |>
   dplyr::left_join(prof_staff_data) |>
   
   dplyr::mutate(ratio = Appt/n)
-  
 
 
+
+
+#### Experiential Learning ####
+
+exper_learning_data <- question_list$Q22 |>
+  tidyr::pivot_longer(
+    cols = !(1:2),
+    names_to = "Question",
+    values_to = "exper"
+  ) |>
+  #dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
+  dplyr::left_join(
+    keyFunction('Q22',dim1)
+  ) |>
+  dplyr::select(`Institution Name`,dim1,exper) |>
+  dplyr::mutate(exper = as.numeric(exper)) |>
   
+  dplyr::mutate(dim1 = stringr::str_replace(dim1,
+                                            "ANY[:blank:].+$",
+                                            "Any Experiential Learning*"))
+
