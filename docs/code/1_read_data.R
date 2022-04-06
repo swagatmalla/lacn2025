@@ -63,18 +63,18 @@ googlesheets4::gs4_auth(email = "gold1@stolaf.edu", token=ss)
 
 
 #### ---------- CREATE RESPONSE KEY ----------- ####
-response_key_messy <- lacn_master |>
-  dplyr::select(Q1_1:Q25) |>
-  dplyr::slice(1L)|>
-  tidyr::pivot_longer(
-    cols = dplyr::everything(),
-    names_to = "Question",
-    values_to = "Description"
-  ) |>
-  tidyr::separate(col = Description, into = c("1","2","3","4"), 
-                  sep = " - ", extra = "drop", fill = "right", remove = FALSE) |>
-  tidyr::separate(col = Question, into = c('main','sub','sub2'),
-                  sep = "_", extra = "drop", fill = "right", remove = FALSE)
+#response_key_messy <- lacn_master |>
+#  dplyr::select(Q1_1:Q25) |>
+#  dplyr::slice(1L)|>
+#  tidyr::pivot_longer(
+#    cols = dplyr::everything(),
+#    names_to = "Question",
+#    values_to = "Description"
+#  ) |>
+#  tidyr::separate(col = Description, into = c("1","2","3","4"), 
+#                  sep = " - ", extra = "drop", fill = "right", remove = FALSE) |>
+#  tidyr::separate(col = Question, into = c('main','sub','sub2'),
+#                  sep = "_", extra = "drop", fill = "right", remove = FALSE)
 
 
 #---------------ONLY RUN ONCE----------------------------------
