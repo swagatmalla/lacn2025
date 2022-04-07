@@ -7,6 +7,8 @@ output:
     toc: true
     toc_float: true
     toc_depth: 3
+params:
+  plotfont: "Source Sans Pro"
 ---
 
 ```{r setup, include=FALSE}
@@ -14,6 +16,13 @@ knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # load packages
 library(tidyverse)
+library(showtext)
+library(sysfonts)
+
+# load fonts
+font_add_google(params$plotfont)
+
+showtext_auto()
 
 # load LACN analysis environment
 load("../lacn.RData")
@@ -65,7 +74,7 @@ enroll_data |>
       axis.ticks = element_blank(),
       panel.background = element_blank(),
       plot.margin = unit(c(1,1,1,1), "cm"),
-      text = element_text(size = 15)
+      text = element_text(size = 45, family = params$plotfont)
     )
 ```
 
@@ -107,7 +116,7 @@ endow_data |>
       axis.text.x = element_blank(),
       axis.ticks = element_blank(),
       panel.background = element_blank(),
-      text = element_text(size = 15)
+      text = element_text(size = 45, family = params$plotfont)
       )
 ```
 
@@ -137,7 +146,9 @@ tableViz(endow_data, var = "endow")
 ```{r reporting-plot}
 
 singlePlot(reporting_data, q = "Q2",
-           string_rem = ":")
+           string_rem = ":",
+           size = 45,
+           font = params$plotfont)
 
 ```
 
@@ -161,7 +172,9 @@ singlePlot(reporting_data, q = "Q2",
 ```{r steps-plot}
 
   singlePlot(steps_data, q = "Q3",
-           string_rem = "[:blank:]\\(.+\\)")
+           string_rem = "[:blank:]\\(.+\\)",
+           size = 45,
+           font = params$plotfont)
 
 ```
 
@@ -183,7 +196,9 @@ singlePlot(reporting_data, q = "Q2",
 
 ```{r student-staff-plot}
 
-matrixPlot(student_staff_data)
+matrixPlot(student_staff_data, breaks = c(0,25,50,75,100),
+           font = params$plotfont,
+           size = 45)
 
 ```
 
@@ -209,7 +224,9 @@ tableViz(data = student_staff_data,'n')
   <div class="col-sm-7">
 
 ```{r prof-plot}
-matrixPlot(prof_staff_data)
+matrixPlot(prof_staff_data, breaks = c(0,10,20,30),
+           font = params$plotfont,
+           size = 45)
 ```
 
   </div>
@@ -232,7 +249,9 @@ tableViz(prof_staff_data, var = 'n')
 
 ```{r sp-ratio-plot}
 
-matrixPlot(student_prof_ratio)
+matrixPlot(student_prof_ratio, breaks = c(0,100,200,300,400,500),
+           font = params$plotfont,
+           size = 45)
 
 ```
 
@@ -257,7 +276,9 @@ tableViz(student_prof_ratio, var='n')
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data)
+matrixPlot(prof_advising_data, breaks = c(0,50,100,150,200), 
+           font = params$plotfont,
+           size = 45)
 ```
 
   </div>
@@ -279,7 +300,10 @@ tableViz(prof_advising_data, 'n')
   <div class="col-sm-7">
 
 ```{r prof-employer-plot}
-matrixPlot(prof_employer_data)
+matrixPlot(prof_employer_data,
+           breaks = c(0,25,50,75,100), 
+           font = params$plotfont, 
+           size = 45)
 ```
 
   </div>
@@ -327,8 +351,9 @@ sengage_year_data |>
              )
     )+
   ggplot2::theme(
-    text = ggplot2::element_text(size = 15),
+    text = ggplot2::element_text(size = 45, family = params$plotfont),
     axis.ticks = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(size = 30, lineheight = 0.5),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.position = "top"
@@ -394,8 +419,10 @@ sengage_type_data |>
     )
   )+
   ggplot2::theme(
-    text = ggplot2::element_text(size = 14),
+    text = ggplot2::element_text(size = 45, family = params$plotfont,
+                                 lineheight = .5),
     axis.ticks = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_text(size = 30),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.position = "top"
@@ -443,12 +470,14 @@ appt_student_data |>
              Junior = "#6AD4BF",
              Senior = "#F7BF66"))+
   ggplot2::theme(
-    text = ggplot2::element_text(size = 14),
+    text = ggplot2::element_text(size = 45, 
+                                 family = params$plotfont),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.position = "top"
+    legend.text = ggplot2::element_text(size = 30),
+    legend.position = "right"
     )
 
 ```
@@ -459,7 +488,7 @@ appt_student_data |>
 
 ```{r appt-student-dist-table}
 
-# How should we handle missing values and zeros?
+
 tableViz(
   data = appt_student_data |>
     dplyr::group_by(`Institution Name`) |>
@@ -520,7 +549,7 @@ appt_alum_data |>
     )
   )+
   ggplot2::theme(
-    text = ggplot2::element_text(size = 15),
+    text = ggplot2::element_text(size = 45, family = params$plotfont),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
@@ -567,7 +596,8 @@ appt_fte_data |>
   )+
   
   ggplot2::theme(
-    text = ggplot2::element_text(size = 15),
+    text = ggplot2::element_text(size = 45, family = params$plotfont,
+                                 lineheight = .5),
     panel.background = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_blank()
@@ -631,10 +661,11 @@ exper_learning_data |>
     )
   )+
   ggplot2::theme(
-    plot.caption = ggplot2::element_text(size = 10, 
+    plot.caption = ggplot2::element_text(size = 20, 
                                          margin = ggplot2::margin(t = "10")),
-    text = ggplot2::element_text(size = 15),
-    axis.text.x = ggplot2::element_text(size = 10),
+    text = ggplot2::element_text(size = 45, family = params$plotfont,
+                                 lineheight = .5),
+    axis.text.x = ggplot2::element_text(size = 25),
     panel.background = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     legend.position = "top",

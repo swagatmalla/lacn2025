@@ -55,13 +55,33 @@ rankViz <- function(college) {
   
 }
 
-matrixPlot <- function(data, college, title=NULL) {
+matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Lato", size = 45) {
+  
+  sysfonts::font_add_google(font)
+  
+  showtext::showtext_auto()
+  
+  if(!missing(breaks)) {
+    
+    stopifnot(length(breaks) > 1)
+    
+  }
   
   
-  seq <- c(0, 
-           ceiling(max(data['n'])/3), 
-           ceiling((2/3)*max(data['n'])), 
-           ceiling(max(data['n'])))
+  if(missing(breaks)) {
+    
+    seq <- c(0, 
+             ceiling(max(data['n'])/3), 
+             ceiling((2/3)*max(data['n'])), 
+             ceiling(max(data['n']))
+             )
+  
+  } else {
+    
+    seq <- breaks
+    
+    }
+
   
   plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes(reorder(`Institution Name`,n),n))+
     ggplot2::geom_hline(yintercept = seq,
@@ -77,7 +97,7 @@ matrixPlot <- function(data, college, title=NULL) {
       axis.text.x = ggplot2::element_blank(),
       axis.ticks = ggplot2::element_blank(),
       panel.background = ggplot2::element_blank(),
-      text = element_text(size = 15)
+      text = element_text(size = size, family = font)
     )
   
   
@@ -91,7 +111,8 @@ matrixPlot <- function(data, college, title=NULL) {
       plot + 
         ggplot2::geom_bar(data = indiv, stat = 'identity', fill = "#217DBB")+
         ggplot2::geom_label(data = indiv,
-                            ggplot2::aes(label = `Institution Name`))
+                            ggplot2::aes(label = `Institution Name`),
+                            label.size = 1)
     )
     
     
@@ -103,7 +124,7 @@ matrixPlot <- function(data, college, title=NULL) {
   
 }
 
-singlePlot <- function(data, q, college=NULL, title = NULL, string_rem) {
+singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "Lato", size = 45, lineheight = 0.5) {
   
   viz <- ggplot2::ggplot(data = data, 
                          mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
@@ -121,7 +142,7 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem) {
     ggplot2::theme(
       axis.ticks = ggplot2::element_blank(),
       panel.background = ggplot2::element_blank(),
-      text = element_text(size = 15)
+      text = element_text(size = size, family = font, lineheight = lineheight)
     )
   
   if(!missing(college)) {
