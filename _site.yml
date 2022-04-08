@@ -6,4 +6,17 @@ navbar:
       href: index.html
     - text: "General Report"
       href: test_report.html
+    - text: "Custom Reports"
+      menu:
+        - text: "Brandeis College"
+          href: lacn-BrandeisCollege.html
+        - text: "College of the Holy Cross"
+          href: lacn-CollegeoftheHolyCross.html
+        - text: "Franklin and Marshall College"
+          href: lacn-FranklinandMarshallCollege.html
+        - text: "Vassar College"
+          href: lacn-VassarCollege.html
+        - text: "Williams College"
+          href: lacn-WilliamsCollege.html
+        
 output_dir: "docs"
