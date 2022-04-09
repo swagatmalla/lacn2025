@@ -701,9 +701,32 @@ exper_learning_data |>
 <div class="row">
 
   <div class="col-sm-7">
+```{r}
+funding_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,total_mil),
+                               total_mil, fill = dim1))+
+  ggplot2::geom_hline(yintercept = c(0,2,4,6), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", position = "stack")+
+  ggplot2::labs(
+    x = NULL,
+    y = "Total (in millions)"
+  )+
+  ggplot2::scale_fill_manual(
+    values=c(`Endowed Funds` = "#6AD4BF",
+             `Expendable Gifts` = "grey",
+             Other = "#F7BF66"
+             #, `Your School` = "#217DBB"
+    )
+  )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 35, family = params$plotfont,
+                                 lineheight = .5),
+    panel.background = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank()
+  )
 
-```{r total-funding-plot}
-plot(cars)
 ```
 
   </div>
@@ -711,21 +734,52 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r total-funding-table}
-plot(cars)
+
+tableViz(
+  data = funding_data |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(total = sum(total)),
+  
+  var = 'total'
+)
+
 ```
 
   </div>
   
 </div>
 
-### Endowed Funds
+### Expenditure by Funding Source
 
 <div class="row">
 
   <div class="col-sm-7">
 
-```{r endow-fund-plot}
-plot(cars)
+```{r expend-plot}
+expend_data |>
+  ggplot2::ggplot(mapping = ggplot2::aes(reorder(dim2, -mean_thou), mean_thou, fill = dim1))+
+  ggplot2::geom_hline(yintercept= seq(0, 400, by = 100), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", position = "stack")+
+  ggplot2::labs(
+    x = "Expenditure Type",
+    y = "Average Expenditure\n (in thousands)"
+  )+
+  ggplot2::scale_y_continuous(labels = c(0,100,200,300,"$400"))+
+  ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
+  ggplot2::scale_fill_manual(
+    name = "Funding Source",
+    values=c(`Endowed Funds` = "#6AD4BF",
+             `Expendable Gifts` = "grey",
+             Other = "#F7BF66"
+             #, `Your School` = "#217DBB"
+    )
+  )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 45, family = params$plotfont,
+                                 lineheight = 0.5),
+    panel.background = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank()
+  )
 ```
 
   </div>
