@@ -749,36 +749,38 @@ tableViz(
   
 </div>
 
-### Expenditure by Funding Source
+### Endowed Funds
 
 <div class="row">
 
   <div class="col-sm-7">
 
-```{r expend-plot}
-expend_data |>
-  ggplot2::ggplot(mapping = ggplot2::aes(reorder(dim2, -mean_thou), mean_thou, fill = dim1))+
-  ggplot2::geom_hline(yintercept= seq(0, 400, by = 100), colour = "grey")+
-  ggplot2::geom_bar(stat = "identity", position = "stack")+
+```{r endow-fund-plot}
+endow_exp_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil, fill = dim2))+
+  ggplot2::geom_hline(yintercept = c(0,0.5,1,1.5,2), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", position = "stack") +
   ggplot2::labs(
-    x = "Expenditure Type",
-    y = "Average Expenditure\n (in thousands)"
+    y = "Total (in millions)",
+    x = NULL
   )+
-  ggplot2::scale_y_continuous(labels = c(0,100,200,300,"$400"))+
-  ggplot2::scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
+  
+  ggplot2::scale_y_continuous(labels = c("0","0.5","1","1.5","$2"))+
+  
   ggplot2::scale_fill_manual(
-    name = "Funding Source",
-    values=c(`Endowed Funds` = "#6AD4BF",
-             `Expendable Gifts` = "grey",
-             Other = "#F7BF66"
-             #, `Your School` = "#217DBB"
+    values = c(
+      `Funded Internships` = "#6AD4BF",
+      Other = "#F7BF66"
     )
   )+
+  
   ggplot2::theme(
-    text = ggplot2::element_text(size = 45, family = params$plotfont,
-                                 lineheight = 0.5),
+    text = ggplot2::element_text(family = params$plotfont, size = 35),
     panel.background = ggplot2::element_blank(),
-    axis.ticks = ggplot2::element_blank()
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 30)
   )
 ```
 
@@ -787,7 +789,11 @@ expend_data |>
   <div class="col-sm-5">
 
 ```{r endow-fund-table}
-plot(cars)
+tableViz(data = endow_exp_data |>
+           dplyr::group_by(`Institution Name`) |>
+           dplyr::summarise(amount = sum(amount)), 
+         
+         var = 'amount')
 ```
 
   </div>
@@ -801,7 +807,32 @@ plot(cars)
   <div class="col-sm-7">
 
 ```{r expend-gift-plot}
-plot(cars)
+gift_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil, fill = dim2))+
+  ggplot2::geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", position = "stack")+
+  ggplot2::labs(
+    y = "Total (in millions)",
+    x = NULL
+  )+
+  
+  ggplot2::scale_y_continuous(labels = c("0","1","2","$3"))+
+  
+  ggplot2::scale_fill_manual(
+    values = c(
+      `Funded Internships` = "#6AD4BF",
+      Other = "#F7BF66"
+    )
+  )+
+  
+  ggplot2::theme(
+    text = ggplot2::element_text(family = params$plotfont, size = 35),
+    panel.background = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 30)
+  )
 ```
 
   </div>
@@ -809,7 +840,10 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r expend-gift-table}
-plot(cars)
+gift_data |>
+  dplyr::group_by(`Institution Name`) |>
+  dplyr::summarise(amount = sum(amount)) |>
+  tableViz(var = "amount")
 ```
 
   </div>

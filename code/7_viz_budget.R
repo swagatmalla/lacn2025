@@ -35,24 +35,111 @@ funding_data <- question_list$Q24 |>
 
 
 
-expend_data <- all_list$matrix$Q24 |>
+#### Endowed Funds ####
+
+endow_exp_data <- question_list$Q24 |>
   tidyr::pivot_longer(
-    cols = !dim2,
-    names_to = "dim1",
-    values_to = "mean"
+    cols = !(1:2),
+    names_to = "Question",
+    values_to = "amount"
   ) |>
-  dplyr::filter(dim2 != "Total") |>
+  dplyr::left_join(
+    keyFunction('Q24',dim1,dim2)
+  ) |>
   dplyr::mutate(
     dim1 = stringr::str_to_title(
       stringr::str_remove(dim1, "Income from[:blank:]")
-    ),
-    dim2 = stringr::str_to_title(
-      stringr::str_remove(dim2,
-                          "Amount utilized for[:blank:]"
-                          )
       ),
-    dim2 = stringr::str_remove(dim2, "[:blank:]\\([:symbol:]\\)"),
-    mean_thou = mean/1000
+    amount = as.numeric(amount)
+    ) |>
+  
+  dplyr::filter(dim1 == "Endowed Funds" & dim2 != "Total") |>
+  
+  dplyr::group_by(`Institution Name`, dim2) |>
+  dplyr::summarise(amount = sum(amount)) |>
+  
+  tidyr::pivot_wider(
+    names_from = dim2,
+    values_from = amount
+  ) |>
+  
+  dplyr::filter(
+    dplyr::if_any(`Amount utilized for funded internships ($)`:`Other ($)`,
+                  ~ .x > 0 & !is.na(.x)
+                  )
+    ) |>
+  
+  tidyr::pivot_longer(
+    cols = !(1),
+    names_to = "dim2",
+    values_to = "amount"
+  ) |>
+  
+  dplyr::mutate(amount_mil = amount/1e+06,
+                dim2 = stringr::str_to_title(
+                  stringr::str_remove(dim2, 
+                                      "Amount.+for[:blank:]"
+                                      )
+                  ),
+                dim2 = stringr::str_remove(dim2,
+                                           "[:blank:]\\([:symbol:]\\)"
+                                           )
+                )
+                
+
+
+
+#### Expendable Gifts ####
+
+gift_data <- question_list$Q24 |>
+  tidyr::pivot_longer(
+    cols = !(1:2),
+    names_to = "Question",
+    values_to = "amount"
+  ) |>
+  dplyr::left_join(
+    keyFunction('Q24',dim1,dim2)
+  ) |>
+  
+  dplyr::mutate(amount = as.numeric(amount))|>
+  
+  dplyr::group_by(`Institution Name`, dim2) |>
+  dplyr::summarise(amount = sum(amount)) |>
+  
+  dplyr::mutate(dim2 = stringr::str_to_title(
+                  stringr::str_remove(dim2, 
+                                      "Amount.+for[:blank:]"
+                  )
+                ),
+                dim2 = stringr::str_remove(dim2,
+                                           "[:blank:]\\([:symbol:]\\)"
+                )
+  ) |>
+  
+  tidyr::pivot_wider(
+    names_from = dim2,
+    values_from = amount
+  ) |>
+  
+  dplyr::filter(
+    dplyr::if_any((1:3), ~ .x > 0 & !is.na(.x)
+    )
+  ) |>
+  
+  tidyr::pivot_longer(
+    cols = !(1),
+    names_to = "dim2",
+    values_to = "amount") |>
+  
+  dplyr::filter(dim2 != "Total" & !is.na(amount)) |>
+  
+  dplyr::mutate(
+    amount_mil = amount/1e+06
   )
+
+
+
+
+
 
 
