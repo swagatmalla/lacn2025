@@ -101,7 +101,9 @@ gift_data <- question_list$Q24 |>
     keyFunction('Q24',dim1,dim2)
   ) |>
   
-  dplyr::mutate(amount = as.numeric(amount))|>
+  dplyr::filter(dim1 == "Expendable gifts" & dim2 != "Total") |>
+  
+  dplyr::mutate(amount = tidyr::replace_na(as.numeric(amount),0)) |>
   
   dplyr::group_by(`Institution Name`, dim2) |>
   dplyr::summarise(amount = sum(amount)) |>
@@ -122,7 +124,7 @@ gift_data <- question_list$Q24 |>
   ) |>
   
   dplyr::filter(
-    dplyr::if_any((1:3), ~ .x > 0 & !is.na(.x)
+    dplyr::if_any((1:2), ~ .x > 0 & !is.na(.x)
     )
   ) |>
   
@@ -131,10 +133,8 @@ gift_data <- question_list$Q24 |>
     names_to = "dim2",
     values_to = "amount") |>
   
-  dplyr::filter(dim2 != "Total" & !is.na(amount)) |>
-  
   dplyr::mutate(
-    amount_mil = amount/1e+06
+    amount_thou = amount/1e+03
   )
 
 

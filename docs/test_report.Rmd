@@ -808,15 +808,15 @@ tableViz(data = endow_exp_data |>
 
 ```{r expend-gift-plot}
 gift_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil, fill = dim2))+
-  ggplot2::geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_thou), amount_thou, fill = dim2))+
+  ggplot2::geom_hline(yintercept = c(0,250,500,750,1000), colour = "grey")+
   ggplot2::geom_bar(stat = "identity", position = "stack")+
   ggplot2::labs(
-    y = "Total (in millions)",
+    y = "Total (in thousands)",
     x = NULL
   )+
   
-  ggplot2::scale_y_continuous(labels = c("0","1","2","$3"))+
+  ggplot2::scale_y_continuous(labels = c("0","250","500","750","$1000"))+
   
   ggplot2::scale_fill_manual(
     values = c(
@@ -831,7 +831,7 @@ gift_data |>
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 30)
+    legend.text = ggplot2::element_text(size = 3)
   )
 ```
 
@@ -843,6 +843,7 @@ gift_data |>
 gift_data |>
   dplyr::group_by(`Institution Name`) |>
   dplyr::summarise(amount = sum(amount)) |>
+  dplyr::filter(!is.na(amount) & amount > 0) |>
   tableViz(var = "amount")
 ```
 
