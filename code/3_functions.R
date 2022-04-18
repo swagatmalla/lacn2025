@@ -238,4 +238,65 @@ nTab <- function(var) {
 }
 
 
+# Service/Program Table
+
+serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
+  
+  q_n <- question_list[[q]] |>
+    
+    dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
+    
+    nrow()
+  
+  tab <- data |>
+    
+    gt::gt() |>
+    
+    gt::tab_header(title = title,
+                   subtitle = glue::glue("{subtitle} (n = {q_n})")
+    ) |>
+    gt::cols_label(value = offer,
+                   n = "N",
+                   freq = "Frequency") |>
+    
+    gt::cols_width(
+      value ~ px(500)
+    ) |>
+    
+    gt::cols_align(
+      align = "center",
+      columns = n:freq
+    ) |>
+    
+    gt::tab_style(
+      style = list(
+        cell_fill(color = "aliceblue")),
+      locations = cells_body(
+        columns = everything(),
+        rows = as.numeric(row.names(all_list$multi[[q]])) %% 2 == 0)
+    ) |>
+    
+    gt::tab_style(
+      style = list(
+        cell_text(weight = "bold")
+      ),
+      locations = cells_column_labels(
+        columns = everything()
+      )
+    ) |>
+    
+    gt::tab_style(
+      style = list(
+        cell_text(style = "italic")
+      ),
+      locations = cells_title(groups = "subtitle")
+    )
+  
+  
+  return(tab)
+  
+}
+
+
+
 
