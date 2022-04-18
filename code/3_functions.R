@@ -242,6 +242,10 @@ nTab <- function(var) {
 
 serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
   
+  if(missing(offer)) {
+    warning("Offer missing. Enter program, service, conference, or other.")
+  }
+  
   q_n <- question_list[[q]] |>
     
     dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
@@ -270,26 +274,27 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
     
     gt::tab_style(
       style = list(
-        cell_fill(color = "aliceblue")),
-      locations = cells_body(
-        columns = everything(),
-        rows = as.numeric(row.names(all_list$multi[[q]])) %% 2 == 0)
-    ) |>
+        gt::cell_fill(color = "aliceblue")),
+      locations = gt::cells_body(
+        columns = dplyr::everything(),
+        rows = as.numeric(row.names(data)) %% 2 == 0
+        )
+      ) |>
     
     gt::tab_style(
       style = list(
-        cell_text(weight = "bold")
+        gt::cell_text(weight = "bold")
       ),
-      locations = cells_column_labels(
+      locations = gt::cells_column_labels(
         columns = everything()
       )
     ) |>
     
     gt::tab_style(
       style = list(
-        cell_text(style = "italic")
+        gt::cell_text(style = "italic")
       ),
-      locations = cells_title(groups = "subtitle")
+      locations = gt::cells_title(groups = "subtitle")
     )
   
   

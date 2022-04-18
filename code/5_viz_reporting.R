@@ -82,5 +82,19 @@ prof_employer_data <- question_list$Q8 |>
 
 
 
+#### Conferences #### 
 
+question_list$Q9
+
+all_list$multi$Q9 |>
+  
+  dplyr::filter(n > 1) |>
+  
+  dplyr::mutate(freq = format(round(freq,2), nsmall = 2))|>
+  
+  arrange(-n) |>
+  
+  serviceTab(q = 'Q9', title = "Conferences Attended by Staff", 
+             subtitle = "Conferences with more than one response", 
+             offer = "Conferences")
 
