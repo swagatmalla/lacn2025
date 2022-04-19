@@ -238,4 +238,70 @@ nTab <- function(var) {
 }
 
 
+# Service/Program Table
+
+serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
+  
+  if(missing(offer)) {
+    warning("Offer missing. Enter program, service, conference, or other.")
+  }
+  
+  q_n <- question_list[[q]] |>
+    
+    dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
+    
+    nrow()
+  
+  tab <- data |>
+    
+    gt::gt() |>
+    
+    gt::tab_header(title = title,
+                   subtitle = glue::glue("{subtitle} (n = {q_n})")
+    ) |>
+    gt::cols_label(value = offer,
+                   n = "N",
+                   freq = "Frequency") |>
+    
+    gt::cols_width(
+      value ~ px(500)
+    ) |>
+    
+    gt::cols_align(
+      align = "center",
+      columns = n:freq
+    ) |>
+    
+    gt::tab_style(
+      style = list(
+        gt::cell_fill(color = "aliceblue")),
+      locations = gt::cells_body(
+        columns = dplyr::everything(),
+        rows = as.numeric(row.names(data)) %% 2 == 0
+        )
+      ) |>
+    
+    gt::tab_style(
+      style = list(
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_column_labels(
+        columns = everything()
+      )
+    ) |>
+    
+    gt::tab_style(
+      style = list(
+        gt::cell_text(style = "italic")
+      ),
+      locations = gt::cells_title(groups = "subtitle")
+    )
+  
+  
+  return(tab)
+  
+}
+
+
+
 

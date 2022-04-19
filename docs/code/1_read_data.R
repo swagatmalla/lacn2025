@@ -1,7 +1,8 @@
 library(tidyverse)
 
 #### ---------- LOAD DATA ------------- ####
-lacn_location <- file.path("~/piper analysis/lacn/data/lacn_2021.csv")
+list.files("data")
+lacn_location <- file.path("~/piper analysis/lacn/data","OpsSurveyRawData4.14.22.csv")
 
 lacn_master <- readr::read_csv(lacn_location) |>
   dplyr::slice(-(2:3)) |> 

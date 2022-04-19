@@ -132,6 +132,19 @@ student_para_data <- question_list[['Q6']] |>
   dplyr::filter(n > 0 & !is.na(n))
 
 
+#### Student to Student Staff Ratio ####
+
+student_stustaff_ratio <- student_staff_data |>
+  
+  left_join(question_list$Q6[1:2]) |>
+  
+  mutate(ratio = as.numeric(`Undergraduate enrollment`)/n) |>
+  
+  dplyr::select(`Institution Name`,
+                ratio) |>
+  dplyr::mutate(n=ratio, .keep = "unused") |>
+  dplyr::filter(!is.na(n) & n > 0 & !is.infinite(n))
+
 #### Professional Staff ####
 
 prof_staff_data <- question_list[['Q7']] |>

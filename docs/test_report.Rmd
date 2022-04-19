@@ -217,6 +217,65 @@ tableViz(data = student_staff_data,'n')
 
 </div>
 
+### Student Staff (paraprofessional)
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r student-para-plot}
+
+matrixPlot(student_para_data, breaks = c(0,25,50,75,100),
+           font = params$plotfont,
+           size = 45)
+
+```
+
+  </div>
+
+
+  <div class="col-sm-5">
+
+```{r student-para-table}
+
+tableViz(data = student_para_data,'n')
+
+```
+
+  </div>
+
+</div>
+
+### Student to Student Staff Ratio
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r ss-ratio-plot}
+
+matrixPlot(student_stustaff_ratio, breaks = c(0,250,500,750,1000),
+           font = params$plotfont,
+           size = 45)
+
+```
+
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r ss-ratio-table}
+
+tableViz(student_stustaff_ratio, var='n')
+
+```
+
+  </div>
+  
+</div>
+
+
+
 ### Professional (FTE)
 
 <div class="row">
@@ -809,14 +868,15 @@ tableViz(data = endow_exp_data |>
 ```{r expend-gift-plot}
 gift_data |>
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_thou), amount_thou, fill = dim2))+
-  ggplot2::geom_hline(yintercept = c(0,250,500,750,1000), colour = "grey")+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
   ggplot2::geom_bar(stat = "identity", position = "stack")+
   ggplot2::labs(
     y = "Total (in thousands)",
     x = NULL
   )+
   
-  ggplot2::scale_y_continuous(labels = c("0","250","500","750","$1000"))+
+  ggplot2::scale_y_continuous(breaks = c(0,500,1000,1500),
+                              labels = c("0","500","1000","$1500"))+
   
   ggplot2::scale_fill_manual(
     values = c(
@@ -831,7 +891,7 @@ gift_data |>
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 3)
+    legend.text = ggplot2::element_text(size = 30)
   )
 ```
 
