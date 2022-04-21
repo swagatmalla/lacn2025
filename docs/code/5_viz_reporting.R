@@ -24,22 +24,6 @@ steps_data <- all_list$single$Q3 |>
 
 #### Advisory Boards ####
 
-all_list$multi$Q4 |>
-  
-  dplyr::filter(n>1) |>
-  
-  arrange(-n) |>
-  
-  mutate(freq = format(round(freq,2), nsmall = 2)) |>
-  
-  mutate(value = stringr::str_replace(value, "^My career.+boards$","No Advisory Boards"),
-         value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |>
-  
-  serviceTab(q = "Q4", title = "Advisory Boards",
-             subtitle = "Subtitle",
-             offer = "To Whom Do You Report?")
-
-
 
 
 
@@ -65,32 +49,6 @@ rank_data <- question_list$Q5 |>
                 dim1 = stringr::str_remove(dim1, "[:blank:]\\(.+\\)"))
 
 
-
-
-rank_data |>
-  ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+
-  geom_vline(xintercept = rank_data$dim1, colour = "grey")+
-  geom_jitter(alpha = 0.5, width = 0, size = 3)+
-  # geom_point(aes(reorder(dim1,-ranking_avg), ranking_avg), 
-  #           colour = "grey",
-  #           size = 5)+
-  coord_flip()+
-  scale_y_reverse(breaks = seq(1,11))+
-  scale_color_gradientn(colours = c('chartreuse4','grey','hotpink2'))+
-  
-  labs(
-    title = "Performance Metrics: Importance Ranking",
-    subtitle = "Subtitle (n = n_respond)",
-    y = "Importance Ranking\n (1=highest)"
-  )+
-  theme(
-    panel.background = element_blank(),
-    text = element_text(family = "Source Sans Pro", size = 15),
-    axis.ticks.y = element_blank(),
-    axis.title.y = element_blank(),
-    axis.title.x = element_text(size = 13),
-    legend.position = "none"
-  )
 
 
 
@@ -196,17 +154,5 @@ prof_employer_data <- question_list$Q8 |>
 
 #### Conferences #### 
 
-question_list$Q9
 
-all_list$multi$Q9 |>
-  
-  dplyr::filter(n > 1) |>
-  
-  dplyr::mutate(freq = format(round(freq,2), nsmall = 2))|>
-  
-  arrange(-n) |>
-  
-  serviceTab(q = 'Q9', title = "Conferences Attended by Staff", 
-             subtitle = "Conferences with more than one response", 
-             offer = "Conferences")
 

@@ -188,6 +188,59 @@ singlePlot(reporting_data, q = "Q2",
 
 </div>
 
+### Advisory Boards
+
+```{r, advisory-boards}
+all_list$multi$Q4 |>
+  
+  dplyr::filter(n>1) |>
+  
+  arrange(-n) |>
+  
+  mutate(freq = format(round(freq,2), nsmall = 2)) |>
+  
+  mutate(value = stringr::str_replace(value, "^My career.+boards$","No Advisory Boards"),
+         value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |>
+  
+  serviceTab(q = "Q4", title = "Advisory Boards",
+             subtitle = "Subtitle",
+             offer = "To Whom Do You Report?")
+```
+
+### Performance Metrics
+
+*Relative Importance Ranking (n = 38)*
+
+```{r, performance-rank}
+rank_data |>
+  ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+
+  geom_vline(xintercept = rank_data$dim1, colour = "grey")+
+  geom_jitter(alpha = 0.5, width = 0, size = 3)+
+  geom_point(aes(reorder(dim1,-ranking_avg), ranking_avg), 
+             colour = "black",
+             size = 3,
+             shape = 21)+
+  coord_flip()+
+  scale_y_reverse(breaks = seq(1,11))+
+  scale_color_gradientn(colours = c('#F7BF66','grey','#6AD4BF'))+
+  scale_shape_identity()+
+  
+  labs(
+    y = "Importance Ranking (1=highest)"
+  )+
+  theme(
+    panel.background = element_blank(),
+    text = element_text(family = params$plotfont, size = 35),
+    axis.ticks.y = element_blank(),
+    axis.title.y = element_blank(),
+    axis.title.x = element_text(size = 20),
+    legend.position = "none"
+  )
+
+
+```
+
+
 ### Student Staff (total)
 
 <div class="row">
@@ -380,7 +433,161 @@ tableViz(prof_employer_data, 'n')
 <hr/>
 
 
+### Conferences
+
+```{r, conferences}
+
+all_list$multi$Q9 |>
+  
+  dplyr::mutate(freq = format(round(freq,2), nsmall = 2))|>
+  
+  arrange(-n) |>
+  
+  serviceTab(q = 'Q9', title = "Conferences Attended by Staff", 
+             subtitle = "subtitle", 
+             offer = "Conferences")
+```
+
+
+
 ## Student/Alum Engagement
+
+### Services offered: undergrad
+
+```{r, service-undergrad}
+all_list$multi$Q10 |>
+  
+  # cleaning
+  
+  dplyr::mutate(
+    value = dplyr::case_when(
+      value == "Other:" ~ "Other",
+      TRUE ~ as.character(value)
+    ),
+    freq = format(round(freq,2), nsmall = 2), .keep = "unused"
+    ) |>
+  dplyr::arrange(-n)|>
+  
+  serviceTab(q = "Q10", title = "Services Offered to Undergraduates",
+             subtitle = "Subtitle",
+             offer = "Services")
+```
+
+### Programs offered: undergrad
+```{r, program-undergrad}
+all_list$multi$Q11 |>
+  
+  dplyr::mutate(
+    value = dplyr::case_when(
+      value == "Other:" ~ "Other",
+      TRUE ~ as.character(value)
+    ),
+    freq = format(round(freq,2), nsmall = 2), .keep = "unused"
+  ) |>
+  dplyr::arrange(-n)|>
+  
+  serviceTab(
+    q = "Q11",
+    title = "Programs Offered to Undergraduates",
+    offer = "Programs"
+  )
+```
+
+
+
+
+### Services offered: grad
+
+<div class="row">
+
+  <div class="col-sm-7">
+```{r, service-grad-tab}
+all_list$multi$Q13 |>
+  
+  mutate(value = stringr::str_to_title(value),
+         freq = n/q13_n,
+         freq = format(round(freq,2), nsmall = 2)) |>
+  
+  dplyr::arrange(-n) |>
+  
+  serviceTab(
+    q = "Q13",
+    title = "Services Offered to Grad Students",
+    offer = "Services"
+  )
+```
+  </div>
+  
+  <div class="col-sm-5">
+  
+```{r, service-grad-plot}
+all_list$single$Q12 |>
+  
+  mutate(
+    Q12 = replace_na(Q12, 'No Response')
+  ) |>
+  
+  ggplot(aes(factor(Q12, levels=c('No','Yes','No Response')), 
+             n, 
+             fill = Q12, 
+             label = n))+
+  
+  geom_hline(yintercept = seq(0,25,by=5), colour = "grey")+
+  geom_bar(stat = "identity", width = 0.4)+
+  geom_text(size = 20, colour = "white", nudge_y = -2)+
+  
+  scale_y_continuous(labels = seq(0,25,by=5))+
+  scale_fill_manual(
+    values = c('#F7BF66','#76828E','#6AD4BF')
+  )+
+  
+  labs(
+    title = "Offered Grad Services?",
+    x = NULL,
+    y = NULL
+  )+
+  
+  theme(
+    text = element_text(family = params$plotfont, size = 45),
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text = element_text(size = 35),
+    legend.position = "none"
+  )
+```
+  
+
+  </div>
+  
+</div>
+
+### Services offered: alumni
+<div class="row">
+
+  <div class="col-sm-7">
+```{r, service-alum}
+all_list$multi$Q15 |>
+  
+  mutate(value = stringr::str_to_title(value),
+         freq = n/q15_n,
+         freq = format(round(freq,2), nsmall = 2)) |>
+  
+  dplyr::arrange(-n) |>
+  
+  serviceTab(q = "Q15", title = "Services Offered to Alumni",
+             offer = "Services")
+
+```
+  </div>
+  
+  <div class="col-sm-5">
+  
+  All institutions offer alumni services `r nTab(question_list$Q15$Q15)`
+
+  </div>
+  
+</div>
+
 
 ### Student Engagement by Class Year
 
@@ -423,9 +630,6 @@ sengage_year_data |>
   
   <div class="col-sm-5">
   
-<!-- Q for Nate: what do we consider a missing value here? I'm only
-considering whether they answered total engagement for "TOTAL (all classes)"--> 
-
 `r nTab(question_list$Q21$Q21_5_4)`
 
 \n \n Note: Engagement \n includes appointments \n w/ professional staff \n and peer advisors and \n programs and events
@@ -760,30 +964,29 @@ exper_learning_data |>
 <div class="row">
 
   <div class="col-sm-7">
-```{r}
-funding_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,total_mil),
-                               total_mil, fill = dim1))+
-  ggplot2::geom_hline(yintercept = c(0,2,4,6), colour = "grey")+
-  ggplot2::geom_bar(stat = "identity", position = "stack")+
-  ggplot2::labs(
+  
+  What do we do about Amherst? 7936792 isn't obviously wrong.
+```{r, total-funding}
+total_budget |>
+  ggplot(aes(reorder(`Institution Name`,amount_mil), amount_mil, fill = Budget))+
+  geom_hline(yintercept = seq(0,10,by=5), colour = "grey")+
+  geom_bar(stat = 'identity')+
+  labs(
     x = NULL,
-    y = "Total (in millions)"
+    y = "Total (in millions)",
+    fill = "Budget Type"
   )+
-  ggplot2::scale_fill_manual(
-    values=c(`Endowed Funds` = "#6AD4BF",
-             `Expendable Gifts` = "grey",
-             Other = "#F7BF66"
-             #, `Your School` = "#217DBB"
-    )
-  )+
-  ggplot2::theme(
-    text = ggplot2::element_text(size = 35, family = params$plotfont,
-                                 lineheight = .5),
-    panel.background = ggplot2::element_blank(),
-    axis.text.x = ggplot2::element_blank(),
-    axis.ticks = ggplot2::element_blank(),
-    legend.title = ggplot2::element_blank()
+  scale_fill_manual(values=c("#6AD4BF","#F7BF66"),
+                    breaks=c("Total_NOP","Total_OP"),
+                    labels=c("Non-Operating", "Operating"))+
+  scale_y_continuous(breaks = seq(0,10,by=5),
+                     labels = c("0","5","$10"))+
+  theme(
+    text = element_text(family = params$plotfont, size = 40),
+    panel.background = element_blank(),
+    axis.ticks = element_blank(),
+    axis.text.x = element_blank(),
+    legend.text = element_text(size = 25)
   )
 
 ```
@@ -795,9 +998,9 @@ funding_data |>
 ```{r total-funding-table}
 
 tableViz(
-  data = funding_data |>
+  data = total_budget |>
     dplyr::group_by(`Institution Name`) |>
-    dplyr::summarise(total = sum(total)),
+    dplyr::summarise(total = sum(amount)),
   
   var = 'total'
 )

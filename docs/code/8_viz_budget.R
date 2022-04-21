@@ -10,9 +10,9 @@ funding_data <- question_list$Q24 |>
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q24',dim1)
+    keyFunction('Q24',dim1, dim2)
     ) |>
-  dplyr::select(`Institution Name`,dim1,amount) |>
+  dplyr::select(`Institution Name`,dim1,dim2,amount) |>
   dplyr::mutate(amount = as.numeric(amount)) |>
   dplyr::group_by(`Institution Name`, dim1) |>
   dplyr::summarise(total = sum(amount, na.rm = TRUE)) |>
@@ -137,9 +137,86 @@ gift_data <- question_list$Q24 |>
     amount_thou = amount/1e+03
   )
 
+  
+#### Operating Budget ####
+
+OP_budget <- question_list$Q23 |>
+    
+    tidyr::pivot_longer(
+      cols = !(1:2),
+      names_to = "Question",
+      values_to = "amount"
+    ) |>
+    
+    dplyr::mutate(amount = as.numeric(amount)) |>
+    
+    dplyr::group_by(`Institution Name`) |>
+    
+    dplyr::summarise(Total_OP = sum(amount))
 
 
+#### Non-Operating Budget ####
+  
+NOP_budget <- question_list$Q24 |>
+    tidyr::pivot_longer(
+      cols = !(1:2),
+      names_to = "Question",
+      values_to = "amount"
+    ) |>
+    dplyr::left_join(
+      keyFunction('Q24',dim1,dim2)
+    ) |>
+    
+    dplyr::select(!Question) |>
+    
+    dplyr::mutate(amount = as.numeric(amount)) |>
+    
+    tidyr::pivot_wider(
+      names_from = dim2,
+      values_from = amount
+    ) |> 
+    
+    dplyr::rename(intern = "Amount utilized for funded internships ($)",
+                  other = "Other ($)") |>
+    
+    dplyr::mutate(
+      other = dplyr::case_when(
+        (`Institution Name` == "Middlebury College" & dim1 == "Expendable gifts") ~ other/10,
+        TRUE ~ other
+      )
+    ) |>
+    
+    dplyr::mutate(sum = intern + other,
+                  diff = Total-sum) |>
+    
+    dplyr::mutate(
+      total_correct = dplyr::case_when(
+        is.na(sum) ~ Total,
+        TRUE ~ sum
+      )
+    ) |>
+    
+    dplyr::group_by(`Institution Name`) |>
+    
+    dplyr::summarise(Total_NOP = sum(total_correct))
 
+  
+#### Combined Budget ####
+  
+total_budget <- OP_budget |>
+    
+    dplyr::left_join(NOP_budget) |>
+    
+    dplyr::mutate(Total_OP = tidyr::replace_na(Total_OP,0)) |>
+    
+    tidyr::pivot_longer(
+      cols = !`Institution Name`,
+      names_to = "Budget",
+      values_to = "amount"
+    ) |>
+    
+    dplyr::mutate(amount_mil = amount/1e+06)
+  
 
 
 
