@@ -430,34 +430,44 @@ tableViz(prof_employer_data, 'n')
   
 </div>
 
-<hr/>
-
-
 ### Conferences
 
-```{r, conferences}
+```{r conferences}
+
+write_in_con <- question_list$Q9$Q9_11_TEXT
 
 all_list$multi$Q9 |>
   
-  dplyr::mutate(freq = format(round(freq,2), nsmall = 2))|>
+  dplyr::filter(!is.element(value,write_in_con)) |>
+  
+  dplyr::mutate(freq = format(round(freq,2), nsmall = 2),
+                value = str_remove(value,":")
+                )|>
   
   arrange(-n) |>
   
-  serviceTab(q = 'Q9', title = "Conferences Attended by Staff", 
-             subtitle = "subtitle", 
+  serviceTab(q = "Q9", 
+             title = "Conferences Attended by Staff",
+             subtitle = "For write-in responses, see Appendix",
              offer = "Conferences")
 ```
 
 
+<hr/>
 
 ## Student/Alum Engagement
 
 ### Services offered: undergrad
 
-```{r, service-undergrad}
+```{r service-undergrad}
+
+write_in_userve <- question_list$Q10$Q10_13_TEXT
+
 all_list$multi$Q10 |>
   
-  # cleaning
+  dplyr::filter(
+    !is.element(value,write_in_userve)
+  ) |>
   
   dplyr::mutate(
     value = dplyr::case_when(
@@ -465,17 +475,24 @@ all_list$multi$Q10 |>
       TRUE ~ as.character(value)
     ),
     freq = format(round(freq,2), nsmall = 2), .keep = "unused"
-    ) |>
+  ) |>
   dplyr::arrange(-n)|>
   
   serviceTab(q = "Q10", title = "Services Offered to Undergraduates",
-             subtitle = "Subtitle",
+             subtitle = "For write-in responses, see Appendix",
              offer = "Services")
+
 ```
 
 ### Programs offered: undergrad
-```{r, program-undergrad}
+```{r program-undergrad}
+write_in_uprogram <- question_list$Q11$Q11_29_TEXT
+
 all_list$multi$Q11 |>
+  
+  dplyr::filter(
+    !is.element(value,write_in_uprogram)
+  ) |>
   
   dplyr::mutate(
     value = dplyr::case_when(
@@ -489,6 +506,7 @@ all_list$multi$Q11 |>
   serviceTab(
     q = "Q11",
     title = "Programs Offered to Undergraduates",
+    subtitle = "For write-in responses, see Appendix",
     offer = "Programs"
   )
 ```
@@ -501,7 +519,16 @@ all_list$multi$Q11 |>
 <div class="row">
 
   <div class="col-sm-7">
-```{r, service-grad-tab}
+```{r service-grad-tab}
+
+write_in_gserve <- question_list$Q13$Q13_4_TEXT
+
+q13_n <- question_list[['Q13']] |>
+  
+  dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
+  
+  nrow()
+
 all_list$multi$Q13 |>
   
   mutate(value = stringr::str_to_title(value),
@@ -520,7 +547,7 @@ all_list$multi$Q13 |>
   
   <div class="col-sm-5">
   
-```{r, service-grad-plot}
+```{r service-grad-plot}
 all_list$single$Q12 |>
   
   mutate(
@@ -566,6 +593,13 @@ all_list$single$Q12 |>
 
   <div class="col-sm-7">
 ```{r, service-alum}
+
+q15_n <- question_list[['Q15']] |>
+  
+  dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
+  
+  nrow()
+
 all_list$multi$Q15 |>
   
   mutate(value = stringr::str_to_title(value),
@@ -575,6 +609,7 @@ all_list$multi$Q15 |>
   dplyr::arrange(-n) |>
   
   serviceTab(q = "Q15", title = "Services Offered to Alumni",
+             subtitle = "No write-in responses",
              offer = "Services")
 
 ```
@@ -582,7 +617,7 @@ all_list$multi$Q15 |>
   
   <div class="col-sm-5">
   
-  All institutions offer alumni services `r nTab(question_list$Q15$Q15)`
+  All institutions offer alumni services (`r nTab(question_list$Q15$Q15)`)
 
   </div>
   
@@ -1115,6 +1150,28 @@ gift_data |>
 </div>
 
 <hr/>
+
+## Appendix
+
+### Write-In Responses
+
+#### Conferences
+
+`r glue::glue("{write_in_con[!is.na(write_in_con)]}")`
+
+#### Undergraduate Services
+`r glue::glue("{write_in_userve[!is.na(write_in_userve)]}", .sep = "\n")`
+
+
+#### Undergraduate Programs
+`r glue::glue("{write_in_uprogram[!is.na(write_in_uprogram)]}", .sep = "\n")`
+
+
+#### Graduate Services
+`r glue::glue("{write_in_gserve[!is.na(write_in_gserve)]}", .sep = "\n")`
+
+
+
 
 
 Special thanks to **ACKNOWLEDGEMENTS HERE**
