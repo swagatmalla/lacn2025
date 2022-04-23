@@ -134,7 +134,7 @@ gift_data <- question_list$Q24 |>
     values_to = "amount") |>
   
   dplyr::mutate(
-    amount_thou = amount/1e+03
+    amount_mil = amount/1e+06
   )
 
   

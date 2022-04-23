@@ -211,7 +211,7 @@ all_list$multi$Q4 |>
 
 *Relative Importance Ranking (n = 38)*
 
-```{r, performance-rank}
+```{r performance-rank, fig.width = 9}
 rank_data |>
   ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+
   geom_vline(xintercept = rank_data$dim1, colour = "grey")+
@@ -228,15 +228,29 @@ rank_data |>
   labs(
     y = "Importance Ranking (1=highest)"
   )+
+  
+  annotate("text", 
+           x = 4.5, 
+           y = 4, 
+           label = "Mean",
+           colour = "black",
+           size = 10)+
+  
+  annotate("segment", 
+           x = 5,
+           xend = 4.5, 
+           y = 6, 
+           yend = 4.5, 
+           colour = "black")+
+  
   theme(
     panel.background = element_blank(),
-    text = element_text(family = params$plotfont, size = 35),
+    text = element_text(family = params$plotfont, size = 40),
     axis.ticks.y = element_blank(),
     axis.title.y = element_blank(),
-    axis.title.x = element_text(size = 20),
+    axis.title.x = element_text(size = 25),
     legend.position = "none"
   )
-
 
 ```
 
@@ -540,6 +554,7 @@ all_list$multi$Q13 |>
   serviceTab(
     q = "Q13",
     title = "Services Offered to Grad Students",
+    subtitle = "For write-in responses, see Appendix",
     offer = "Services"
   )
 ```
@@ -682,7 +697,7 @@ sengage_year_data |>
 ```{r sengage-type-plot}
 sengage_type_data |>
 
-  dplyr::select(!c(main:sub2,Question))  |>
+  dplyr::select(!c(main:sub2,Question,dim1))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
   
   dplyr::group_by(dim2) |>
@@ -732,7 +747,16 @@ sengage_type_data |>
   <div class="col-sm-5">
 
 ```{r sengage-type-table}
-plot(cars)
+sengage_type_data |>
+  
+  mutate(engage = as.numeric(engage)) |>
+  
+  group_by(`Institution Name`) |>
+  summarise(engage = mean(engage, na.rm = TRUE)) |>
+  
+  dplyr::filter(is.finite(engage)) |>
+  
+  tableViz(var = 'engage', subtitle = "School Averages")
 ```
 
   </div>
@@ -807,7 +831,48 @@ tableViz(
   <div class="col-sm-7">
 
 ```{r appt-student-group-plot}
-plot(cars)
+appt_student_data |>
+
+  dplyr::group_by(Year) |>
+  dplyr::summarise(Mean = mean(Appt, na.rm = TRUE), 
+                   Median = median(Appt, na.rm = TRUE),
+                   Max = max(Appt, na.rm = TRUE),
+                   #`Your School` = mean(engage[`Institution Name`==params$college])
+  ) |>
+  
+  tidyr::pivot_longer(
+    cols = !Year,
+    names_to = "measure",
+    values_to = "amount"
+  ) |>
+  
+  ggplot2::ggplot(ggplot2::aes(Year,amount))+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500,2000), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = measure),
+                    position = "dodge",
+                    stat = "identity") +
+  #  ggrepel::geom_text_repel(data = subset(appt_student_data,
+  #                                          `Institution Name` == params$college & Year == "Sophomore"),
+  #                            mapping = ggplot2::aes(label = `Institution Name`),
+  #                            min.segment.length = 0,
+  #                            hjust = -10)+
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  ggplot2::scale_fill_manual(
+    values=c(Max = "#76828E",
+             Mean = "#6AD4BF",
+             Median = "#F7BF66"))+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 45, 
+                                 family = params$plotfont),
+    axis.text.x = ggplot2::element_text(size = 30),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 30),
+    legend.position = "top"
+  )
 ```
 
   </div>
@@ -815,7 +880,11 @@ plot(cars)
   <div class="col-sm-5">
 
 ```{r appt-student-group-table}
-plot(cars)
+appt_student_data |>
+  group_by(`Institution Name`) |>
+  summarise(Appt = sum(Appt)) |>
+  
+  tableViz(var = 'Appt', subtitle = "All Years")
 ```
 
   </div>
@@ -1001,7 +1070,7 @@ exper_learning_data |>
   <div class="col-sm-7">
   
   What do we do about Amherst? 7936792 isn't obviously wrong.
-```{r, total-funding}
+```{r total-funding}
 total_budget |>
   ggplot(aes(reorder(`Institution Name`,amount_mil), amount_mil, fill = Budget))+
   geom_hline(yintercept = seq(0,10,by=5), colour = "grey")+
@@ -1054,22 +1123,15 @@ tableViz(
 
 ```{r endow-fund-plot}
 endow_exp_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil, fill = dim2))+
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil))+
   ggplot2::geom_hline(yintercept = c(0,0.5,1,1.5,2), colour = "grey")+
-  ggplot2::geom_bar(stat = "identity", position = "stack") +
+  ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8") +
   ggplot2::labs(
     y = "Total (in millions)",
     x = NULL
   )+
   
   ggplot2::scale_y_continuous(labels = c("0","0.5","1","1.5","$2"))+
-  
-  ggplot2::scale_fill_manual(
-    values = c(
-      `Funded Internships` = "#6AD4BF",
-      Other = "#F7BF66"
-    )
-  )+
   
   ggplot2::theme(
     text = ggplot2::element_text(family = params$plotfont, size = 35),
@@ -1105,23 +1167,16 @@ tableViz(data = endow_exp_data |>
 
 ```{r expend-gift-plot}
 gift_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_thou), amount_thou, fill = dim2))+
-  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
-  ggplot2::geom_bar(stat = "identity", position = "stack")+
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, amount_mil), amount_mil))+
+  ggplot2::geom_hline(yintercept = c(0,0.5,1,1.5), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
   ggplot2::labs(
-    y = "Total (in thousands)",
+    y = "Total (in millions)",
     x = NULL
   )+
   
-  ggplot2::scale_y_continuous(breaks = c(0,500,1000,1500),
-                              labels = c("0","500","1000","$1500"))+
-  
-  ggplot2::scale_fill_manual(
-    values = c(
-      `Funded Internships` = "#6AD4BF",
-      Other = "#F7BF66"
-    )
-  )+
+  ggplot2::scale_y_continuous(breaks = c(0,0.5,1,1.5),
+                              labels = c("0","0.5","1","$1.5"))+
   
   ggplot2::theme(
     text = ggplot2::element_text(family = params$plotfont, size = 35),

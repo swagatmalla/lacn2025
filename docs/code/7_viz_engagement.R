@@ -52,9 +52,8 @@ sengage_type_data <- question_list$Q21 |>
   ) |>
   dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q21',dim2)
+    keyFunction('Q21',dim1,dim2)
   )
-
 
 
 
