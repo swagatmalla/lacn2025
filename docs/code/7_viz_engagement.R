@@ -37,7 +37,7 @@ sengage_year_data <- question_list$Q21 |>
     "Junior",
     "Senior",
     "Total\n (all classes)"))
-    )
+  )
 
 
 
@@ -143,10 +143,28 @@ appt_alum_data <- question_list$Q20 |>
   
   dplyr::mutate(engage = as.numeric(engage)) |>
   
+  dplyr::select(`Institution Name`,dim1,dim2,Year,engage) |>
+  
+  tidyr::pivot_wider(
+    names_from = dim2,
+    values_from = engage
+  ) |>
+  dplyr::filter(
+    dplyr::if_any((4:5), ~ .x > 0 & !is.na(.x)
+    )
+  ) |>
+  
+  tidyr::pivot_longer(
+    cols = !(1:3),
+    names_to = "dim2",
+    values_to = "engage"
+  ) |>
+  
   #filter to only alumni
-  dplyr::filter(Year == "Alumni",
-                !is.na(engage)
-  )
+  dplyr::filter(Year == "Alumni") |>
+  
+  dplyr::mutate(engage = tidyr::replace_na(engage,0))
+
 
 
 
