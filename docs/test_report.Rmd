@@ -1089,7 +1089,8 @@ exper_learning_data |>
   gt::gt() |>
   
     
-  gt::tab_header(title = "Summary") |>
+  gt::tab_header(title = "Summary",
+                 subtitle = "# of respondents by experience") |>
   
   
   gt::cols_label(dim1 = "Experience",
@@ -1102,6 +1103,12 @@ exper_learning_data |>
       locations = gt::cells_column_labels(
         columns = everything()
       )
+    ) |>
+  gt::tab_style(
+      style = list(
+        gt::cell_text(style = "italic")
+      ),
+      locations = gt::cells_title(groups = "subtitle")
     ) |>
 gt::cols_width(
       dim1 ~ px(250)
@@ -1119,16 +1126,87 @@ gt::cols_width(
 
 ### Info Sessions: Number Offered
 
-```{r}
-plot(cars)
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r info-no-plot}
+  
+info_no_data |>  
+  ggplot(aes(reorder(`Institution Name`,amount),amount, fill = dim2))+
+  
+  geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
+  geom_bar(stat = "identity", position="stack")+
+  
+  labs(
+    y = "Total",
+    x = NULL,
+    fill = NULL
+  )+
+  
+  theme(
+    text = element_text(family = params$plotfont, size = 40),
+    panel.background = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "top"
+  )
 ```
+  </div>
+  
+  <div class="col-sm-5">
+```{r info-no-table}
+info_no_data |>
+  group_by(`Institution Name`) |>
+  summarise(amount = sum(amount)) |>
+  tableViz(var = 'amount')
+```
+  
+  </div>
+
+</div>
 
 
 ### Info Sessions: Number of Employers
 
-```{r}
-plot(cars)
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r info-employ-plot}
+info_employ_data |>  
+  ggplot(aes(reorder(`Institution Name`,amount),amount, fill = dim2))+
+  
+  geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
+  geom_bar(stat = "identity", position="stack")+
+  
+  labs(
+    y = "Total",
+    x = NULL,
+    fill = NULL
+  )+
+  
+  theme(
+    text = element_text(family = params$plotfont, size = 40),
+    panel.background = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "top"
+  )
 ```
+  </div>
+  
+  <div class="col-sm-5">
+```{r info-employ-table}
+info_employ_data |>
+  group_by(`Institution Name`) |>
+  summarise(amount = sum(amount)) |>
+  tableViz(var = 'amount')
+```
+  
+  </div>
+
+</div>
 
 
 <hr/>
@@ -1209,7 +1287,7 @@ endow_exp_data |>
   ggplot2::scale_y_continuous(labels = c("0","0.5","1","1.5","$2"))+
   
   ggplot2::theme(
-    text = ggplot2::element_text(family = params$plotfont, size = 35),
+    text = ggplot2::element_text(family = params$plotfont, size = 40),
     panel.background = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
@@ -1254,7 +1332,7 @@ gift_data |>
                               labels = c("0","0.5","1","$1.5"))+
   
   ggplot2::theme(
-    text = ggplot2::element_text(family = params$plotfont, size = 35),
+    text = ggplot2::element_text(family = params$plotfont, size = 40),
     panel.background = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
