@@ -141,7 +141,7 @@ tableViz(endow_data, var = "endow")
 
 ### Reporting Structure
 
-  <div class="col-sm-7">
+  <div class="col-sm-8">
 
 ```{r reporting-plot}
 
@@ -155,7 +155,7 @@ singlePlot(reporting_data, q = "Q2",
   </div>
 
 
-  <div class="col-sm-5">
+  <div class="col-sm-4">
 
 `r nTab(question_list$Q2['Institution Name'])`
 
@@ -167,7 +167,7 @@ singlePlot(reporting_data, q = "Q2",
 
 ### Steps Removed from President's Office
 
-  <div class="col-sm-7">
+  <div class="col-sm-8">
 
 ```{r steps-plot}
 
@@ -180,7 +180,7 @@ singlePlot(reporting_data, q = "Q2",
 
   </div>
 
-<div class="col-sm-5">
+<div class="col-sm-4">
 
 `r nTab(question_list$Q3['Institution Name'])`
 
@@ -190,14 +190,14 @@ singlePlot(reporting_data, q = "Q2",
 
 ### Advisory Boards
 
-```{r, advisory-boards}
+```{r advisory-boards}
 all_list$multi$Q4 |>
   
   dplyr::filter(n>1) |>
   
   arrange(-n) |>
   
-  mutate(freq = format(round(freq,2), nsmall = 2)) |>
+  mutate(freq = round(freq*100,2)) |>
   
   mutate(value = stringr::str_replace(value, "^My career.+boards$","No Advisory Boards"),
          value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |>
@@ -209,10 +209,12 @@ all_list$multi$Q4 |>
 
 ### Performance Metrics
 
-*Relative Importance Ranking (n = 38)*
+*Relative Importance Ranking (N = 38)*
 
 ```{r performance-rank, fig.width = 9}
 rank_data |>
+  
+  dplyr::filter(dim1 != "Other") |>
   ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+
   geom_vline(xintercept = rank_data$dim1, colour = "grey")+
   geom_jitter(alpha = 0.5, width = 0, size = 3)+
@@ -230,16 +232,16 @@ rank_data |>
   )+
   
   annotate("text", 
-           x = 4.5, 
-           y = 4, 
+           x = 9.5, 
+           y = 5, 
            label = "Mean",
            colour = "black",
            size = 10)+
   
   annotate("segment", 
-           x = 5,
-           xend = 4.5, 
-           y = 6, 
+           x = 9,
+           xend = 9.5, 
+           y = deframe(rank_data[rank_data$dim1=="Diverse student engagement",'ranking_avg'][1,]), 
            yend = 4.5, 
            colour = "black")+
   
@@ -402,7 +404,7 @@ tableViz(student_prof_ratio, var='n')
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data, breaks = c(0,50,100,150,200), 
+matrixPlot(prof_advising_data, breaks = c(0,10,20,30,40), 
            font = params$plotfont,
            size = 45)
 ```
@@ -427,7 +429,7 @@ tableViz(prof_advising_data, 'n')
 
 ```{r prof-employer-plot}
 matrixPlot(prof_employer_data,
-           breaks = c(0,25,50,75,100), 
+           breaks = c(0,10,20,30,40), 
            font = params$plotfont, 
            size = 45)
 ```
@@ -452,11 +454,15 @@ write_in_con <- question_list$Q9$Q9_11_TEXT
 
 all_list$multi$Q9 |>
   
+    add_row(value = "Career Leadership Collective ",
+          n = 6,
+          freq = 6/39) |>
+  
   dplyr::filter(!is.element(value,write_in_con)) |>
   
-  dplyr::mutate(freq = format(round(freq,2), nsmall = 2),
+  dplyr::mutate(freq = round(freq*100,2),
                 value = str_remove(value,":")
-                )|>
+                ) |>
   
   arrange(-n) |>
   
@@ -488,7 +494,7 @@ all_list$multi$Q10 |>
       value == "Other:" ~ "Other",
       TRUE ~ as.character(value)
     ),
-    freq = format(round(freq,2), nsmall = 2), .keep = "unused"
+    freq = round(freq*100,2), .keep = "unused"
   ) |>
   dplyr::arrange(-n)|>
   
@@ -513,7 +519,7 @@ all_list$multi$Q11 |>
       value == "Other:" ~ "Other",
       TRUE ~ as.character(value)
     ),
-    freq = format(round(freq,2), nsmall = 2), .keep = "unused"
+    freq = round(freq*100,2), .keep = "unused"
   ) |>
   dplyr::arrange(-n)|>
   
@@ -547,7 +553,7 @@ all_list$multi$Q13 |>
   
   mutate(value = stringr::str_to_title(value),
          freq = n/q13_n,
-         freq = format(round(freq,2), nsmall = 2)) |>
+         freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
@@ -593,7 +599,7 @@ all_list$single$Q12 |>
     text = element_text(family = params$plotfont, size = 45),
     panel.background = element_blank(),
     axis.ticks = element_blank(),
-    axis.text = element_text(size = 35),
+    axis.text = element_text(size = 35, colour = "black"),
     legend.position = "none"
   )
 ```
@@ -607,7 +613,7 @@ all_list$single$Q12 |>
 <div class="row">
 
   <div class="col-sm-7">
-```{r, service-alum}
+```{r service-alum}
 
 q15_n <- question_list[['Q15']] |>
   
@@ -619,7 +625,7 @@ all_list$multi$Q15 |>
   
   mutate(value = stringr::str_to_title(value),
          freq = n/q15_n,
-         freq = format(round(freq,2), nsmall = 2)) |>
+         freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
@@ -648,28 +654,36 @@ all_list$multi$Q15 |>
 ```{r sengage-year-plot}
 
 sengage_year_data |>
-  ggplot2::ggplot(ggplot2::aes(dim1,engage))+
+  
+  mutate(measure = factor(measure, levels = c("Mean","Median","Max"))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(dim1, engage, fill = measure))+
   
   ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = measure),
                     position = "dodge",
                     stat = "identity")+
+  geom_text(aes(label = round(engage,0)),
+    colour = "white", size = 9,
+    vjust = 1.25, position = position_dodge(.9)
+    )+
+  
   ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
   ggplot2::labs(
     y = "Engagement (%)",
     x = NULL
   )+
   ggplot2::scale_fill_manual(
-    values=c(Max = "#76828E", 
-             Mean = "#6AD4BF",
-             Median = "#F7BF66"
+    values=c(Mean = "#6AD4BF",
+             Median = "#F7BF66",
+             Max = "#76828E"
              #, `Your School` = "#217DBB"
              )
     )+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, family = params$plotfont),
     axis.ticks = ggplot2::element_blank(),
-    axis.text.x = ggplot2::element_text(size = 30, lineheight = 0.5),
+    axis.text.x = ggplot2::element_text(size = 30, lineheight = 0.5, colour = "black"),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.position = "top"
@@ -712,12 +726,18 @@ sengage_type_data |>
     values_to = "engage"
   ) |>
   
-  ggplot2::ggplot(ggplot2::aes(dim2,engage))+
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(dim2,engage, fill = measure))+
   
   ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = measure),
                     position = "dodge",
                     stat = "identity")+
+  geom_text(aes(label = round(engage,0)),
+            colour = "white", size = 9,
+            vjust = 1.25, position = position_dodge(.9)
+            )+
   ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
   ggplot2::labs(
@@ -725,9 +745,9 @@ sengage_type_data |>
     x = NULL
   )+
   ggplot2::scale_fill_manual(
-    values=c(Max = "#76828E", 
-             Mean = "#6AD4BF",
-             Median = "#F7BF66"
+    values=c(Mean = "#6AD4BF",
+             Median = "#F7BF66",
+             Max = "#76828E"
              #, `Your School` = "#217DBB"
     )
   )+
@@ -735,7 +755,7 @@ sengage_type_data |>
     text = ggplot2::element_text(size = 45, family = params$plotfont,
                                  lineheight = .5),
     axis.ticks = ggplot2::element_blank(),
-    axis.text.x = ggplot2::element_text(size = 30),
+    axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.position = "top"
@@ -798,7 +818,7 @@ appt_student_data |>
     axis.ticks = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 30),
+    legend.text = ggplot2::element_text(size = 30, colour = "black"),
     legend.position = "right"
     )
 
@@ -828,7 +848,7 @@ tableViz(
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-8">
 
 ```{r appt-student-group-plot}
 appt_student_data |>
@@ -846,11 +866,17 @@ appt_student_data |>
     values_to = "amount"
   ) |>
   
-  ggplot2::ggplot(ggplot2::aes(Year,amount))+
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(Year, amount, fill = measure))+
   ggplot2::geom_hline(yintercept = c(0,500,1000,1500,2000), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = measure),
                     position = "dodge",
                     stat = "identity") +
+  geom_text(aes(label = round(amount,0)),
+            colour = "white", size = 8,
+            vjust = 1.5, position = position_dodge(.9)
+            )+
   #  ggrepel::geom_text_repel(data = subset(appt_student_data,
   #                                          `Institution Name` == params$college & Year == "Sophomore"),
   #                            mapping = ggplot2::aes(label = `Institution Name`),
@@ -860,32 +886,26 @@ appt_student_data |>
     y = "Total",
     x = NULL)+
   ggplot2::scale_fill_manual(
-    values=c(Max = "#76828E",
-             Mean = "#6AD4BF",
-             Median = "#F7BF66"))+
+    values=c(Mean = "#6AD4BF",
+             Median = "#F7BF66",
+             Max = "#76828E"))+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, 
                                  family = params$plotfont),
-    axis.text.x = ggplot2::element_text(size = 30),
+    axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
     axis.ticks = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 30),
+    legend.text = ggplot2::element_text(size = 30, colour = "black"),
     legend.position = "top"
   )
 ```
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-4">
 
-```{r appt-student-group-table}
-appt_student_data |>
-  group_by(`Institution Name`) |>
-  summarise(Appt = sum(Appt)) |>
-  
-  tableViz(var = 'Appt', subtitle = "All Years")
-```
+
 
   </div>
   
@@ -899,6 +919,9 @@ appt_student_data |>
 
 ```{r appt-alum-plot}
 appt_alum_data |>
+  
+  mutate(dim2 = factor(dim2, levels = c('Email Consultations','Appointments*'))) |>
+  
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, engage), engage))+
   ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = dim2),
@@ -911,12 +934,12 @@ appt_alum_data |>
   )+
   ggplot2::scale_fill_manual(
     values = c(
-      `Appointments*` = "#F7BF66",
-      `Email Consultations` = "#6AD4BF"
+      `Email Consultations` = "#6AD4BF",
+      `Appointments*` = "#F7BF66"
     )
   )+
   ggplot2::theme(
-    text = ggplot2::element_text(size = 45, family = params$plotfont),
+    text = ggplot2::element_text(size = 40, family = params$plotfont),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     panel.background = ggplot2::element_blank(),
@@ -963,8 +986,9 @@ appt_fte_data |>
   )+
   
   ggplot2::theme(
-    text = ggplot2::element_text(size = 45, family = params$plotfont,
+    text = ggplot2::element_text(size = 40, family = params$plotfont,
                                  lineheight = .5),
+    plot.caption = element_text(size = 20),
     panel.background = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_blank()
@@ -1006,12 +1030,20 @@ exper_learning_data |>
     names_to = "measure",
     values_to = "exper"
   ) |>
-  ggplot2::ggplot(ggplot2::aes(reorder(dim1,-exper),exper))+
+  
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(reorder(dim1,-exper),exper, fill = measure))+
   
   ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = measure),
                     stat = "identity",
                     position = "dodge")+
+   geom_text(
+    aes(label = round(exper,0)),
+    colour = "white", size = 9,
+    vjust = 1.5, position = position_dodge(.9)
+    )+
   ggplot2::scale_x_discrete(
     labels = function(x) stringr::str_wrap(x, width = 12)
     )+
@@ -1021,9 +1053,9 @@ exper_learning_data |>
     caption = "*Internship, pre-licensure field experience, mentored experience or similar professional experience\n **Including pre-licensure field experience, NOT including mentored undergraduate research"
   )+
   ggplot2::scale_fill_manual(
-    values=c(Max = "#76828E", 
-             Mean = "#6AD4BF",
-             Median = "#F7BF66"
+    values=c(Mean = "#6AD4BF",
+             Median = "#F7BF66",
+             Max = "#76828E"
              #, `Your School` = "#217DBB"
     )
   )+
@@ -1032,7 +1064,7 @@ exper_learning_data |>
                                          margin = ggplot2::margin(t = "10")),
     text = ggplot2::element_text(size = 45, family = params$plotfont,
                                  lineheight = .5),
-    axis.text.x = ggplot2::element_text(size = 25),
+    axis.text.x = ggplot2::element_text(size = 25, colour = "black"),
     panel.background = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     legend.position = "top",
@@ -1045,19 +1077,59 @@ exper_learning_data |>
   
   <div class="col-sm-5">
 
-```{r exper-learning-table}
+```{r exper-learning-table, echo=FALSE}
+
 exper_learning_data |>
-  tidyr::pivot_wider(
-    names_from = dim1,
-    values_from = exper
-  ) |>
+  filter(!is.na(exper)) |>
+  group_by(dim1)|>
+  summarise(count = n()) |>
   
-  tableViz(var = "Any Experiential Learning*",subtitle = "Any Experiential Learning Only",na.rm = TRUE)
+  mutate(dim1 = stringr::str_remove_all(dim1,"\\(.+\\)"),
+         dim1= stringr::str_remove_all(dim1, "\\*"))|>
+  gt::gt() |>
+  
+    
+  gt::tab_header(title = "Summary") |>
+  
+  
+  gt::cols_label(dim1 = "Experience",
+                 count = "N")|>
+  
+  gt::tab_style(
+      style = list(
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_column_labels(
+        columns = everything()
+      )
+    ) |>
+gt::cols_width(
+      dim1 ~ px(250)
+    )
+
 ```
 
   </div>
   
 </div>
+
+<hr/>
+
+## Employer Relations
+
+### Info Sessions: Number Offered
+
+```{r}
+plot(cars)
+```
+
+
+### Info Sessions: Number of Employers
+
+```{r}
+plot(cars)
+```
+
 
 <hr/>
 
@@ -1072,6 +1144,9 @@ exper_learning_data |>
   What do we do about Amherst? 7936792 isn't obviously wrong.
 ```{r total-funding}
 total_budget |>
+  
+  mutate(Budget = factor(Budget, levels = c('Total_OP','Total_NOP'))) |>
+  
   ggplot(aes(reorder(`Institution Name`,amount_mil), amount_mil, fill = Budget))+
   geom_hline(yintercept = seq(0,10,by=5), colour = "grey")+
   geom_bar(stat = 'identity')+
@@ -1080,9 +1155,9 @@ total_budget |>
     y = "Total (in millions)",
     fill = "Budget Type"
   )+
-  scale_fill_manual(values=c("#6AD4BF","#F7BF66"),
-                    breaks=c("Total_NOP","Total_OP"),
-                    labels=c("Non-Operating", "Operating"))+
+  scale_fill_manual(values=c("#F7BF66","#6AD4BF"),
+                    breaks=c("Total_OP", "Total_NOP"),
+                    labels=c("Operating", "Non-Operating"))+
   scale_y_continuous(breaks = seq(0,10,by=5),
                      labels = c("0","5","$10"))+
   theme(

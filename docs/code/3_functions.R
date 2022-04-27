@@ -55,7 +55,7 @@ rankViz <- function(college) {
   
 }
 
-matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Lato", size = 45) {
+matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Source Sans Pro", size = 45) {
   
   sysfonts::font_add_google(font)
   
@@ -74,14 +74,14 @@ matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Lato", 
              ceiling(max(data['n'])/3), 
              ceiling((2/3)*max(data['n'])), 
              ceiling(max(data['n']))
-             )
-  
+    )
+    
   } else {
     
     seq <- breaks
     
-    }
-
+  }
+  
   
   plot <- ggplot2::ggplot(data = data, mapping = ggplot2::aes(reorder(`Institution Name`,n),n))+
     ggplot2::geom_hline(yintercept = seq,
@@ -131,7 +131,8 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
     ggplot2::geom_hline(yintercept = seq(0,1,by=0.2), colour = "grey")+
     ggplot2::geom_col(width = rel(0.5), fill = "#7CBCE8")+
     ggplot2::scale_y_continuous(limits=c(0,1), 
-                                breaks = seq(0,1,by=0.2))+
+                                breaks = seq(0,1,by=0.2),
+                                labels = c('0%','20%','40%','60%','80%','100%'))+
     scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 20))+
     ggplot2::coord_flip()+
     ggplot2::labs(
@@ -166,7 +167,7 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
       indiv <- indiv |>
         dplyr::left_join(data)
     )
-   
+    
     
     return(
       viz + 
@@ -191,7 +192,7 @@ tableViz <- function(data, var, college = NULL, title = "Summary", subtitle = NU
   } else {
     labels <- c('N','Mean','Median','Max','Min', college)
   }
-
+  
   variable <- tibble::deframe(data[var])
   
   N <- as.integer(sum(!is.na(variable)))
@@ -205,14 +206,14 @@ tableViz <- function(data, var, college = NULL, title = "Summary", subtitle = NU
       dplyr::filter(`Institution Name` == college) |>
       dplyr::pull(.data[[var]])
   }
-
+  
   
   if(missing(college)){
     stats <- c(N, Mean, Median, Max, Min)
   } else {
     stats <- c(N, Mean, Median, Max, Min, College)
   }
-
+  
   
   return(
     data.frame(labels, stats) |>
@@ -263,6 +264,12 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
                    n = "N",
                    freq = "Frequency") |>
     
+    gt::fmt_number(
+      columns = freq,
+      pattern = "{x}%",
+      n_sigfig = 2
+    ) |>
+    
     gt::cols_width(
       value ~ px(500)
     ) |>
@@ -278,8 +285,8 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
       locations = gt::cells_body(
         columns = dplyr::everything(),
         rows = as.numeric(row.names(data)) %% 2 == 0
-        )
-      ) |>
+      )
+    ) |>
     
     gt::tab_style(
       style = list(
@@ -301,6 +308,8 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
   return(tab)
   
 }
+
+
 
 
 

@@ -64,7 +64,7 @@ student_staff_data <- question_list[['Q6']] |>
   ) |>
   dplyr::left_join(
     keyFunction('Q6', dim1,dim2)
-    ) |>
+  ) |>
   dplyr::mutate(response = as.numeric(response)) |>
   dplyr::group_by(`Institution Name`) |>
   dplyr::summarise(n = sum(response, na.rm = TRUE)) |>
@@ -130,29 +130,42 @@ student_prof_ratio <- question_list[['Q7']] |>
 
 #### Professional Advising (any amount of time) ####
 
+advising_q <- keyFunction('Q8',dim1,dim2)|>
+  filter(dim2!="Total # of staff involved") |>
+  filter(stringr::str_detect(dim1, "Advising")) |>
+  pull(Question)
+
 prof_advising_data <- question_list$Q8 |>
-  dplyr::select(`Institution Name`,Q8_1_1:Q8_7_3) |>
-  dplyr::mutate_at(vars(Q8_1_1:Q8_7_3), as.numeric) |>
-  dplyr::rowwise() |>
-  dplyr::mutate(n = sum(Q8_1_1:Q8_7_3)) |>
-  dplyr::select(`Institution Name`, n) |>
-  dplyr::filter(!is.na(n) & n > 0 & !is.infinite(n))
+  
+  select(`Institution Name`, all_of(advising_q)) |>
+  dplyr::mutate_at(vars(Q8_1_2:Q8_5_3), as.numeric) |>
+  pivot_longer(
+    cols = !(1),
+    names_to = "Question",
+    values_to = "value"
+  ) |>
+  group_by(`Institution Name`) |>
+  summarise(n = sum(value, na.rm = TRUE)) |>
+  filter(n > 0)
 
 
 
 #### Professional Employer Relations ####
 
 prof_employer_data <- question_list$Q8 |>
-  dplyr::select(`Institution Name`, Q8_8_1:Q8_14_3) |>
-  dplyr::mutate_at(vars(Q8_8_1:Q8_14_3), as.numeric) |>
+  dplyr::select(`Institution Name`, Q8_8_2,Q8_8_3) |>
+  dplyr::mutate_at(vars(Q8_8_2:Q8_8_3), as.numeric) |>
   dplyr::rowwise() |>
-  dplyr::mutate(n = sum(Q8_8_1:Q8_14_3)) |>
+  dplyr::mutate(n = sum(Q8_8_2:Q8_8_3)) |>
   dplyr::select(`Institution Name`, n) |>
   dplyr::filter(n > 0 & !is.na(n) & !is.infinite(n))
 
 
 
 #### Conferences #### 
+
+
+
 
 
 
