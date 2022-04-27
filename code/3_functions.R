@@ -128,8 +128,12 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
   
   viz <- ggplot2::ggplot(data = data, 
                          mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
+    
     ggplot2::geom_hline(yintercept = seq(0,1,by=0.2), colour = "grey")+
-    ggplot2::geom_col(width = rel(0.5), fill = "#7CBCE8")+
+    ggplot2::geom_bar(width = 0.6, 
+                      stat = 'identity',
+                      fill = "#7CBCE8")+
+    
     ggplot2::scale_y_continuous(limits=c(0,1), 
                                 breaks = seq(0,1,by=0.2),
                                 labels = c('0%','20%','40%','60%','80%','100%'))+
@@ -171,10 +175,19 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
     
     return(
       viz + 
-        ggplot2::geom_col(data = indiv, fill = "#217DBB", width = rel(0.5))+
-        geom_label(data = indiv, 
-                   ggplot2::aes(label = `Institution Name`),
-                   nudge_y = .05)
+        geom_bar(data = indiv,
+                 width = 0.6,
+                 stat = 'identity', fill = "#217DBB") +
+        ggrepel::geom_text_repel(
+          data = indiv,
+          aes(
+            label=`Institution Name`
+          ),
+          nudge_y=0.3,
+          color = "black",
+          size = size/2,
+          family = font
+        )
     )
     
   } else {
@@ -187,10 +200,10 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
 
 tableViz <- function(data, var, college = NULL, title = "Summary", subtitle = NULL, ...) {
   
-  if(missing(college)){
-    labels <- c('N','Mean','Median','Max','Min')
-  } else {
+  if(!missing(college)){
     labels <- c('N','Mean','Median','Max','Min', college)
+  } else {
+    labels <- c('N','Mean','Median','Max','Min')
   }
   
   variable <- tibble::deframe(data[var])
@@ -205,13 +218,17 @@ tableViz <- function(data, var, college = NULL, title = "Summary", subtitle = NU
     College <- data |> 
       dplyr::filter(`Institution Name` == college) |>
       dplyr::pull(.data[[var]])
+    
+    if(purrr::is_empty(College)) {
+      College <- 0
+    }
   }
   
   
-  if(missing(college)){
-    stats <- c(N, Mean, Median, Max, Min)
-  } else {
+  if(!missing(college)){
     stats <- c(N, Mean, Median, Max, Min, College)
+  } else {
+    stats <- c(N, Mean, Median, Max, Min)
   }
   
   

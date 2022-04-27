@@ -9,14 +9,8 @@ navbar:
     - text: "Custom Reports"
       menu:
         - text: "Brandeis College"
-          href: custom/lacn-BrandeisCollege.html
-        - text: "College of the Holy Cross"
-          href: custom/lacn-CollegeoftheHolyCross.html
-        - text: "Franklin and Marshall College"
-          href: custom/lacn-FranklinandMarshallCollege.html
-        - text: "Vassar College"
-          href: custom/lacn-VassarCollege.html
+          href: custom/BrandeisCollege.html
         - text: "Williams College"
-          href: custom/lacn-WilliamsCollege.html
+          href: custom/WilliamsCollege.html
         
 output_dir: "docs"
