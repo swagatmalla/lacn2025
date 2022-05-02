@@ -655,6 +655,25 @@ all_list$multi$Q15 |>
 
 sengage_year_data |>
   
+  dplyr::group_by(dim1) |>
+  dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
+                   Median = median(engage, na.rm = TRUE),
+                   Max = max(engage, na.rm = TRUE)) |>
+  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
+  tidyr::pivot_longer(
+    cols = !dim1,
+    names_to = "measure",
+    values_to = "engage"
+  ) |>
+  
+  dplyr::mutate(dim1 = factor(dim1, levels = c(
+    "First-Year",
+    "Sophomore",
+    "Junior",
+    "Senior",
+    "Total\n (all classes)"))
+  ) |>
+  
   mutate(measure = factor(measure, levels = c("Mean","Median","Max"))) |>
   
   ggplot2::ggplot(ggplot2::aes(dim1, engage, fill = measure))+
@@ -783,11 +802,14 @@ sengage_type_data |>
   
 </div>
 
-### Professional Staff Appt w/ Students (by class year) (distribution)
+### Professional Staff Appt w/ Students
+
+a) Individual Schools by Class Year
+b) Overall Metrics by Class Year
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-9">
 
 ```{r appt-student-dist-plot}
 appt_student_data |>
@@ -797,20 +819,25 @@ appt_student_data |>
   ggplot2::geom_bar(ggplot2::aes(fill = Year),
                     position = "stack",
                     stat = "identity") +
-#  ggrepel::geom_text_repel(data = subset(appt_student_data,
-#                                          `Institution Name` == params$college & Year == "Sophomore"),
-#                            mapping = ggplot2::aes(label = `Institution Name`),
-#                            min.segment.length = 0,
-#                            hjust = -10)+
+
   ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
-  ggplot2::labs(
-    y = "Total",
-    x = NULL)+
   ggplot2::scale_fill_manual(
     values=c(`First-Year` = "#76828E",
              Sophomore = "grey",
              Junior = "#6AD4BF",
              Senior = "#F7BF66"))+
+  
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  
+   annotate("text",
+           x = 5,
+           y = 5000,
+           label = "a)",
+           size = 15,
+           family = params$plotfont)+
+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, 
                                  family = params$plotfont),
@@ -826,7 +853,7 @@ appt_student_data |>
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-3">
 
 ```{r appt-student-dist-table}
 
@@ -844,21 +871,15 @@ tableViz(
   
 </div>
 
-### Professional Staff Appt w/ Students (by class year) (grouped bar)
-
 <div class="row">
 
-  <div class="col-sm-8">
-
-```{r appt-student-group-plot}
+```{r appt-student-group-plot, fig.width=8}
 appt_student_data |>
 
   dplyr::group_by(Year) |>
   dplyr::summarise(Mean = mean(Appt, na.rm = TRUE), 
                    Median = median(Appt, na.rm = TRUE),
-                   Max = max(Appt, na.rm = TRUE),
-                   #`Your School` = mean(engage[`Institution Name`==params$college])
-  ) |>
+                   Max = max(Appt, na.rm = TRUE)) |>
   
   tidyr::pivot_longer(
     cols = !Year,
@@ -877,11 +898,12 @@ appt_student_data |>
             colour = "white", size = 8,
             vjust = 1.5, position = position_dodge(.9)
             )+
-  #  ggrepel::geom_text_repel(data = subset(appt_student_data,
-  #                                          `Institution Name` == params$college & Year == "Sophomore"),
-  #                            mapping = ggplot2::aes(label = `Institution Name`),
-  #                            min.segment.length = 0,
-  #                            hjust = -10)+
+  annotate("text",
+           x = 0.7,
+           y = 1750,
+           label = "b)",
+           size = 15,
+           family = params$plotfont)+
   ggplot2::labs(
     y = "Total",
     x = NULL)+
@@ -900,14 +922,6 @@ appt_student_data |>
     legend.position = "top"
   )
 ```
-
-  </div>
-  
-  <div class="col-sm-4">
-
-
-
-  </div>
   
 </div>
 
@@ -1138,6 +1152,13 @@ info_no_data |>
   geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
   geom_bar(stat = "identity", position="stack")+
   
+  scale_fill_manual(
+    values = c(
+      `On-campus` = "#6AD4BF",
+      Virtual = "#F7BF66"
+    )
+  )+
+  
   labs(
     y = "Total",
     x = NULL,
@@ -1179,6 +1200,13 @@ info_employ_data |>
   
   geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
   geom_bar(stat = "identity", position="stack")+
+  
+  scale_fill_manual(
+    values = c(
+      `On-campus` = "#6AD4BF",
+      Virtual = "#F7BF66"
+    )
+  )+
   
   labs(
     y = "Total",

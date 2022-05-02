@@ -17,27 +17,7 @@ sengage_year_data <- question_list$Q21 |>
     keyFunction('Q21',dim1)
   ) |>
   dplyr::select(!c(main:sub2,Question))  |>
-  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
-  dplyr::group_by(dim1) |>
-  dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
-                   Median = median(engage, na.rm = TRUE),
-                   Max = max(engage, na.rm = TRUE),
-                   #`Your School` = mean(engage[`Institution Name`==params$college])
-  ) |>
-  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
-  tidyr::pivot_longer(
-    cols = !dim1,
-    names_to = "measure",
-    values_to = "engage"
-  ) |>
-  
-  dplyr::mutate(dim1 = factor(dim1, levels = c(
-    "First-Year",
-    "Sophomore",
-    "Junior",
-    "Senior",
-    "Total\n (all classes)"))
-  )
+  dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric))
 
 
 

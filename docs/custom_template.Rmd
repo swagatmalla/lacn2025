@@ -9,7 +9,7 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
-  college: St Olaf College
+  college: Amherst College
     
 ---
 
@@ -63,7 +63,7 @@ enroll_data |>
     ),
     nudge_y=500,
     color = "black",
-    size = 20,
+    size = 15,
     family = params$plotfont
   )+
   
@@ -123,7 +123,7 @@ endow_data |>
     ),
     nudge_y=0.5,
     color = "black",
-    size = 20,
+    size = 15,
     family = params$plotfont
   )+
   
@@ -683,50 +683,72 @@ all_list$multi$Q15 |>
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-9">
 
 ```{r sengage-year-plot}
 
 sengage_year_data |>
   
-  mutate(measure = factor(measure, levels = c("Mean","Median","Max"))) |>
+  dplyr::group_by(dim1) |>
+  dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
+                   Median = median(engage, na.rm = TRUE),
+                   Max = max(engage, na.rm = TRUE),
+                   `Your School` = mean(engage[`Institution Name`==params$college])
+                   ) |>
+  dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
+  tidyr::pivot_longer(
+    cols = !dim1,
+    names_to = "measure",
+    values_to = "engage"
+  ) |>
   
-  ggplot2::ggplot(ggplot2::aes(dim1, engage, fill = measure))+
+  dplyr::mutate(dim1 = factor(dim1, levels = c(
+    "First-Year",
+    "Sophomore",
+    "Junior",
+    "Senior",
+    "Total\n (all classes)"))
+  ) |>
+  
+  mutate(measure = factor(measure, levels = c("Mean","Median","Max", "Your School"))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(dim1, engage))+
   
   ggplot2::geom_hline(yintercept = c(0,25,50,75,100), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = measure),
                     position = "dodge",
                     stat = "identity")+
-  geom_text(aes(label = round(engage,0)),
+  geom_text(aes(fill = measure, label = round(engage,0)),
     colour = "white", size = 9,
-    vjust = 1.25, position = position_dodge(.9)
+    vjust = 1.5, position = position_dodge(.9)
     )+
   
   ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
+  ggplot2::scale_fill_manual(
+    values=c(Mean = "#6AD4BF", 
+             Median = "#F7BF66", 
+             Max = "#76828E", 
+             `Your School` = "#7CBCE8"))+
+  
   ggplot2::labs(
     y = "Engagement (%)",
     x = NULL
   )+
-  ggplot2::scale_fill_manual(
-    values=c(Mean = "#6AD4BF",
-             Median = "#F7BF66",
-             Max = "#76828E"
-             #, `Your School` = "#217DBB"
-             )
-    )+
+  
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, family = params$plotfont),
     axis.ticks = ggplot2::element_blank(),
     axis.text.x = ggplot2::element_text(size = 30, lineheight = 0.5, colour = "black"),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
+    legend.text = element_text(size = 30),
     legend.position = "top"
     )
 ```
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-3">
   
 `r nTab(question_list$Q21$Q21_5_4)`
 
@@ -752,7 +774,7 @@ sengage_type_data |>
   dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
                    Median = median(engage, na.rm = TRUE),
                    Max = max(engage, na.rm = TRUE),
-                   #`Your School` = mean(engage[`Institution Name`== params$college], na.rm = TRUE)
+                   `Your School` = mean(engage[`Institution Name`== params$college], na.rm = TRUE)
   ) |>
   tidyr::pivot_longer(
     cols = !dim2,
@@ -760,7 +782,7 @@ sengage_type_data |>
     values_to = "engage"
   ) |>
   
-  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max',"Your School"))) |>
   
   ggplot2::ggplot(ggplot2::aes(dim2,engage, fill = measure))+
   
@@ -769,7 +791,7 @@ sengage_type_data |>
                     position = "dodge",
                     stat = "identity")+
   geom_text(aes(label = round(engage,0)),
-            colour = "white", size = 9,
+            colour = "white", size = 8,
             vjust = 1.25, position = position_dodge(.9)
             )+
   ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
@@ -781,8 +803,8 @@ sengage_type_data |>
   ggplot2::scale_fill_manual(
     values=c(Mean = "#6AD4BF",
              Median = "#F7BF66",
-             Max = "#76828E"
-             #, `Your School` = "#217DBB"
+             Max = "#76828E", 
+             `Your School` = "#7CBCE8"
     )
   )+
   ggplot2::theme(
@@ -792,6 +814,7 @@ sengage_type_data |>
     axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
+    legend.text = element_text(size = 30),
     legend.position = "top"
   )
 ```
@@ -817,11 +840,14 @@ sengage_type_data |>
   
 </div>
 
-### Professional Staff Appt w/ Students (by class year) (distribution)
+### Professional Staff Appt w/ Students
+
+a) Individual Schools by Class Year
+b) Overall Metrics by Class Year
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-9">
 
 ```{r appt-student-dist-plot}
 appt_student_data |>
@@ -831,20 +857,34 @@ appt_student_data |>
   ggplot2::geom_bar(ggplot2::aes(fill = Year),
                     position = "stack",
                     stat = "identity") +
-#  ggrepel::geom_text_repel(data = subset(appt_student_data,
-#                                          `Institution Name` == params$college & Year == "Sophomore"),
-#                            mapping = ggplot2::aes(label = `Institution Name`),
-#                            min.segment.length = 0,
-#                            hjust = -10)+
+  ggrepel::geom_text_repel(data = subset(appt_student_data,
+                                         `Institution Name` == params$college & Year == "Senior"),
+                           mapping = ggplot2::aes(label = `Institution Name`),
+                           nudge_y = 1500,
+                           nudge_x = -200,
+                           size = 13,
+                           colour = "black",
+                           family = params$plotfont)+
+  
   ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
-  ggplot2::labs(
-    y = "Total",
-    x = NULL)+
   ggplot2::scale_fill_manual(
     values=c(`First-Year` = "#76828E",
              Sophomore = "grey",
              Junior = "#6AD4BF",
              Senior = "#F7BF66"))+
+  
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  
+  annotate("text",
+           x = 5,
+           y = 5000,
+           label = "a)",
+           size = 15,
+           family = params$plotfont)+
+  
+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, 
                                  family = params$plotfont),
@@ -860,7 +900,7 @@ appt_student_data |>
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-3">
 
 ```{r appt-student-dist-table}
 appt_student_data |>
@@ -874,21 +914,18 @@ appt_student_data |>
   
 </div>
 
-### Professional Staff Appt w/ Students (by class year) (grouped bar)
-
 <div class="row">
 
-  <div class="col-sm-8">
+```{r appt-student-group-plot, fig.width=9}
 
-```{r appt-student-group-plot}
 appt_student_data |>
 
   dplyr::group_by(Year) |>
   dplyr::summarise(Mean = mean(Appt, na.rm = TRUE), 
                    Median = median(Appt, na.rm = TRUE),
                    Max = max(Appt, na.rm = TRUE),
-                   #`Your School` = mean(engage[`Institution Name`==params$college])
-  ) |>
+                   `Your School` = mean(Appt[`Institution Name`==params$college])
+                   ) |>
   
   tidyr::pivot_longer(
     cols = !Year,
@@ -896,7 +933,7 @@ appt_student_data |>
     values_to = "amount"
   ) |>
   
-  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max',"Your School"))) |>
   
   ggplot2::ggplot(ggplot2::aes(Year, amount, fill = measure))+
   ggplot2::geom_hline(yintercept = c(0,500,1000,1500,2000), colour = "grey")+
@@ -904,21 +941,31 @@ appt_student_data |>
                     position = "dodge",
                     stat = "identity") +
   geom_text(aes(label = round(amount,0)),
-            colour = "white", size = 8,
-            vjust = 1.5, position = position_dodge(.9)
-            )+
-  #  ggrepel::geom_text_repel(data = subset(appt_student_data,
-  #                                          `Institution Name` == params$college & Year == "Sophomore"),
-  #                            mapping = ggplot2::aes(label = `Institution Name`),
-  #                            min.segment.length = 0,
-  #                            hjust = -10)+
+            colour = "white", size = 9,
+            hjust = 1.2,
+            position = position_dodge(.9),
+            angle = 90)+
+  
+  ggplot2::scale_fill_manual(
+    values = c(
+      Mean = "#6AD4BF", 
+      Median = "#F7BF66", 
+      Max = "#76828E", 
+      `Your School` = "#7CBCE8")
+      )+
+  
   ggplot2::labs(
     y = "Total",
     x = NULL)+
-  ggplot2::scale_fill_manual(
-    values=c(Mean = "#6AD4BF",
-             Median = "#F7BF66",
-             Max = "#76828E"))+
+  
+    annotate("text",
+           x = 0.7,
+           y = 1750,
+           label = "b)",
+           size = 15,
+           family = params$plotfont)+
+  
+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, 
                                  family = params$plotfont),
@@ -927,17 +974,10 @@ appt_student_data |>
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.text = ggplot2::element_text(size = 30, colour = "black"),
-    legend.position = "top"
+    legend.position = "right"
   )
 ```
 
-  </div>
-  
-  <div class="col-sm-4">
-
-
-
-  </div>
   
 </div>
 
@@ -1041,7 +1081,7 @@ tableViz(appt_fte_data, var = "ratio", na.rm = TRUE, college = params$college)
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-8">
 
 ```{r exper-learning-plot}
 exper_learning_data |>
@@ -1052,8 +1092,8 @@ exper_learning_data |>
   dplyr::group_by(dim1) |>
   dplyr::summarise(Mean = mean(exper, na.rm = TRUE), 
                    Median = median(exper, na.rm = TRUE),
-                   Max = max(exper, na.rm = TRUE)
-                   #, `Your School` = mean(exper[`Institution Name`==params$college])
+                   Max = max(exper, na.rm = TRUE),
+                   `Your School` = mean(exper[`Institution Name`==params$college], na.rm = TRUE)
   ) |>
   
   tidyr::pivot_longer(
@@ -1062,7 +1102,7 @@ exper_learning_data |>
     values_to = "exper"
   ) |>
   
-  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max','Your School'))) |>
   
   ggplot2::ggplot(ggplot2::aes(reorder(dim1,-exper),exper, fill = measure))+
   
@@ -1086,8 +1126,8 @@ exper_learning_data |>
   ggplot2::scale_fill_manual(
     values=c(Mean = "#6AD4BF",
              Median = "#F7BF66",
-             Max = "#76828E"
-             #, `Your School` = "#217DBB"
+             Max = "#76828E",
+             `Your School` = "#7CBCE8"
     )
   )+
   ggplot2::theme(
@@ -1099,6 +1139,7 @@ exper_learning_data |>
     panel.background = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
     legend.position = "top",
+    legend.text = element_text(size = 30),
     legend.title = ggplot2::element_blank()
   )
 
@@ -1106,7 +1147,7 @@ exper_learning_data |>
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-4">
 
 ```{r exper-learning-table, echo=FALSE}
 
@@ -1142,7 +1183,7 @@ exper_learning_data |>
       locations = gt::cells_title(groups = "subtitle")
     ) |>
 gt::cols_width(
-      dim1 ~ px(250)
+      dim1 ~ px(150)
     )
 
 ```
@@ -1168,6 +1209,26 @@ info_no_data |>
   
   geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
   geom_bar(stat = "identity", position="stack")+
+  ggrepel::geom_text_repel(
+    data = subset(
+      info_no_data,
+      `Institution Name` == params$college & dim2 == "Virtual"
+      ),
+    aes(
+      label=`Institution Name`
+    ),
+    nudge_y=200,
+    color = "black",
+    size = 15,
+    family = params$plotfont
+  )+
+  
+  scale_fill_manual(
+    values = c(
+      `On-campus` = "#6AD4BF",
+      Virtual = "#F7BF66"
+    )
+  )+
   
   labs(
     y = "Total",
@@ -1210,6 +1271,26 @@ info_employ_data |>
   
   geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
   geom_bar(stat = "identity", position="stack")+
+  ggrepel::geom_text_repel(
+    data = subset(
+      info_no_data,
+      `Institution Name` == params$college & dim2 == "Virtual"
+      ),
+    aes(
+      label=`Institution Name`
+    ),
+    nudge_y=10,
+    color = "black",
+    size = 15,
+    family = params$plotfont
+  )+
+  
+  scale_fill_manual(
+    values = c(
+      `On-campus` = "#6AD4BF",
+      Virtual = "#F7BF66"
+    )
+  )+
   
   labs(
     y = "Total",
@@ -1259,8 +1340,6 @@ total_budget |>
   ggplot(aes(reorder(`Institution Name`,amount_mil), amount_mil, fill = Budget))+
   geom_hline(yintercept = seq(0,10,by=5), colour = "grey")+
   geom_bar(stat = 'identity')+
-  geom_bar(data = subset(total_budget, `Institution Name` == params$college),
-           stat = 'identity', fill = "#217DBB") +
   ggrepel::geom_text_repel(
     data = subset(
       total_budget,
@@ -1269,9 +1348,10 @@ total_budget |>
     aes(
       label=`Institution Name`
     ),
-    nudge_y=1,
+    nudge_y=3,
+    nudge_x = -3,
     color = "black",
-    size = 20,
+    size = 15,
     family = params$plotfont
   )+
   labs(
@@ -1304,6 +1384,7 @@ total_budget |>
     dplyr::summarise(total = sum(amount)) |>
 tableViz(
   var = 'total',
+  subtitle = "Total (operating and non-operating)",
   college = params$college
 )
 
@@ -1335,8 +1416,9 @@ endow_exp_data |>
       label=`Institution Name`
     ),
     nudge_y=1,
+    nudge_x = -9,
     color = "black",
-    size = 20,
+    size = 15,
     family = params$plotfont
   )+
   
@@ -1395,9 +1477,10 @@ gift_data |>
     aes(
       label=`Institution Name`
     ),
-    nudge_y=.4,
+    nudge_y = 0.5,
+    nudge_x = -2,
     color = "black",
-    size = 20,
+    size = 15,
     family = params$plotfont
   )+
   

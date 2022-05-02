@@ -180,12 +180,10 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
                  stat = 'identity', fill = "#217DBB") +
         ggrepel::geom_text_repel(
           data = indiv,
-          aes(
-            label=`Institution Name`
-          ),
-          nudge_y=0.3,
+          aes(label="Your School"),
           color = "black",
           size = size/2,
+          angle = 270,
           family = font
         )
     )
