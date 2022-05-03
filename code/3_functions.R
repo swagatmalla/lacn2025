@@ -110,10 +110,15 @@ matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Source 
       
       plot + 
         ggplot2::geom_bar(data = indiv, stat = 'identity', fill = "#217DBB")+
-        ggplot2::geom_label(data = indiv,
-                            ggplot2::aes(label = `Institution Name`),
-                            label.size = 1)
+        ggrepel::geom_text_repel(data = indiv,
+                                 mapping = ggplot2::aes(label = `Institution Name`),
+                                 nudge_y = max(data['n'])/2,
+                                 nudge_x = -5,
+                                 size = 13,
+                                 colour = "black",
+                                 family = params$plotfont)
     )
+
     
     
   } else {
@@ -181,8 +186,10 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
         ggrepel::geom_text_repel(
           data = indiv,
           aes(label="Your School"),
+          nudge_y = 0.2,
+          nudge_x = 0.5,
           color = "black",
-          size = size/2,
+          size = size/3,
           angle = 270,
           family = font
         )
@@ -322,6 +329,28 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
   
   return(tab)
   
+}
+
+serviceCustom <- function(q,dim, college = params$college) {
+  
+  tbl <- question_list[[q]] |>
+    pivot_longer(
+      cols = !(1:2),
+      names_to = "Question",
+      values_to = "Your School"
+    ) |>
+    left_join(
+      keyFunction(q,eval(dim))
+    ) |>
+    filter(`Institution Name` == college) |>
+    select(eval(dim),`Your School`) |>
+    rename(value = dim) |>
+    mutate(`Your School` = case_when(
+      is.na(`Your School`) ~ "",
+      TRUE ~ "Yes"
+    ))
+  
+  return(tbl)
 }
 
 

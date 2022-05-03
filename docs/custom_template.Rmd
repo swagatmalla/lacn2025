@@ -9,7 +9,7 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
-  college: Amherst College
+  college: Hobart and William Smith College
     
 ---
 
@@ -62,6 +62,7 @@ enroll_data |>
       label=`Institution Name`
     ),
     nudge_y=500,
+    nudge_x = -7,
     color = "black",
     size = 15,
     family = params$plotfont
@@ -121,7 +122,8 @@ endow_data |>
     aes(
       label=`Institution Name`
     ),
-    nudge_y=0.5,
+    nudge_y= 1.5,
+    nudge_x = -7,
     color = "black",
     size = 15,
     family = params$plotfont
@@ -199,7 +201,7 @@ singlePlot(reporting_data, q = "Q2",
 
 <div class="col-sm-4">
 
-`r nTab(question_list$Q3['Institution Name'])`
+`r nTab(question_list$Q3$Q3)`
 
   </div>
 
@@ -209,6 +211,15 @@ singlePlot(reporting_data, q = "Q2",
 
 ```{r advisory-boards}
 all_list$multi$Q4 |>
+  
+  left_join(
+    serviceCustom(
+      q = 'Q4',
+      dim = 'dim2'
+    )
+  ) |>
+  
+  suppressMessages() |>
   
   dplyr::filter(n>1) |>
   
@@ -259,7 +270,7 @@ rank_data |>
            size = 10)+
   
   annotate("text", 
-           x = 3.5, 
+           x = 7.5, 
            y = 5, 
            label = params$college,
            colour = "black", #"#3EA1E6",
@@ -273,9 +284,9 @@ rank_data |>
            colour = "black")+
   
   annotate("segment", 
-           x = 3,
-           xend = 3.3, 
-           y = deframe(rank_data[rank_data$dim1 =="Faculty engagement" & rank_data$`Institution Name` == params$college,'ranking']), 
+           x = 8,
+           xend = 7.7, 
+           y = deframe(rank_data[rank_data$dim1 =="First destination data" & rank_data$`Institution Name` == params$college,'ranking']), 
            yend = 5, 
            colour = "black")+
   
@@ -301,7 +312,8 @@ rank_data |>
 
 matrixPlot(student_staff_data, breaks = c(0,25,50,75,100),
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 
 ```
 
@@ -330,7 +342,8 @@ tableViz(data = student_staff_data,'n', college = params$college)
 
 matrixPlot(student_para_data, breaks = c(0,25,50,75,100),
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 
 ```
 
@@ -359,7 +372,8 @@ tableViz(data = student_para_data,'n', college = params$college)
 
 matrixPlot(student_stustaff_ratio, breaks = c(0,250,500,750,1000),
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 
 ```
 
@@ -388,7 +402,8 @@ tableViz(student_stustaff_ratio, var='n', college = params$college)
 ```{r prof-plot}
 matrixPlot(prof_staff_data, breaks = c(0,10,20,30),
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 ```
 
   </div>
@@ -413,7 +428,8 @@ tableViz(prof_staff_data, var = 'n', college = params$college)
 
 matrixPlot(student_prof_ratio, breaks = c(0,100,200,300,400,500),
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 
 ```
 
@@ -440,7 +456,8 @@ tableViz(student_prof_ratio, var='n', college = params$college)
 ```{r prof-advising-plot}
 matrixPlot(prof_advising_data, breaks = c(0,10,20,30,40), 
            font = params$plotfont,
-           size = 45)
+           size = 45,
+           college = params$college)
 ```
 
   </div>
@@ -465,7 +482,8 @@ tableViz(prof_advising_data, 'n', college = params$college)
 matrixPlot(prof_employer_data,
            breaks = c(0,10,20,30,40), 
            font = params$plotfont, 
-           size = 45)
+           size = 45,
+           college = params$college)
 ```
 
   </div>
@@ -488,9 +506,19 @@ write_in_con <- question_list$Q9$Q9_11_TEXT
 
 all_list$multi$Q9 |>
   
+  left_join(
+    serviceCustom(
+      q = 'Q9',
+      dim = 'dim2'
+    )
+  ) |>
+  
+  suppressMessages() |>
+  
     add_row(value = "Career Leadership Collective ",
           n = 6,
-          freq = 6/39) |>
+          freq = 6/39,
+          `Your School` = "") |>
   
   dplyr::filter(!is.element(value,write_in_con)) |>
   
@@ -519,6 +547,15 @@ write_in_userve <- question_list$Q10$Q10_13_TEXT
 
 all_list$multi$Q10 |>
   
+  left_join(
+    serviceCustom(
+      q = 'Q10',
+      dim = 'dim2'
+    )
+  ) |>
+  
+  suppressMessages() |>
+  
   dplyr::filter(
     !is.element(value,write_in_userve)
   ) |>
@@ -543,6 +580,15 @@ all_list$multi$Q10 |>
 write_in_uprogram <- question_list$Q11$Q11_29_TEXT
 
 all_list$multi$Q11 |>
+  
+  left_join(
+    serviceCustom(
+      q = 'Q11',
+      dim = 'dim2'
+    )
+  ) |>
+  
+  suppressMessages() |>
   
   dplyr::filter(
     !is.element(value,write_in_uprogram)
@@ -585,11 +631,22 @@ q13_n <- question_list[['Q13']] |>
 
 all_list$multi$Q13 |>
   
+  left_join(
+    serviceCustom(
+      q = 'Q13',
+      dim = 'dim2'
+    )
+  ) |>
+  
+  suppressMessages() |>
+  
   mutate(value = stringr::str_to_title(value),
          freq = n/q13_n,
-         freq = round(freq*100,2)) |>
+         freq = round(freq*100,2),
+         `Your School` = replace_na(`Your School`,"")
+         ) |>
   
-  dplyr::arrange(-n) |>
+  dplyr::arrange(-n) |> 
   
   serviceTab(
     q = "Q13",
@@ -655,11 +712,24 @@ q15_n <- question_list[['Q15']] |>
   
   nrow()
 
+q15_custom <- question_list$Q15 |>
+  filter(`Institution Name` == params$college) |>
+  select(Q15) |>
+  rename(value = 'Q15') |>
+  add_column('Your School' = "Yes")
+
 all_list$multi$Q15 |>
+  
+  left_join(
+    q15_custom
+  ) |>
+  
+  suppressMessages() |>
   
   mutate(value = stringr::str_to_title(value),
          freq = n/q15_n,
-         freq = round(freq*100,2)) |>
+         freq = round(freq*100,2),
+         `Your School` = replace_na(`Your School`,"")) |>
   
   dplyr::arrange(-n) |>
   
@@ -791,8 +861,8 @@ sengage_type_data |>
                     position = "dodge",
                     stat = "identity")+
   geom_text(aes(label = round(engage,0)),
-            colour = "white", size = 8,
-            vjust = 1.25, position = position_dodge(.9)
+            colour = "white", size = 8.5,
+            vjust = 1.4, position = position_dodge(.9)
             )+
   ggplot2::scale_y_continuous(limits = c(0,100), breaks = c(0,25,50,75,100))+
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
@@ -860,7 +930,7 @@ appt_student_data |>
   ggrepel::geom_text_repel(data = subset(appt_student_data,
                                          `Institution Name` == params$college & Year == "Senior"),
                            mapping = ggplot2::aes(label = `Institution Name`),
-                           nudge_y = 1500,
+                           nudge_y = 2500,
                            nudge_x = -200,
                            size = 13,
                            colour = "black",
@@ -997,6 +1067,22 @@ appt_alum_data |>
   ggplot2::geom_bar(ggplot2::aes(fill = dim2),
                     position = "stack",
                     stat = "identity")+
+  
+  ggrepel::geom_text_repel(
+    data = subset(
+      appt_alum_data,
+      `Institution Name` == params$college & dim2 == "Appointments*"
+      ),
+    aes(
+      label=`Institution Name`
+    ),
+    nudge_y=500,
+    nudge_x = -7,
+    color = "black",
+    size = 15,
+    family = params$plotfont
+  )+
+  
   ggplot2::labs(
     y = "Total",
     x = NULL,
@@ -1049,6 +1135,21 @@ appt_fte_data |>
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
   ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
   ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
+  
+  ggrepel::geom_text_repel(
+    data = subset(
+      appt_fte_data,
+      `Institution Name` == params$college
+      ),
+    aes(
+      label=`Institution Name`
+    ),
+    nudge_y=200,
+    nudge_x = -7,
+    color = "black",
+    size = 15,
+    family = params$plotfont
+  )+
   
   ggplot2::labs(
     x = NULL,
@@ -1112,8 +1213,8 @@ exper_learning_data |>
                     position = "dodge")+
    geom_text(
     aes(label = round(exper,0)),
-    colour = "white", size = 9,
-    vjust = 1.5, position = position_dodge(.9)
+    colour = "white", size = 8,
+    vjust = 1.4, position = position_dodge(.9)
     )+
   ggplot2::scale_x_discrete(
     labels = function(x) stringr::str_wrap(x, width = 12)
@@ -1273,13 +1374,13 @@ info_employ_data |>
   geom_bar(stat = "identity", position="stack")+
   ggrepel::geom_text_repel(
     data = subset(
-      info_no_data,
+      info_employ_data,
       `Institution Name` == params$college & dim2 == "Virtual"
       ),
     aes(
       label=`Institution Name`
     ),
-    nudge_y=10,
+    nudge_y=75,
     color = "black",
     size = 15,
     family = params$plotfont
