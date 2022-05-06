@@ -29,6 +29,10 @@ hr {
   text-align: center;
 }
 
+#notes {
+  text-align: left;
+}
+
 .row {
   padding-top: 15px;
   padding-bottom: 15px;

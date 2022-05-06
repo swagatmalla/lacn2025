@@ -36,8 +36,12 @@ load("../lacn.RData")
 
 ## `r params$college` {#college}
 
-* If `r params$college` does not appear on a visualization, it either did not respond to that question or entered 0.
-* A value for `r params$college` in a summary table in 0 indicates either a response of 0 or no response.
+::: {#notes style="text-align: left;"}
+
+* If `r params$college` does not appear on a plot, it either did not respond to that question or entered 0.
+* A value of zero in a summary table indicates either a response of 0 or no response.
+
+:::
 
 <hr/>
 
@@ -293,7 +297,7 @@ rank_data |>
            x = 9,
            xend = 8.7, 
            y = deframe(rank_data[rank_data$dim1 =="Diverse student engagement" & rank_data$`Institution Name` == params$college,'ranking']), 
-           yend = deframe(rank_data[rank_data$dim1 =="Diverse student engagement" & rank_data$`Institution Name` == params$college,'ranking'])+2, 
+           yend = deframe(rank_data[rank_data$dim1 =="Diverse student engagement" & rank_data$`Institution Name` == params$college,'ranking'])+1, 
            colour = "black")+
   
   theme(
