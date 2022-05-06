@@ -153,8 +153,9 @@ appt_alum_data <- question_list$Q20 |>
 
 
 appt_fte_data <- question_list$Q20 |> 
+  select(`Institution Name`, Q20_5_1:Q20_6_2) |>
   tidyr::pivot_longer(
-    cols = !(1:2),
+    cols = !(1),
     names_to = "Question",
     values_to = "Appt"
   ) |>
@@ -163,7 +164,7 @@ appt_fte_data <- question_list$Q20 |>
   dplyr::group_by(`Institution Name`) |>
   dplyr::summarise(Appt = sum(Appt)) |>
   
-  dplyr::left_join(prof_staff_data) |>
+  dplyr::left_join(prof_staff_data) |> 
   
   dplyr::filter(Appt != 0 & !is.na(Appt),
                 n != 0 & !is.na(n)) |>

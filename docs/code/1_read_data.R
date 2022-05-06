@@ -9,6 +9,7 @@ lacn_master <- readr::read_csv(lacn_location) |>
   dplyr::mutate(
     `Institution Name` = dplyr::case_when(
       is.na(`Institution Name`) ~ Q1_2,
+      `Institution Name` == "Brandeis College" ~ "Brandeis University",
       TRUE ~ `Institution Name`
     )
   )

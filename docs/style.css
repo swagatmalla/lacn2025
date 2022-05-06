@@ -25,6 +25,10 @@ hr {
   font-style: italic;
 }
 
+#college {
+  text-align: center;
+}
+
 .row {
   padding-top: 15px;
   padding-bottom: 15px;

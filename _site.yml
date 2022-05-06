@@ -8,9 +8,11 @@ navbar:
       href: test_report.html
     - text: "Custom Reports"
       menu:
-        - text: "Brandeis College"
-          href: custom/BrandeisCollege.html
+        - text: "Brandeis University"
+          href: custom/BrandeisUniversity.html
         - text: "Williams College"
           href: custom/WilliamsCollege.html
+        - text: "Vassar College"
+          href: custom/VassarCollege.html
         
 output_dir: "docs"

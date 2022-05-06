@@ -36,7 +36,7 @@ load("../lacn.RData")
 ## Introduction
 
 
-### Enrollment
+### Undergraduate Enrollment
 
 <div class="row">
 
@@ -209,7 +209,7 @@ all_list$multi$Q4 |>
 
 ### Performance Metrics
 
-*Relative Importance Ranking (N = 38)*
+*Relative Importance to Senior Leadership (N = 38)*
 
 ```{r performance-rank, fig.width = 9}
 rank_data |>
@@ -257,7 +257,7 @@ rank_data |>
 ```
 
 
-### Student Staff (total)
+### Student Staff (Total)
 
 <div class="row">
 
@@ -345,7 +345,7 @@ tableViz(student_stustaff_ratio, var='n')
 
 
 
-### Professional (FTE)
+### Professional (Total FTE)
 
 <div class="row">
 
@@ -399,6 +399,8 @@ tableViz(student_prof_ratio, var='n')
 
 ### Professional Staff: Advising
 
+*(# who devote any level of time)*
+
 <div class="row">
 
   <div class="col-sm-7">
@@ -423,13 +425,15 @@ tableViz(prof_advising_data, 'n')
 
 ### Professional Staff: Employer Relations
 
+*(# who devote any level of time)*
+
 <div class="row">
 
   <div class="col-sm-7">
 
 ```{r prof-employer-plot}
 matrixPlot(prof_employer_data,
-           breaks = c(0,10,20,30,40), 
+           breaks = c(0,5,10,15), 
            font = params$plotfont, 
            size = 45)
 ```
@@ -446,7 +450,7 @@ tableViz(prof_employer_data, 'n')
   
 </div>
 
-### Conferences
+### National/Regional Conferences and Workshops
 
 ```{r conferences}
 
@@ -468,16 +472,16 @@ all_list$multi$Q9 |>
   
   serviceTab(q = "Q9", 
              title = "Conferences Attended by Staff",
-             subtitle = "For write-in responses, see Appendix",
+             subtitle = "",
              offer = "Conferences")
 ```
 
 
 <hr/>
 
-## Student/Alum Engagement
+## Services and Programs
 
-### Services offered: undergrad
+### Services Offered: Undergraduate Students
 
 ```{r service-undergrad}
 
@@ -492,6 +496,7 @@ all_list$multi$Q10 |>
   dplyr::mutate(
     value = dplyr::case_when(
       value == "Other:" ~ "Other",
+      value == "Student on-campus employment" ~ "Student on-campus employment (managed)",
       TRUE ~ as.character(value)
     ),
     freq = round(freq*100,2), .keep = "unused"
@@ -499,12 +504,12 @@ all_list$multi$Q10 |>
   dplyr::arrange(-n)|>
   
   serviceTab(q = "Q10", title = "Services Offered to Undergraduates",
-             subtitle = "For write-in responses, see Appendix",
+             subtitle = "",
              offer = "Services")
 
 ```
 
-### Programs offered: undergrad
+### Programs Offered: Undergraduate Students
 ```{r program-undergrad}
 write_in_uprogram <- question_list$Q11$Q11_29_TEXT
 
@@ -526,7 +531,7 @@ all_list$multi$Q11 |>
   serviceTab(
     q = "Q11",
     title = "Programs Offered to Undergraduates",
-    subtitle = "For write-in responses, see Appendix",
+    subtitle = "",
     offer = "Programs"
   )
 ```
@@ -534,7 +539,7 @@ all_list$multi$Q11 |>
 
 
 
-### Services offered: grad
+### Services Offered: Graduate Students
 
 <div class="row">
 
@@ -560,7 +565,7 @@ all_list$multi$Q13 |>
   serviceTab(
     q = "Q13",
     title = "Services Offered to Grad Students",
-    subtitle = "For write-in responses, see Appendix",
+    subtitle = "",
     offer = "Services"
   )
 ```
@@ -609,7 +614,7 @@ all_list$single$Q12 |>
   
 </div>
 
-### Services offered: alumni
+### Services Offered: Alumni
 <div class="row">
 
   <div class="col-sm-7">
@@ -644,6 +649,320 @@ all_list$multi$Q15 |>
   
 </div>
 
+<hr/>
+
+
+## Employer Relations
+
+### Info Sessions: Number Offered
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r info-no-plot}
+  
+info_no_data |>  
+  ggplot(aes(reorder(`Institution Name`,amount),amount))+
+  
+  geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
+  geom_bar(stat = "identity", fill = "#7CBCE8")+
+  
+  labs(
+    y = "Total",
+    x = NULL,
+    fill = NULL
+  )+
+  
+  theme(
+    text = element_text(family = params$plotfont, size = 40),
+    panel.background = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "top"
+  )
+```
+  </div>
+  
+  <div class="col-sm-5">
+```{r info-no-table}
+info_no_data |>
+  group_by(`Institution Name`) |>
+  summarise(amount = sum(amount)) |>
+  tableViz(var = 'amount',
+           subtitle = "All Sessions Virtual")
+```
+  
+  </div>
+
+</div>
+
+### Info Sessions: Number of Employers
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r info-employ-plot}
+info_employ_data |>  
+  ggplot(aes(reorder(`Institution Name`,amount),amount))+
+  
+  geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
+  geom_bar(stat = "identity", fill="#7CBCE8")+
+
+  
+  labs(
+    y = "Total",
+    x = NULL,
+    fill = NULL
+  )+
+  
+  theme(
+    text = element_text(family = params$plotfont, size = 40),
+    panel.background = element_blank(),
+    axis.text.x = element_blank(),
+    axis.ticks = element_blank(),
+    legend.position = "top"
+  )
+```
+  </div>
+  
+  <div class="col-sm-5">
+```{r info-employ-table}
+info_employ_data |>
+  group_by(`Institution Name`) |>
+  summarise(amount = sum(amount)) |>
+  tableViz(var = 'amount',
+           subtitle = "All Sessions Virtual")
+```
+  
+  </div>
+
+</div>
+
+
+<hr/>
+
+
+## Student and Alumni Engagement
+
+### Professional Staff Appointments with Students
+
+a) Individual Schools by Class Year
+b) Overall Metrics by Class Year
+
+<div class="row">
+
+  <div class="col-sm-9">
+
+```{r appt-student-dist-plot}
+appt_student_data |>
+  
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, Appt) ,Appt))+
+  ggplot2::geom_hline(yintercept = c(0,2000,4000,6000), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = Year),
+                    position = "stack",
+                    stat = "identity") +
+
+  ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
+  ggplot2::scale_fill_manual(
+    values=c(`First-Year` = "#76828E",
+             Sophomore = "grey",
+             Junior = "#6AD4BF",
+             Senior = "#F7BF66"))+
+  
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  
+   annotate("text",
+           x = 5,
+           y = 5000,
+           label = "a)",
+           size = 15,
+           family = params$plotfont)+
+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 45, 
+                                 family = params$plotfont),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 30, colour = "black"),
+    legend.position = "right"
+    )
+
+```
+
+  </div>
+  
+  <div class="col-sm-3">
+
+```{r appt-student-dist-table}
+
+
+tableViz(
+  data = appt_student_data |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(Appt = sum(Appt)),
+  
+  var = "Appt"
+)
+```
+
+  </div>
+  
+</div>
+
+<div class="row">
+
+```{r appt-student-group-plot, fig.width=8}
+appt_student_data |>
+
+  dplyr::group_by(Year) |>
+  dplyr::summarise(Mean = mean(Appt, na.rm = TRUE), 
+                   Median = median(Appt, na.rm = TRUE),
+                   Max = max(Appt, na.rm = TRUE)) |>
+  
+  tidyr::pivot_longer(
+    cols = !Year,
+    names_to = "measure",
+    values_to = "amount"
+  ) |>
+  
+  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(Year, amount, fill = measure))+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500,2000), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = measure),
+                    position = "dodge",
+                    stat = "identity") +
+  geom_text(aes(label = round(amount,0)),
+            colour = "white", size = 8, angle = 90,
+            hjust = 1.25, position = position_dodge(.9)
+            )+
+  annotate("text",
+           x = 0.7,
+           y = 1750,
+           label = "b)",
+           size = 15,
+           family = params$plotfont)+
+  ggplot2::labs(
+    y = "Total",
+    x = NULL)+
+  ggplot2::scale_fill_manual(
+    values=c(Mean = "#6AD4BF",
+             Median = "#F7BF66",
+             Max = "#76828E"))+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 45, 
+                                 family = params$plotfont),
+    axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.text = ggplot2::element_text(size = 30, colour = "black"),
+    legend.position = "right"
+  )
+```
+  
+</div>
+
+### Professional Staff Appointments + Email Consultations (Alumi only)
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-alum-plot}
+appt_alum_data |>
+  
+  mutate(dim2 = factor(dim2, levels = c('Email Consultations','Appointments*'))) |>
+  
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, engage), engage))+
+  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
+  ggplot2::geom_bar(ggplot2::aes(fill = dim2),
+                    position = "stack",
+                    stat = "identity")+
+  ggplot2::labs(
+    y = "Total",
+    x = NULL,
+    caption = "*In-Person, Phone, or Video Chat"
+  )+
+  ggplot2::scale_fill_manual(
+    values = c(
+      `Email Consultations` = "#6AD4BF",
+      `Appointments*` = "#F7BF66"
+    )
+  )+
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 40, family = params$plotfont),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    panel.background = ggplot2::element_blank(),
+    legend.title = ggplot2::element_blank(),
+    legend.position = "top"
+  )
+```
+
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-alum-table}
+tableViz(
+  data = appt_alum_data |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::summarise(engage = sum(engage)),
+  
+  var = "engage", 
+  na.rm = TRUE
+  )
+```
+
+  </div>
+  
+</div>
+
+### Professional Staff Appointments + Email Consultations per Total FTE
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r appt-fte-plot}
+appt_fte_data |>
+  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
+  ggplot2::geom_hline(yintercept = c(0,200,400,600,800), colour = "grey")+
+  ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
+  
+  ggplot2::labs(
+    x = NULL,
+    y = "Appt. to FTE Ratio",
+    caption = "Note: includes only institutions that\n reported both appointments and FTE"
+  )+
+  
+  ggplot2::theme(
+    text = ggplot2::element_text(size = 40, family = params$plotfont,
+                                 lineheight = .5),
+    plot.caption = element_text(size = 25),
+    panel.background = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank()
+  )
+```
+
+  </div>
+  
+  <div class="col-sm-5">
+
+```{r appt-fte-table}
+tableViz(appt_fte_data, var = "ratio", na.rm = TRUE)
+```
+  </div>
+  
+</div>
 
 ### Student Engagement by Class Year
 
@@ -802,229 +1121,14 @@ sengage_type_data |>
   
 </div>
 
-### Professional Staff Appt w/ Students
 
-a) Individual Schools by Class Year
-b) Overall Metrics by Class Year
+### Experiential Learning Participation'
+
+*% of students who completed by graduation*
 
 <div class="row">
 
   <div class="col-sm-9">
-
-```{r appt-student-dist-plot}
-appt_student_data |>
-  
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, Appt) ,Appt))+
-  ggplot2::geom_hline(yintercept = c(0,2000,4000,6000), colour = "grey")+
-  ggplot2::geom_bar(ggplot2::aes(fill = Year),
-                    position = "stack",
-                    stat = "identity") +
-
-  ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
-  ggplot2::scale_fill_manual(
-    values=c(`First-Year` = "#76828E",
-             Sophomore = "grey",
-             Junior = "#6AD4BF",
-             Senior = "#F7BF66"))+
-  
-  ggplot2::labs(
-    y = "Total",
-    x = NULL)+
-  
-   annotate("text",
-           x = 5,
-           y = 5000,
-           label = "a)",
-           size = 15,
-           family = params$plotfont)+
-
-  ggplot2::theme(
-    text = ggplot2::element_text(size = 45, 
-                                 family = params$plotfont),
-    axis.text.x = ggplot2::element_blank(),
-    axis.ticks = ggplot2::element_blank(),
-    panel.background = ggplot2::element_blank(),
-    legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 30, colour = "black"),
-    legend.position = "right"
-    )
-
-```
-
-  </div>
-  
-  <div class="col-sm-3">
-
-```{r appt-student-dist-table}
-
-
-tableViz(
-  data = appt_student_data |>
-    dplyr::group_by(`Institution Name`) |>
-    dplyr::summarise(Appt = sum(Appt)),
-  
-  var = "Appt"
-)
-```
-
-  </div>
-  
-</div>
-
-<div class="row">
-
-```{r appt-student-group-plot, fig.width=8}
-appt_student_data |>
-
-  dplyr::group_by(Year) |>
-  dplyr::summarise(Mean = mean(Appt, na.rm = TRUE), 
-                   Median = median(Appt, na.rm = TRUE),
-                   Max = max(Appt, na.rm = TRUE)) |>
-  
-  tidyr::pivot_longer(
-    cols = !Year,
-    names_to = "measure",
-    values_to = "amount"
-  ) |>
-  
-  mutate(measure = factor(measure, levels = c('Mean','Median','Max'))) |>
-  
-  ggplot2::ggplot(ggplot2::aes(Year, amount, fill = measure))+
-  ggplot2::geom_hline(yintercept = c(0,500,1000,1500,2000), colour = "grey")+
-  ggplot2::geom_bar(ggplot2::aes(fill = measure),
-                    position = "dodge",
-                    stat = "identity") +
-  geom_text(aes(label = round(amount,0)),
-            colour = "white", size = 8,
-            vjust = 1.5, position = position_dodge(.9)
-            )+
-  annotate("text",
-           x = 0.7,
-           y = 1750,
-           label = "b)",
-           size = 15,
-           family = params$plotfont)+
-  ggplot2::labs(
-    y = "Total",
-    x = NULL)+
-  ggplot2::scale_fill_manual(
-    values=c(Mean = "#6AD4BF",
-             Median = "#F7BF66",
-             Max = "#76828E"))+
-  ggplot2::theme(
-    text = ggplot2::element_text(size = 45, 
-                                 family = params$plotfont),
-    axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
-    axis.ticks = ggplot2::element_blank(),
-    panel.background = ggplot2::element_blank(),
-    legend.title = ggplot2::element_blank(),
-    legend.text = ggplot2::element_text(size = 30, colour = "black"),
-    legend.position = "top"
-  )
-```
-  
-</div>
-
-### Professional Staff Appt w/ Alum
-
-<div class="row">
-
-  <div class="col-sm-7">
-
-```{r appt-alum-plot}
-appt_alum_data |>
-  
-  mutate(dim2 = factor(dim2, levels = c('Email Consultations','Appointments*'))) |>
-  
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, engage), engage))+
-  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
-  ggplot2::geom_bar(ggplot2::aes(fill = dim2),
-                    position = "stack",
-                    stat = "identity")+
-  ggplot2::labs(
-    y = "Total",
-    x = NULL,
-    caption = "*In-Person, Phone, or Video Chat"
-  )+
-  ggplot2::scale_fill_manual(
-    values = c(
-      `Email Consultations` = "#6AD4BF",
-      `Appointments*` = "#F7BF66"
-    )
-  )+
-  ggplot2::theme(
-    text = ggplot2::element_text(size = 40, family = params$plotfont),
-    axis.text.x = ggplot2::element_blank(),
-    axis.ticks = ggplot2::element_blank(),
-    panel.background = ggplot2::element_blank(),
-    legend.title = ggplot2::element_blank(),
-    legend.position = "top"
-  )
-```
-
-  </div>
-  
-  <div class="col-sm-5">
-
-```{r appt-alum-table}
-tableViz(
-  data = appt_alum_data |>
-    dplyr::group_by(`Institution Name`) |>
-    dplyr::summarise(engage = sum(engage)),
-  
-  var = "engage", 
-  na.rm = TRUE
-  )
-```
-
-  </div>
-  
-</div>
-
-### Professional Staff Appt (+ email) per Total FTE
-
-<div class="row">
-
-  <div class="col-sm-7">
-
-```{r appt-fte-plot}
-appt_fte_data |>
-  ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`,ratio),ratio))+
-  ggplot2::geom_hline(yintercept = c(0,500,1000,1500), colour = "grey")+
-  ggplot2::geom_bar(stat = "identity", fill = "#7CBCE8")+
-  
-  ggplot2::labs(
-    x = NULL,
-    y = "Appt. to FTE Ratio",
-    caption = "Note: includes only institutions that\n reported both appointments and FTE"
-  )+
-  
-  ggplot2::theme(
-    text = ggplot2::element_text(size = 40, family = params$plotfont,
-                                 lineheight = .5),
-    plot.caption = element_text(size = 20),
-    panel.background = ggplot2::element_blank(),
-    axis.ticks = ggplot2::element_blank(),
-    axis.text.x = ggplot2::element_blank()
-  )
-```
-
-  </div>
-  
-  <div class="col-sm-5">
-
-```{r appt-fte-table}
-tableViz(appt_fte_data, var = "ratio", na.rm = TRUE)
-```
-  </div>
-  
-</div>
-
-### Experiential Learning Participation
-
-<div class="row">
-
-  <div class="col-sm-7">
 
 ```{r exper-learning-plot}
 exper_learning_data |>
@@ -1089,7 +1193,7 @@ exper_learning_data |>
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-3">
 
 ```{r exper-learning-table, echo=FALSE}
 
@@ -1136,112 +1240,11 @@ gt::cols_width(
 
 <hr/>
 
-## Employer Relations
-
-### Info Sessions: Number Offered
-
-<div class="row">
-
-  <div class="col-sm-7">
-
-```{r info-no-plot}
-  
-info_no_data |>  
-  ggplot(aes(reorder(`Institution Name`,amount),amount, fill = dim2))+
-  
-  geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
-  geom_bar(stat = "identity", position="stack")+
-  
-  scale_fill_manual(
-    values = c(
-      `On-campus` = "#6AD4BF",
-      Virtual = "#F7BF66"
-    )
-  )+
-  
-  labs(
-    y = "Total",
-    x = NULL,
-    fill = NULL
-  )+
-  
-  theme(
-    text = element_text(family = params$plotfont, size = 40),
-    panel.background = element_blank(),
-    axis.text.x = element_blank(),
-    axis.ticks = element_blank(),
-    legend.position = "top"
-  )
-```
-  </div>
-  
-  <div class="col-sm-5">
-```{r info-no-table}
-info_no_data |>
-  group_by(`Institution Name`) |>
-  summarise(amount = sum(amount)) |>
-  tableViz(var = 'amount')
-```
-  
-  </div>
-
-</div>
-
-
-### Info Sessions: Number of Employers
-
-<div class="row">
-
-  <div class="col-sm-7">
-
-```{r info-employ-plot}
-info_employ_data |>  
-  ggplot(aes(reorder(`Institution Name`,amount),amount, fill = dim2))+
-  
-  geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
-  geom_bar(stat = "identity", position="stack")+
-  
-  scale_fill_manual(
-    values = c(
-      `On-campus` = "#6AD4BF",
-      Virtual = "#F7BF66"
-    )
-  )+
-  
-  labs(
-    y = "Total",
-    x = NULL,
-    fill = NULL
-  )+
-  
-  theme(
-    text = element_text(family = params$plotfont, size = 40),
-    panel.background = element_blank(),
-    axis.text.x = element_blank(),
-    axis.ticks = element_blank(),
-    legend.position = "top"
-  )
-```
-  </div>
-  
-  <div class="col-sm-5">
-```{r info-employ-table}
-info_employ_data |>
-  group_by(`Institution Name`) |>
-  summarise(amount = sum(amount)) |>
-  tableViz(var = 'amount')
-```
-  
-  </div>
-
-</div>
-
-
-<hr/>
-
 ## Budget
 
 ### Total Available Funding
+
+*Operating + Endowed Funds + Expendable Gifts + Other*
 
 <div class="row">
 
@@ -1384,28 +1387,6 @@ gift_data |>
   </div>
   
 </div>
-
-<hr/>
-
-## Appendix
-
-### Write-In Responses
-
-#### Conferences
-
-`r glue::glue("{write_in_con[!is.na(write_in_con)]}")`
-
-#### Undergraduate Services
-`r glue::glue("{write_in_userve[!is.na(write_in_userve)]}", .sep = "\n")`
-
-
-#### Undergraduate Programs
-`r glue::glue("{write_in_uprogram[!is.na(write_in_uprogram)]}", .sep = "\n")`
-
-
-#### Graduate Services
-`r glue::glue("{write_in_gserve[!is.na(write_in_gserve)]}", .sep = "\n")`
-
 
 <hr/>
 
