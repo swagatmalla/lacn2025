@@ -129,7 +129,7 @@ matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Source 
   
 }
 
-singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "Lato", size = 45, lineheight = 0.5) {
+singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "Lato", size = 45, lineheight = 0.5, angle) {
   
   viz <- ggplot2::ggplot(data = data, 
                          mapping = ggplot2::aes(reorder(.data[[q]], freq), freq))+
@@ -185,12 +185,12 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
                  stat = 'identity', fill = "#217DBB") +
         ggrepel::geom_text_repel(
           data = indiv,
-          aes(label="Your School"),
+          aes(label="Your \nSchool"),
           nudge_y = 0.2,
           nudge_x = 0.5,
           color = "black",
           size = size/3,
-          angle = 270,
+          angle = angle,
           family = font
         )
     )

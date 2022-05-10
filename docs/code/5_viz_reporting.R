@@ -131,14 +131,14 @@ student_prof_ratio <- question_list[['Q7']] |>
 #### Professional Advising (any amount of time) ####
 
 advising_q <- keyFunction('Q8',dim1,dim2)|>
-  filter(dim2=="Total # of staff involved") |>
+  filter(dim2!="Total # of staff involved") |>
   filter(stringr::str_detect(dim1, "Advising")) |>
   pull(Question)
 
 prof_advising_data <- question_list$Q8 |>
   
   select(`Institution Name`, all_of(advising_q)) |>
-  dplyr::mutate_at(vars(Q8_1_1:Q8_5_1), as.numeric) |>
+  dplyr::mutate_at(vars(Q8_1_2:Q8_5_3), as.numeric) |>
   pivot_longer(
     cols = !(1),
     names_to = "Question",

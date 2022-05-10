@@ -34,6 +34,13 @@ info_no_data <- question_list$Q36 |>
     cols = (4:5),
     names_to = "dim2",
     values_to = "amount"
+  ) |>
+  
+  mutate(
+    amount = case_when(
+      `Institution Name` == "Pomona College" ~ 28,
+      TRUE ~ amount
+    )
   )
 
 
@@ -75,6 +82,13 @@ info_employ_data <- question_list$Q37 |>
     cols = (4:5),
     names_to = "dim2",
     values_to = "amount"
+  ) |>
+  
+  mutate(
+    amount = case_when(
+      `Institution Name` == "Pomona College" ~ 28,
+      TRUE ~ amount
+    )
   )
 
 

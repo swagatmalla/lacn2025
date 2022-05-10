@@ -9,7 +9,7 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
-  college: Washington and Lee University
+  college: St Olaf College
     
 ---
 
@@ -114,14 +114,10 @@ tableViz(enroll_data, var = "enroll", college = params$college)
 ```{r endow-plot}
 
 endow_data |>
-    ggplot(mapping = aes(reorder(`Institution Name`,endow_bil), endow_bil))+
-    geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
-    geom_bar(stat="identity", fill = "#7CBCE8")+
-    labs(
-      title = NULL,
-      x = NULL,
-      y = "Total (in billions)"
-    )+ 
+  ggplot(mapping = aes(reorder(`Institution Name`,endow_bil), endow_bil))+
+  geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
+  geom_bar(stat="identity", fill = "#7CBCE8")+
+
   geom_bar(data = subset(endow_data, `Institution Name` == params$college),
            stat = 'identity', fill = "#217DBB") +
   ggrepel::geom_text_repel(
@@ -139,12 +135,20 @@ endow_data |>
     family = params$plotfont
   )+
   
-    theme(
+  scale_y_continuous(labels = c('0','1','2','$3'))+
+  
+  labs(
+    title = NULL,
+    x = NULL,
+    y = "Total (in billions)"
+  )+ 
+  
+  theme(
       axis.text.x = element_blank(),
       axis.ticks = element_blank(),
       panel.background = element_blank(),
       text = element_text(size = 45, family = params$plotfont)
-      )
+    )
 ```
 
   </div>
@@ -168,7 +172,7 @@ tableViz(endow_data, var = "endow", college = params$college)
 
 ### Reporting Structure
 
-  <div class="col-sm-8">
+  <div class="col-sm-9">
 
 ```{r reporting-plot}
 
@@ -176,14 +180,15 @@ singlePlot(reporting_data, q = "Q2",
            string_rem = ":",
            size = 45,
            font = params$plotfont,
-           college = params$college)
+           college = params$college,
+           angle = 0)
 
 ```
 
   </div>
 
 
-  <div class="col-sm-4">
+  <div class="col-sm-3">
 
 `r nTab(question_list$Q2['Institution Name'])`
 
@@ -195,7 +200,7 @@ singlePlot(reporting_data, q = "Q2",
 
 ### Steps Removed from President's Office
 
-  <div class="col-sm-8">
+  <div class="col-sm-9">
 
 ```{r steps-plot}
 
@@ -203,13 +208,14 @@ singlePlot(reporting_data, q = "Q2",
            string_rem = "[:blank:]\\(.+\\)",
            size = 45,
            font = params$plotfont,
-           college = params$college)
+           college = params$college,
+           angle = 0)
 
 ```
 
   </div>
 
-<div class="col-sm-4">
+<div class="col-sm-3">
 
 `r nTab(question_list$Q3$Q3)`
 
@@ -241,7 +247,7 @@ all_list$multi$Q4 |>
          value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |>
   
   serviceTab(q = "Q4", title = "Advisory Boards",
-             subtitle = "Subtitle",
+             subtitle = "",
              offer = "To Whom Do You Report?")
 ```
 
@@ -776,7 +782,7 @@ all_list$multi$Q15 |>
 info_no_data |>  
   ggplot(aes(reorder(`Institution Name`,amount),amount))+
   
-  geom_hline(yintercept = c(0,200,400,600,800), colour= "grey")+
+  geom_hline(yintercept = c(0,50,100,150,200), colour= "grey")+
   geom_bar(stat = "identity", fill="#7CBCE8")+
   geom_bar(data = subset(
     info_no_data,
@@ -792,6 +798,7 @@ info_no_data |>
       label=`Institution Name`
     ),
     nudge_y=200,
+    nudge_x = -3,
     color = "black",
     size = 15,
     family = params$plotfont
