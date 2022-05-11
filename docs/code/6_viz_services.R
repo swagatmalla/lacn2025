@@ -22,7 +22,7 @@ library(tidyverse)
 
 
 # Question 14
-all_list$single$Q14 # all 39 offer alum services; probably skip the viz? Ask Nate
+all_list$single$Q14 # all 39 offer alum services; skip the viz
 
 
 

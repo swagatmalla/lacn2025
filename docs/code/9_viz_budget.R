@@ -192,6 +192,7 @@ NOP_budget <- question_list$Q24 |>
     dplyr::mutate(
       total_correct = dplyr::case_when(
         is.na(sum) ~ Total,
+        `Institution Name` == "Amherst College" & dim1 == "Other" ~ 172323,
         TRUE ~ sum
       )
     ) |>

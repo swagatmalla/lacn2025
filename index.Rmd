@@ -1,32 +1,55 @@
 ---
-title: "LACN Survey"
+title: LACN Operations Survey
 output: 
   html_document:
+    css: "style.css"
     theme: flatly
 ---
 
-<div class="row" style="padding-top: 30px;">
+### *Data from 2020-21* {#college}
+
+::: {.row}
+
+<a href = "http://liberalartscareers.org/"> <img id="logo" src="images/LACN%20logo.jpg" alt="LACN Logo"> </a>
+
+:::
+
+<hr/>
+
+::: {.row}
 
 ::: {.col-sm-6}
 
-# **Welcome**
+# **Categories**
 
-This is a test report. This is a test report.This is a test report. This is a test report.This is a test report. This is a test report.This is a test report. This is a test report.This is a test report. This is a test report.This is a test report. This is a test report. This is a test report. This is a test report.This is a test report. This is a test report.
+- IPEDS Embedded Data
+- Reporting and Staffing
+- Services and Programs
+- Employer Relations
+- Student and Alumni Engagement
+- Budget
 
-## Guidelines
 
--   Usage guidelines. Usage guidelines.
--   Usage guidelines. Usage guidelines. Usage guidelines.
--   Usage guidelines.Usage guidelines.
--   Usage guidelines. Usage guidelines. Usage guidelines. Usage guidelines.
 :::
 
 ::: {.col-sm-6}
-### Liberal Arts Career Network
 
-<a href = "http://liberalartscareers.org/"> ![index page image](images/LACN%20logo.jpg) </a>
+# **Survey Administration**
 
-#### Another Image
-![](images/rank_plot.PNG)
+- Timeline: Data from 2020-21 
+- Response Rate: 39 schools reported
+- Visualizations
+    - Very similar to 2019-20 report,except:
+      - **Removed** visualizations on career fairs, interviews and career treks, which were limited by COVID-19
+      - **Combined** Experiential Learning participation into one visualization
+- Data Analysis
+  - Completed by St. Olaf College
+  - Added ability to highlight responses from a particular institution and create institution-specific reports
+  
+:::
 
 :::
+
+<hr/>
+
+*Administered by the Benchmarking Committee; published May 2022*

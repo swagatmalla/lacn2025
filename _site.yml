@@ -1,11 +1,11 @@
-name: "LACN Survey"
+name: "LACN Operations Survey"
 navbar:
-  title: "LACN Survey"
+  title: "LACN Operations Survey"
   left:
     - text: "Home"
       href: index.html
     - text: "General Report"
-      href: test_report.html
+      href: GeneralReport.html
     - text: "Custom Reports"
       menu:
         - text: "Brandeis University"

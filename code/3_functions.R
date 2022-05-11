@@ -185,7 +185,7 @@ singlePlot <- function(data, q, college=NULL, title = NULL, string_rem, font = "
                  stat = 'identity', fill = "#217DBB") +
         ggrepel::geom_text_repel(
           data = indiv,
-          aes(label="Your \nSchool"),
+          aes(label="Your School"),
           nudge_y = 0.2,
           nudge_x = 0.5,
           color = "black",

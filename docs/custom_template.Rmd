@@ -209,7 +209,7 @@ singlePlot(reporting_data, q = "Q2",
            size = 45,
            font = params$plotfont,
            college = params$college,
-           angle = 0)
+           angle = 270)
 
 ```
 
@@ -901,8 +901,8 @@ info_employ_data |>
 
 ### Professional Staff Appointments with Students
 
-a) Individual Schools by Class Year
-b) Overall Metrics by Class Year
+a) Appointments by Institution 
+b) Appointments by Class Year
 
 <div class="row">
 
@@ -1113,7 +1113,7 @@ tableViz(
   
 </div>
 
-### Professional Staff Appointments + Email Consultations per Total FTE
+### Professional Staff Appointments + Email Consultations per Total Professional Staff FTE
 
 <div class="row">
 
@@ -1253,7 +1253,7 @@ sengage_year_data |>
 
 <div class="row">
 
-  <div class="col-sm-7">
+  <div class="col-sm-9">
 
 ```{r sengage-type-plot}
 sengage_type_data |>
@@ -1312,20 +1312,18 @@ sengage_type_data |>
 
   </div>
   
-  <div class="col-sm-5">
+  <div class="col-sm-3">
 
-```{r sengage-type-table}
-sengage_type_data |>
-  
-  mutate(engage = as.numeric(engage)) |>
-  
+```{r sengage-tyle-table, echo=FALSE}
+sengage_tab_data <- sengage_type_data |> 
+  mutate(engage = as.numeric(engage)) |> 
   group_by(`Institution Name`) |>
   summarise(engage = mean(engage, na.rm = TRUE)) |>
-  
-  dplyr::filter(is.finite(engage)) |>
-  
-  tableViz(var = 'engage', subtitle = "School Averages", college = params$college)
+  dplyr::filter(is.finite(engage))
 ```
+
+
+`r nTab(sengage_tab_data$engage)`
 
   </div>
   
@@ -1468,7 +1466,7 @@ total_budget |>
   mutate(Budget = factor(Budget, levels = c('Total_OP','Total_NOP'))) |>
   
   ggplot(aes(reorder(`Institution Name`,amount_mil), amount_mil, fill = Budget))+
-  geom_hline(yintercept = seq(0,10,by=5), colour = "grey")+
+  geom_hline(yintercept = c(0,1,2,3), colour = "grey")+
   geom_bar(stat = 'identity')+
   ggrepel::geom_text_repel(
     data = subset(
@@ -1478,7 +1476,7 @@ total_budget |>
     aes(
       label=`Institution Name`
     ),
-    nudge_y=3,
+    nudge_y=2,
     nudge_x = -3,
     color = "black",
     size = 15,
@@ -1486,20 +1484,21 @@ total_budget |>
   )+
   labs(
     x = NULL,
-    y = "Total (in millions)",
-    fill = "Budget Type"
+    y = "Total (in millions)"
   )+
   scale_fill_manual(values=c("#F7BF66","#6AD4BF"),
                     breaks=c("Total_OP", "Total_NOP"),
                     labels=c("Operating", "Non-Operating"))+
-  scale_y_continuous(breaks = seq(0,10,by=5),
-                     labels = c("0","5","$10"))+
+  scale_y_continuous(breaks = c(0,1,2,3),
+                     labels = c("0","1","2","$3"))+
   theme(
     text = element_text(family = params$plotfont, size = 40),
     panel.background = element_blank(),
     axis.ticks = element_blank(),
     axis.text.x = element_blank(),
-    legend.text = element_text(size = 25)
+    legend.text = element_text(size = 25),
+    legend.title = element_blank(),
+    legend.position = "top"
   )
 
 ```
@@ -1651,6 +1650,6 @@ gift_data |>
 
 <hr/>
 
-Special thanks to **ACKNOWLEDGEMENTS HERE**
+**Published May 2022, St Olaf College**
 
 
