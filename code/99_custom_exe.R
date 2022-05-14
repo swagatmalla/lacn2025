@@ -1,6 +1,6 @@
 load("lacn.RData")
 
-colleges <- as.list(question_list$Q1$`Institution Name`)[1:3]
+colleges <- as.list(question_list$Q1$`Institution Name`)
 
 purrr::walk(
   .x = colleges,

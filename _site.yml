@@ -6,13 +6,5 @@ navbar:
       href: index.html
     - text: "General Report"
       href: GeneralReport.html
-    - text: "Custom Reports"
-      menu:
-        - text: "Brandeis University"
-          href: custom/BrandeisUniversity.html
-        - text: "Williams College"
-          href: custom/WilliamsCollege.html
-        - text: "Vassar College"
-          href: custom/VassarCollege.html
         
 output_dir: "docs"

@@ -348,7 +348,7 @@ tableViz(data = student_staff_data,'n', college = params$college)
 
 </div>
 
-### Student Staff (paraprofessional)
+### Student Staff (Paraprofessional)
 
 <div class="row">
 
@@ -472,7 +472,7 @@ tableViz(student_prof_ratio, var='n', college = params$college)
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data, breaks = c(0,10,20,30,40), 
+matrixPlot(prof_advising_data, breaks = c(0,5,10,15,20), 
            font = params$plotfont,
            size = 45,
            college = params$college)
@@ -1459,7 +1459,6 @@ gt::cols_width(
 
   <div class="col-sm-7">
   
-  What do we do about Amherst? 7936792 isn't obviously wrong.
 ```{r total-funding-plot}
 total_budget |>
   

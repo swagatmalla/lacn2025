@@ -272,7 +272,7 @@ tableViz(data = student_staff_data,'n')
 
 </div>
 
-### Student Staff (paraprofessional)
+### Student Staff (Paraprofessional)
 
 <div class="row">
 
@@ -392,7 +392,7 @@ tableViz(student_prof_ratio, var='n')
   <div class="col-sm-7">
 
 ```{r prof-advising-plot}
-matrixPlot(prof_advising_data, breaks = c(0,10,20,30,40), 
+matrixPlot(prof_advising_data, breaks = c(0,5,10,15,20), 
            font = params$plotfont,
            size = 45)
 ```
@@ -1375,6 +1375,6 @@ gift_data |>
 
 <hr/>
 
-Special thanks to **ACKNOWLEDGEMENTS HERE**
+*Published May 2022, St. Olaf College*
 
 
