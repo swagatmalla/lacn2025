@@ -40,8 +40,8 @@ output:
 - Response Rate: 39 schools reported
 - Visualizations
     - Very similar to 2019-20 report,except:
-      - **Removed** visualizations on career fairs, interviews and career treks, which were limited by COVID-19
-      - **Combined** Experiential Learning participation into one visualization
+      - Removed visualizations on career fairs, interviews and career treks, which were limited by COVID-19
+      - Combined Experiential Learning participation into one visualization
 - Data Analysis
   - Completed by St. Olaf College
   - Added ability to highlight responses from a particular institution and create institution-specific reports
