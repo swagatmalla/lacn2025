@@ -201,16 +201,4 @@ all_list$multi$Q9
 ```
 
 
-# Visualization
-
-Script: **5_viz.R**
-
-*In progress. Please check back later.*
-
-![example-plot](images/rank_plot.PNG)
-
-# IPEDS Data
-
-*In progress. Please check back later.*
-
 

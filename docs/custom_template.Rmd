@@ -901,6 +901,8 @@ info_employ_data |>
 
 ### Professional Staff Appointments with Students
 
+*Includes in-person, phone, and video chat; excludes email consultations*
+
 a) Appointments by Institution 
 b) Appointments by Class Year
 
@@ -912,20 +914,20 @@ b) Appointments by Class Year
 appt_student_data |>
   
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, Appt) ,Appt))+
-  ggplot2::geom_hline(yintercept = c(0,2000,4000,6000), colour = "grey")+
+  ggplot2::geom_hline(yintercept = c(0,1000,2000,3000,4000), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = Year),
                     position = "stack",
                     stat = "identity") +
   ggrepel::geom_text_repel(data = subset(appt_student_data,
                                          `Institution Name` == params$college & Year == "Senior"),
                            mapping = ggplot2::aes(label = `Institution Name`),
-                           nudge_y = 2500,
+                           nudge_y = 1500,
                            nudge_x = -200,
                            size = 13,
                            colour = "black",
                            family = params$plotfont)+
   
-  ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
+  ggplot2::scale_y_continuous(breaks = c(0,1000,2000,3000,4000)) +
   ggplot2::scale_fill_manual(
     values=c(`First-Year` = "#76828E",
              Sophomore = "grey",
@@ -938,7 +940,7 @@ appt_student_data |>
   
   annotate("text",
            x = 5,
-           y = 5000,
+           y = 3500,
            label = "a)",
            size = 15,
            family = params$plotfont)+
@@ -1184,7 +1186,7 @@ sengage_year_data |>
   dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
                    Median = median(engage, na.rm = TRUE),
                    Max = max(engage, na.rm = TRUE),
-                   `Your School` = mean(engage[`Institution Name`==params$college])
+                   `Your School` = mean(engage[`Institution Name`==params$college & dim1 == "TOTAL (all classes)"])
                    ) |>
   dplyr::mutate(dim1 = stringr::str_replace(dim1, regex("TOTAL"),"Total\n")) |>
   tidyr::pivot_longer(
@@ -1257,15 +1259,20 @@ sengage_year_data |>
 
 ```{r sengage-type-plot}
 sengage_type_data |>
+  
+    dplyr::mutate(dim2 = case_when(
+    dim2 == "% engaged through appointment with professional staff" ~ "% engaged through appointment with professional staff*",
+    TRUE ~ as.character(dim2)
+  )) |>
 
-  dplyr::select(!c(main:sub2,Question,dim1))  |>
+  dplyr::select(!c(main:sub2,Question))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
   
   dplyr::group_by(dim2) |>
   dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
                    Median = median(engage, na.rm = TRUE),
                    Max = max(engage, na.rm = TRUE),
-                   `Your School` = mean(engage[`Institution Name`== params$college], na.rm = TRUE)
+                   `Your School` = mean(engage[`Institution Name`== params$college & dim1 == "TOTAL (all classes)"], na.rm = TRUE)
   ) |>
   tidyr::pivot_longer(
     cols = !dim2,
@@ -1289,7 +1296,8 @@ sengage_type_data |>
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
   ggplot2::labs(
     y = "Engagement (%)",
-    x = NULL
+    x = NULL,
+    caption = "*Includes in-person, phone, video chat, \nand email consultations"
   )+
   ggplot2::scale_fill_manual(
     values=c(Mean = "#6AD4BF",
@@ -1306,7 +1314,8 @@ sengage_type_data |>
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
     legend.text = element_text(size = 30),
-    legend.position = "top"
+    legend.position = "top",
+    plot.caption = element_text(size = 25)
   )
 ```
 

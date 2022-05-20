@@ -734,6 +734,8 @@ info_employ_data |>
 
 ### Professional Staff Appointments with Students
 
+*Includes in-person, phone, and video chat; excludes email consultations*
+
 a) Appointments by Institution 
 b) Appointments by Class Year
 
@@ -745,12 +747,12 @@ b) Appointments by Class Year
 appt_student_data |>
   
   ggplot2::ggplot(ggplot2::aes(reorder(`Institution Name`, Appt) ,Appt))+
-  ggplot2::geom_hline(yintercept = c(0,2000,4000,6000), colour = "grey")+
+  ggplot2::geom_hline(yintercept = c(0,1000,2000,3000,4000), colour = "grey")+
   ggplot2::geom_bar(ggplot2::aes(fill = Year),
                     position = "stack",
                     stat = "identity") +
 
-  ggplot2::scale_y_continuous(breaks = c(0,2000,4000,6000)) +
+  ggplot2::scale_y_continuous(breaks = c(0,1000,2000,3000,4000)) +
   ggplot2::scale_fill_manual(
     values=c(`First-Year` = "#76828E",
              Sophomore = "grey",
@@ -763,7 +765,7 @@ appt_student_data |>
   
    annotate("text",
            x = 5,
-           y = 5000,
+           y = 3500,
            label = "a)",
            size = 15,
            family = params$plotfont)+
@@ -1034,6 +1036,11 @@ sengage_year_data |>
 
 ```{r sengage-type-plot}
 sengage_type_data |>
+  
+  dplyr::mutate(dim2 = case_when(
+    dim2 == "% engaged through appointment with professional staff" ~ "% engaged through appointment with professional staff*",
+    TRUE ~ as.character(dim2)
+  )) |>
 
   dplyr::select(!c(main:sub2,Question,dim1))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
@@ -1066,14 +1073,14 @@ sengage_type_data |>
   scale_x_discrete(labels = function(x) stringr::str_wrap(x, width = 15))+
   ggplot2::labs(
     y = "Engagement (%)",
-    x = NULL
+    x = NULL,
+    caption = "*Includes in-person, phone, video chat, \nand email consultations"
   )+
   ggplot2::scale_fill_manual(
     values=c(Mean = "#6AD4BF",
              Median = "#F7BF66",
              Max = "#76828E"
-             #, `Your School` = "#217DBB"
-    )
+             )
   )+
   ggplot2::theme(
     text = ggplot2::element_text(size = 45, family = params$plotfont,
@@ -1082,7 +1089,8 @@ sengage_type_data |>
     axis.text.x = ggplot2::element_text(size = 30, colour = "black"),
     panel.background = ggplot2::element_blank(),
     legend.title = ggplot2::element_blank(),
-    legend.position = "top"
+    legend.position = "top",
+    plot.caption = element_text(size = 25)
   )
 ```
 
@@ -1106,7 +1114,7 @@ sengage_tab_data <- sengage_type_data |>
 </div>
 
 
-### Experiential Learning Participation'
+### Experiential Learning Participation
 
 *% of students who completed by graduation*
 
@@ -1124,7 +1132,6 @@ exper_learning_data |>
   dplyr::summarise(Mean = mean(exper, na.rm = TRUE), 
                    Median = median(exper, na.rm = TRUE),
                    Max = max(exper, na.rm = TRUE)
-                   #, `Your School` = mean(exper[`Institution Name`==params$college])
   ) |>
   
   tidyr::pivot_longer(
@@ -1158,8 +1165,7 @@ exper_learning_data |>
     values=c(Mean = "#6AD4BF",
              Median = "#F7BF66",
              Max = "#76828E"
-             #, `Your School` = "#217DBB"
-    )
+             )
   )+
   ggplot2::theme(
     plot.caption = ggplot2::element_text(size = 20, 

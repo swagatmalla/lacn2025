@@ -31,8 +31,8 @@ for (i in seq_len(nrow(email_df))) {
   
   html_file <- file.path(here::here(),"docs/custom", email_df$filename[i])
   
-  drive_file <- drive_upload(html_file,
-                             shared_drive, overwrite = TRUE)
+  drive_upload(html_file,
+               shared_drive, overwrite = TRUE)
 }
 
 drive_share(

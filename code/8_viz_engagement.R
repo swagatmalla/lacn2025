@@ -74,7 +74,9 @@ appt_student_data <- question_list$Q20 |>
     "Senior")
   )
   ) |>
-  dplyr::mutate(engage = as.numeric(engage)) |>
+  dplyr::mutate(engage = as.numeric(engage)) |> 
+  
+  dplyr::filter(dim2 != "Total # of email consultations") |>
   
   
   # group and summarise total appts at each college by year

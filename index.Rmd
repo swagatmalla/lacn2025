@@ -39,7 +39,7 @@ output:
 - Timeline: Data from 2020-21 
 - Response Rate: 39 schools reported
 - Visualizations
-    - Very similar to 2019-20 report,except:
+    - Very similar to 2019-20 report, except:
       - Removed visualizations on career fairs, interviews and career treks, which were limited by COVID-19
       - Combined Experiential Learning participation into one visualization
 - Data Analysis
