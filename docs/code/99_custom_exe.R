@@ -10,3 +10,4 @@ purrr::walk(
     params = list(college = {.x})
   )
 )
+
