@@ -9,6 +9,8 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -25,10 +27,11 @@ font_add_google(params$plotfont)
 showtext_auto()
 
 # load LACN analysis environment
-load("../lacn.RData")
+load("~/Desktop/lacn/lacn.RData")
+# load("../lacn.RData")
 ```
 
-#### 2020-21 LACN Operations Survey {#subtitle}
+#### 2021-22 LACN Operations Survey {#subtitle}
 
 <hr/>
 
@@ -174,73 +177,73 @@ singlePlot(reporting_data, q = "Q2",
 
 </div>
 
-### Advisory Boards
+<!-- ### Advisory Boards - NO LONGER A QUESTION (2023) -->
 
-```{r advisory-boards}
-all_list$multi$Q4 |>
-  
-  dplyr::filter(n>1) |>
-  
-  arrange(-n) |>
-  
-  mutate(freq = round(freq*100,2)) |>
-  
-  mutate(value = stringr::str_replace(value, "^My career.+boards$","No Advisory Boards"),
-         value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |>
-  
-  serviceTab(q = "Q4", title = "Advisory Boards",
-             subtitle = "",
-             offer = "To Whom Do You Report?")
-```
+<!-- ```{r advisory-boards} -->
+<!-- all_list$multi$Q4 |> -->
 
-### Performance Metrics
+<!--   dplyr::filter(n>1) |> -->
 
-*Relative Importance to Senior Leadership (N = 38)*
+<!--   arrange(-n) |> -->
 
-```{r performance-rank, fig.width = 9}
-rank_data |>
-  
-  dplyr::filter(dim1 != "Other") |>
-  ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+
-  geom_vline(xintercept = rank_data$dim1, colour = "grey")+
-  geom_jitter(alpha = 0.5, width = 0, size = 3)+
-  geom_point(aes(reorder(dim1,-ranking_avg), ranking_avg), 
-             colour = "black",
-             size = 3,
-             shape = 21)+
-  coord_flip()+
-  scale_y_reverse(breaks = seq(1,11))+
-  scale_color_gradientn(colours = c('#F7BF66','grey','#6AD4BF'))+
-  scale_shape_identity()+
-  
-  labs(
-    y = "Importance Ranking (1=highest)"
-  )+
-  
-  annotate("text", 
-           x = 9.5, 
-           y = 5, 
-           label = "Mean",
-           colour = "black",
-           size = 10)+
-  
-  annotate("segment", 
-           x = 9,
-           xend = 9.5, 
-           y = deframe(rank_data[rank_data$dim1=="Diverse student engagement",'ranking_avg'][1,]), 
-           yend = 4.5, 
-           colour = "black")+
-  
-  theme(
-    panel.background = element_blank(),
-    text = element_text(family = params$plotfont, size = 40),
-    axis.ticks.y = element_blank(),
-    axis.title.y = element_blank(),
-    axis.title.x = element_text(size = 25),
-    legend.position = "none"
-  )
+<!--   mutate(freq = round(freq*100,2)) |> -->
 
-```
+<!--   mutate(value = stringr::str_replace(value, "^My career.+boards$","No Advisory Boards"), -->
+<!--          value = stringr::str_replace(value, "^We report.+reps$","Academic Programs & Standards Committee")) |> -->
+
+<!--   serviceTab(q = "Q4", title = "Advisory Boards", -->
+<!--              subtitle = "", -->
+<!--              offer = "To Whom Do You Report?") -->
+<!-- ``` -->
+
+<!-- ### Performance Metrics -->
+
+<!-- *Relative Importance to Senior Leadership (N = 38)* -->
+
+<!-- ```{r performance-rank, fig.width = 9} -->
+<!-- rank_data |> -->
+
+<!--   dplyr::filter(dim1 != "Other") |> -->
+<!--   ggplot(aes(reorder(dim1,-ranking_avg), ranking, colour = ranking))+ -->
+<!--   geom_vline(xintercept = rank_data$dim1, colour = "grey")+ -->
+<!--   geom_jitter(alpha = 0.5, width = 0, size = 3)+ -->
+<!--   geom_point(aes(reorder(dim1,-ranking_avg), ranking_avg),  -->
+<!--              colour = "black", -->
+<!--              size = 3, -->
+<!--              shape = 21)+ -->
+<!--   coord_flip()+ -->
+<!--   scale_y_reverse(breaks = seq(1,11))+ -->
+<!--   scale_color_gradientn(colours = c('#F7BF66','grey','#6AD4BF'))+ -->
+<!--   scale_shape_identity()+ -->
+
+<!--   labs( -->
+<!--     y = "Importance Ranking (1=highest)" -->
+<!--   )+ -->
+
+<!--   annotate("text",  -->
+<!--            x = 9.5,  -->
+<!--            y = 5,  -->
+<!--            label = "Mean", -->
+<!--            colour = "black", -->
+<!--            size = 10)+ -->
+
+<!--   annotate("segment",  -->
+<!--            x = 9, -->
+<!--            xend = 9.5,  -->
+<!--            y = deframe(rank_data[rank_data$dim1=="Diverse student engagement",'ranking_avg'][1,]),  -->
+<!--            yend = 4.5,  -->
+<!--            colour = "black")+ -->
+
+<!--   theme( -->
+<!--     panel.background = element_blank(), -->
+<!--     text = element_text(family = params$plotfont, size = 40), -->
+<!--     axis.ticks.y = element_blank(), -->
+<!--     axis.title.y = element_blank(), -->
+<!--     axis.title.x = element_text(size = 25), -->
+<!--     legend.position = "none" -->
+<!--   ) -->
+
+<!-- ``` -->
 
 
 ### Student Staff (Total)
@@ -440,9 +443,9 @@ tableViz(prof_employer_data, 'n')
 
 ```{r conferences}
 
-write_in_con <- question_list$Q9$Q9_11_TEXT
+write_in_con <- question_list$Q8$Q8_11_TEXT
 
-all_list$multi$Q9 |>
+all_list$multi$Q8 |>
   
     add_row(value = "Career Leadership Collective ",
           n = 6,
@@ -456,7 +459,7 @@ all_list$multi$Q9 |>
   
   arrange(-n) |>
   
-  serviceTab(q = "Q9", 
+  serviceTab(q = "Q8", 
              title = "Conferences Attended by Staff",
              subtitle = "",
              offer = "Conferences")
@@ -471,9 +474,9 @@ all_list$multi$Q9 |>
 
 ```{r service-undergrad}
 
-write_in_userve <- question_list$Q10$Q10_13_TEXT
+write_in_userve <- question_list$Q9$Q9_13_TEXT
 
-all_list$multi$Q10 |>
+all_list$multi$Q9 |>
   
   dplyr::filter(
     !is.element(value,write_in_userve)
@@ -489,7 +492,7 @@ all_list$multi$Q10 |>
   ) |>
   dplyr::arrange(-n)|>
   
-  serviceTab(q = "Q10", title = "Services Offered to Undergraduates",
+  serviceTab(q = "Q9", title = "Services Offered to Undergraduates",
              subtitle = "",
              offer = "Services")
 
@@ -497,9 +500,9 @@ all_list$multi$Q10 |>
 
 ### Programs Offered: Undergraduate Students
 ```{r program-undergrad}
-write_in_uprogram <- question_list$Q11$Q11_29_TEXT
+write_in_uprogram <- question_list$Q10$Q10_29_TEXT
 
-all_list$multi$Q11 |>
+all_list$multi$Q10 |>
   
   dplyr::filter(
     !is.element(value,write_in_uprogram)
@@ -515,7 +518,7 @@ all_list$multi$Q11 |>
   dplyr::arrange(-n)|>
   
   serviceTab(
-    q = "Q11",
+    q = "Q10",
     title = "Programs Offered to Undergraduates",
     subtitle = "",
     offer = "Programs"
@@ -532,24 +535,24 @@ all_list$multi$Q11 |>
   <div class="col-sm-7">
 ```{r service-grad-tab}
 
-write_in_gserve <- question_list$Q13$Q13_4_TEXT
+write_in_gserve <- question_list$Q12$Q12_4_TEXT
 
-q13_n <- question_list[['Q13']] |>
+q12_n <- question_list[['Q12']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-all_list$multi$Q13 |>
+all_list$multi$Q12 |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q13_n,
+         freq = n/q12_n,
          freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
   serviceTab(
-    q = "Q13",
+    q = "Q12",
     title = "Services Offered to Grad Students",
     subtitle = "",
     offer = "Services"
@@ -560,15 +563,15 @@ all_list$multi$Q13 |>
   <div class="col-sm-5">
   
 ```{r service-grad-plot}
-all_list$single$Q12 |>
+all_list$single$Q11 |>
   
   mutate(
-    Q12 = replace_na(Q12, 'No Response')
+    Q11 = replace_na(Q11, 'No Response')
   ) |>
   
-  ggplot(aes(factor(Q12, levels=c('No','Yes','No Response')), 
+  ggplot(aes(factor(Q11, levels=c('No','Yes','No Response')), 
              n, 
-             fill = Q12, 
+             fill = Q11, 
              label = n))+
   
   geom_hline(yintercept = seq(0,25,by=5), colour = "grey")+
@@ -606,21 +609,21 @@ all_list$single$Q12 |>
   <div class="col-sm-7">
 ```{r service-alum}
 
-q15_n <- question_list[['Q15']] |>
+q14_n <- question_list[['Q14']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-all_list$multi$Q15 |>
+all_list$multi$Q14 |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q15_n,
+         freq = n/q14_n,
          freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
-  serviceTab(q = "Q15", title = "Services Offered to Alumni",
+  serviceTab(q = "Q14", title = "Services Offered to Alumni",
              subtitle = "No write-in responses",
              offer = "Services")
 
@@ -629,7 +632,7 @@ all_list$multi$Q15 |>
   
   <div class="col-sm-5">
   
-  All institutions offer alumni services (`r nTab(question_list$Q15$Q15)`)
+  All institutions offer alumni services (`r nTab(question_list$Q14$Q14)`)
 
   </div>
   
@@ -1020,7 +1023,7 @@ sengage_year_data |>
   
   <div class="col-sm-3">
   
-`r nTab(question_list$Q21$Q21_5_4)`
+`r nTab(question_list$Q20$Q20_5_4)`
 
 \n \n Note: Engagement \n includes appointments \n w/ professional staff \n and peer advisors and \n programs and events
 
@@ -1042,8 +1045,10 @@ sengage_type_data |>
     TRUE ~ as.character(dim2)
   )) |>
 
-  dplyr::select(!c(main:sub2,Question,dim1))  |>
+  dplyr::select(!c(main:sub2,Question))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric)) |>
+  
+  dplyr::filter(dim1 == "TOTAL (all classes)") |>
   
   dplyr::group_by(dim2) |>
   dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
@@ -1381,6 +1386,6 @@ gift_data |>
 
 <hr/>
 
-*Published May 2022, St. Olaf College*
+*Published May 2023, St. Olaf College*
 
 

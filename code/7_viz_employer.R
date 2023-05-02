@@ -1,6 +1,6 @@
 library(tidyverse)
 
-info_no_data <- question_list$Q36 |>
+info_no_data <- question_list$Q16 |>
   pivot_longer(
     cols = !(1:2),
     names_to = "Question",
@@ -9,16 +9,16 @@ info_no_data <- question_list$Q36 |>
   
   mutate(amount = as.numeric(amount)) |>
   
-  filter(Question %in% c('Q36_2_1','Q36_2_2')) |>
+  filter(Question %in% c('Q16_2_1','Q16_2_2')) |>
   
   left_join(
-    keyFunction('Q36', dim1, dim2)
+    keyFunction('Q16', dim1, dim2)
   ) |>
   
   mutate(dim2 = str_remove(dim2, "#[:blank:]"),
          amount = replace_na(amount,0)) |>
   
-  select(!Question)|>
+  select(!Question)|> 
   
   pivot_wider(
     names_from = dim2,
@@ -48,7 +48,7 @@ info_no_data <- question_list$Q36 |>
 
 
 
-info_employ_data <- question_list$Q37 |>
+info_employ_data <- question_list$Q17 |>
   pivot_longer(
     cols = !(1:2),
     names_to = "Question",
@@ -57,10 +57,10 @@ info_employ_data <- question_list$Q37 |>
   
   mutate(amount = as.numeric(amount)) |>
   
-  filter(Question %in% c('Q37_2_1','Q37_2_2')) |>
+  filter(Question %in% c('Q17_2_1','Q17_2_2')) |>
   
   left_join(
-    keyFunction('Q37',dim1,dim2)
+    keyFunction('Q17',dim1,dim2)
   )  |>
   
   mutate(dim2 = str_remove(dim2, "#[:blank:]"),

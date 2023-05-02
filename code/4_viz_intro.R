@@ -15,9 +15,9 @@ enroll_data <- question_list$Q1 |>
 endow_data <- lacn_master |>
   dplyr::select(
     `Institution Name`, 
-    `Value of endowment assets`) |>
+    `Value of endowment assets at the beginning of the fiscal year`) |>
   dplyr::slice(-1) |>
-  mutate(endow = as.numeric(`Value of endowment assets`)) |>
+  mutate(endow = as.numeric(`Value of endowment assets at the beginning of the fiscal year`)) |>
   mutate(endow_bil = endow/1e+09) |>
   dplyr::filter(!is.na(endow))
 

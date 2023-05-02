@@ -29,24 +29,24 @@ steps_data <- all_list$single$Q3 |>
 
 #### Performance Metrics ####
 
-rank_data <- question_list$Q5 |>
-  
-  dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
-  
-  tidyr::pivot_longer(
-    cols = !(1:2),
-    names_to = "Question",
-    values_to = "ranking"
-  ) |>
-  
-  dplyr::left_join(keyFunction('Q5', dim1)) |>
-  
-  dplyr::left_join(all_list$ranking$Q5) |>
-  
-  dplyr::filter(Question != "Q5_13_TEXT") |>
-  
-  dplyr::mutate(ranking = as.numeric(ranking),
-                dim1 = stringr::str_remove(dim1, "[:blank:]\\(.+\\)"))
+# rank_data <- question_list$Q5 |>
+#   
+#   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
+#   
+#   tidyr::pivot_longer(
+#     cols = !(1:2),
+#     names_to = "Question",
+#     values_to = "ranking"
+#   ) |>
+#   
+#   dplyr::left_join(keyFunction('Q5', dim1)) |>
+#   
+#   dplyr::left_join(all_list$ranking$Q5) |>
+#   
+#   dplyr::filter(Question != "Q5_13_TEXT") |>
+#   
+#   dplyr::mutate(ranking = as.numeric(ranking),
+#                 dim1 = stringr::str_remove(dim1, "[:blank:]\\(.+\\)"))
 
 
 
@@ -56,14 +56,14 @@ rank_data <- question_list$Q5 |>
 
 #### Student Staff (Total) ####
 
-student_staff_data <- question_list[['Q6']] |>
+student_staff_data <- question_list[['Q5']] |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "response"
   ) |>
   dplyr::left_join(
-    keyFunction('Q6', dim1,dim2)
+    keyFunction('Q5', dim1,dim2)
   ) |>
   dplyr::mutate(response = as.numeric(response)) |>
   dplyr::group_by(`Institution Name`) |>
@@ -74,17 +74,17 @@ student_staff_data <- question_list[['Q6']] |>
 
 #### Student Staff (Paraprofessional) ####
 
-student_para_data <- question_list[['Q6']] |>
+student_para_data <- question_list[['Q5']] |> 
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "response"
-  ) |>
+  ) |> 
   dplyr::left_join(
-    keyFunction('Q6', dim1,dim2)
-  ) |>
+    keyFunction('Q5', dim1,dim2)
+  ) |> 
   dplyr::mutate(response = as.numeric(response)) |>
-  dplyr::filter(dim1 == "Students in paraprofessional roles") |>
+  dplyr::filter(dim1 == "Students in paraprofessional roles (peer advisors)") |> 
   dplyr::group_by(`Institution Name`) |>
   dplyr::summarise(n = sum(response, na.rm = TRUE)) |>
   dplyr::filter(n > 0 & !is.na(n))
@@ -94,7 +94,7 @@ student_para_data <- question_list[['Q6']] |>
 
 student_stustaff_ratio <- student_staff_data |>
   
-  left_join(question_list$Q6[1:2]) |>
+  left_join(question_list$Q5[1:2]) |>
   
   mutate(ratio = as.numeric(`Undergraduate enrollment`)/n) |>
   
@@ -105,20 +105,20 @@ student_stustaff_ratio <- student_staff_data |>
 
 #### Professional Staff ####
 
-prof_staff_data <- question_list[['Q7']] |>
-  dplyr::select(`Institution Name`,Q7_1_10) |>
-  dplyr::mutate(n = as.numeric(Q7_1_10), .keep = "unused") |>
+prof_staff_data <- question_list[['Q6']] |>
+  dplyr::select(`Institution Name`,Q6_1_10) |>
+  dplyr::mutate(n = as.numeric(Q6_1_10), .keep = "unused") |>
   dplyr::filter(n > 0 & !is.na(n) & !is.infinite(n))
 
 
 
 #### Student to Professional Staff Ratio ####
 
-student_prof_ratio <- question_list[['Q7']] |>
+student_prof_ratio <- question_list[['Q6']] |>
   dplyr::select(`Institution Name`,
                 `Undergraduate enrollment`,
-                Q7_1_10) |>
-  dplyr::mutate(n = as.numeric(Q7_1_10),
+                Q6_1_10) |>
+  dplyr::mutate(n = as.numeric(Q6_1_10),
                 enroll = as.numeric(`Undergraduate enrollment`),
                 ratio = round(enroll/n),
                 .keep = "unused") |>
@@ -130,23 +130,23 @@ student_prof_ratio <- question_list[['Q7']] |>
 
 #### Professional Advising (any amount of time) ####
 
-advising_q <- keyFunction('Q8',dim1,dim2)|>
+advising_q <- keyFunction('Q7',dim1,dim2)|>
   filter(dim2=="Total # of staff involved" & dim1 == "Student Counseling/Advising") |>
   pull(Question)
 
-prof_advising_data <- question_list$Q8 |>
+prof_advising_data <- question_list$Q7 |>
   
   select(`Institution Name`, all_of(advising_q)) |>
-  dplyr::mutate(n = as.numeric(Q8_1_1), .keep = "unused") |>
+  dplyr::mutate(n = as.numeric(Q7_1_1), .keep = "unused") |>
   filter(n > 0 & !is.na(n) & !is.infinite(n))
 
 
 
 #### Professional Employer Relations ####
 
-prof_employer_data <- question_list$Q8 |>
-  dplyr::select(`Institution Name`, Q8_8_1) |>
-  dplyr::mutate(n = as.numeric(Q8_8_1), .keep = "unused") |>
+prof_employer_data <- question_list$Q7 |>
+  dplyr::select(`Institution Name`, Q7_8_1) |>
+  dplyr::mutate(n = as.numeric(Q7_8_1), .keep = "unused") |>
   dplyr::filter(n > 0 & !is.na(n) & !is.infinite(n))
 
 

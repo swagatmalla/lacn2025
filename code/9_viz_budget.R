@@ -3,14 +3,14 @@ library(tidyverse)
 
 
 #### Total Funding ####
-funding_data <- question_list$Q24 |>
+funding_data <- question_list$Q23 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q24',dim1, dim2)
+    keyFunction('Q23',dim1, dim2)
     ) |>
   dplyr::select(`Institution Name`,dim1,dim2,amount) |>
   dplyr::mutate(amount = as.numeric(amount)) |>
@@ -37,14 +37,14 @@ funding_data <- question_list$Q24 |>
 
 #### Endowed Funds ####
 
-endow_exp_data <- question_list$Q24 |>
+endow_exp_data <- question_list$Q23 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q24',dim1,dim2)
+    keyFunction('Q23',dim1,dim2)
   ) |>
   dplyr::mutate(
     dim1 = stringr::str_to_title(
@@ -91,14 +91,14 @@ endow_exp_data <- question_list$Q24 |>
 
 #### Expendable Gifts ####
 
-gift_data <- question_list$Q24 |>
+gift_data <- question_list$Q23 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q24',dim1,dim2)
+    keyFunction('Q23',dim1,dim2)
   ) |>
   
   dplyr::filter(dim1 == "Expendable gifts" & dim2 != "Total") |>
@@ -140,7 +140,7 @@ gift_data <- question_list$Q24 |>
   
 #### Operating Budget ####
 
-OP_budget <- question_list$Q23 |>
+OP_budget <- question_list$Q22 |>
     
     tidyr::pivot_longer(
       cols = !(1:2),
@@ -157,14 +157,14 @@ OP_budget <- question_list$Q23 |>
 
 #### Non-Operating Budget ####
   
-NOP_budget <- question_list$Q24 |>
+NOP_budget <- question_list$Q23 |>
     tidyr::pivot_longer(
       cols = !(1:2),
       names_to = "Question",
       values_to = "amount"
     ) |>
     dplyr::left_join(
-      keyFunction('Q24',dim1,dim2)
+      keyFunction('Q23',dim1,dim2)
     ) |>
     
     dplyr::select(!Question) |>

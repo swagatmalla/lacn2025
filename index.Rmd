@@ -6,7 +6,7 @@ output:
     theme: flatly
 ---
 
-### *Data from 2020-21* {#college}
+### *Data from 2021-22* {#college}
 
 ::: {.row}
 
@@ -36,7 +36,7 @@ output:
 
 # **Survey Administration**
 
-- Timeline: Data from 2020-21 
+- Timeline: Data from 2021-22 
 - Response Rate: 39 schools reported
 - Visualizations
     - Very similar to 2019-20 report, except:
