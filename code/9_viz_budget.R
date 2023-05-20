@@ -187,7 +187,7 @@ NOP_budget <- question_list$Q23 |>
     ) |>
     
     dplyr::mutate(sum = intern + other,
-                  diff = Total-sum) |>
+                  diff = Total-sum) |> 
     
     dplyr::mutate(
       total_correct = dplyr::case_when(
@@ -216,7 +216,9 @@ total_budget <- OP_budget |>
       values_to = "amount"
     ) |>
     
-    dplyr::mutate(amount_mil = amount/1e+06)
+    dplyr::mutate(amount_mil = amount/1e+06) |> 
+    
+    dplyr::filter(amount > 0)
   
 
 

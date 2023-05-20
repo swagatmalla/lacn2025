@@ -37,14 +37,11 @@ output:
 # **Survey Administration**
 
 - Timeline: Data from 2021-22 
-- Response Rate: 39 schools reported
-- Visualizations
-    - Very similar to 2019-20 report, except:
-      - Removed visualizations on career fairs, interviews and career treks, which were limited by COVID-19
-      - Combined Experiential Learning participation into one visualization
+- Response Rate: 36 schools reported
+- Visualizations: very similar to 2020-21 report
+  - Main change is that performance measures were more open ended (rather than ranked), so results were reported in general table
 - Data Analysis
   - Completed by St. Olaf College
-  - Added ability to highlight responses from a particular institution and create institution-specific reports
   
 :::
 
@@ -52,4 +49,4 @@ output:
 
 <hr/>
 
-*Administered by the Benchmarking Committee; published May 2022*
+*Administered by the Benchmarking Committee; published May 2023*

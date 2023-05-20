@@ -23,7 +23,7 @@ sengage_year_data <- question_list$Q20 |>
 
 #### Student Engagement by Type ####
 
-sengage_type_data <- question_list$Q20 |>
+sengage_type_data <- question_list$Q20 |> 
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = c('main','sub1','sub2'),

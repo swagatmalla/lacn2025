@@ -136,7 +136,7 @@ tableViz(endow_data, var = "endow")
 
 singlePlot(reporting_data, q = "Q2",
            string_rem = ":",
-           size = 45,
+           size = 35,
            font = params$plotfont)
 
 ```
@@ -162,7 +162,7 @@ singlePlot(reporting_data, q = "Q2",
 
   singlePlot(steps_data, q = "Q3",
            string_rem = "[:blank:]\\(.+\\)",
-           size = 45,
+           size = 35,
            font = params$plotfont)
 
 ```
@@ -196,7 +196,86 @@ singlePlot(reporting_data, q = "Q2",
 <!--              offer = "To Whom Do You Report?") -->
 <!-- ``` -->
 
-<!-- ### Performance Metrics -->
+
+
+
+
+### Performance Metrics
+
+#### N = 35
+
+```{r performance-metrics}
+
+data <-
+  question_list$Q4 |> 
+  rename(measure1 = Q4_1,
+         measure2 = Q4_2,
+         measure3 = Q4_3) |>
+  pivot_longer(3:5, names_to = "Measure #",
+               values_to = "Measure") |>
+  drop_na() |> 
+  # Aggregate different responses
+  mutate(Measure = str_to_lower(Measure),
+         Measure = ifelse(str_detect(Measure, "destination"), "first destination outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "student engagement"), "student engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "internship"), "internship outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "alumn"), "alumni engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "career outcomes"), "career outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "student satisfaction"), "student satisfaction", Measure),
+         Measure = ifelse(str_detect(Measure, "dei|equity"), "Diversity, Equity & Inclusion", Measure),
+         Measure = ifelse(str_detect(Measure, "career outcomes"), "first destination outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "^outcomes$"), "first destination outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "graduate"), "first destination outcomes", Measure),
+         Measure = ifelse(str_detect(Measure, "student support"), "student engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "^engagement$"), "student engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "faculty collaboration"), "faculty engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "er partnerships"), "employer engagement", Measure),
+         Measure = ifelse(str_detect(Measure, "experiential learning"), "internship outcomes", Measure)
+         ) |> 
+  mutate(Measure = str_to_title(Measure)) |>
+  count(Measure, sort = TRUE) |>
+  filter(n >= 2)
+
+# Table of aggregated responses
+
+data |>
+  gt::gt() |>
+    
+  gt::tab_header(title = "Which Performance Measures are Most Important?",
+                 subtitle = "Minimum 2 responses") |>
+  
+  
+  gt::cols_label(Measure = "Performance Measure",
+                 n = "N")|>
+  
+  gt::tab_style(
+      style = list(
+        gt::cell_text(weight = "bold")
+      ),
+      locations = gt::cells_column_labels(
+        columns = everything()
+      )
+    ) |>
+  gt::tab_style(
+      style = list(
+        gt::cell_text(style = "italic")
+      ),
+      locations = gt::cells_title(groups = "subtitle")
+    ) |>
+  gt::tab_style(
+      style = list(
+        gt::cell_fill(color = "aliceblue")),
+      locations = gt::cells_body(
+        columns = dplyr::everything(),
+        rows = as.numeric(row.names(data)) %% 2 == 0
+      )
+    ) |>
+gt::cols_width(
+      Measure ~ px(250)
+    )
+  
+```
+
 
 <!-- *Relative Importance to Senior Leadership (N = 38)* -->
 
@@ -1131,8 +1210,8 @@ sengage_tab_data <- sengage_type_data |>
 exper_learning_data |>
   
   dplyr::mutate(dim1 = stringr::str_replace(dim1,
-                                           "Internship.+research\\)",
-                                           "Internship**")) |>
+                                           "Internship \\(.+",
+                                           "Internship**")) |> 
   dplyr::group_by(dim1) |>
   dplyr::summarise(Mean = mean(exper, na.rm = TRUE), 
                    Median = median(exper, na.rm = TRUE),
@@ -1196,9 +1275,13 @@ exper_learning_data |>
   filter(!is.na(exper)) |>
   group_by(dim1)|>
   summarise(count = n()) |>
-  
-  mutate(dim1 = stringr::str_remove_all(dim1,"\\(.+\\)"),
-         dim1= stringr::str_remove_all(dim1, "\\*"))|>
+
+  mutate(dim1 = stringr::str_replace(dim1,
+                                           "Internship \\(.+",
+                                           "Internship**")
+         # dim1 = stringr::str_remove_all(dim1,"\\(.+\\)"),
+         # dim1= stringr::str_remove_all(dim1, "\\*")
+         )|>
   gt::gt() |>
   
     
