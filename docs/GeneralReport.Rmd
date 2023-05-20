@@ -202,8 +202,6 @@ singlePlot(reporting_data, q = "Q2",
 
 ### Performance Metrics
 
-#### N = 35
-
 ```{r performance-metrics}
 
 data <-
@@ -242,7 +240,7 @@ data |>
   gt::gt() |>
     
   gt::tab_header(title = "Which Performance Measures are Most Important?",
-                 subtitle = "Minimum 2 responses") |>
+                 subtitle = "Minimum 2 responses (N = 35)") |>
   
   
   gt::cols_label(Measure = "Performance Measure",
