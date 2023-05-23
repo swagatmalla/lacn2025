@@ -71,7 +71,7 @@ per college, some a continuous numeric input, and one a ordinal ranking.
 If we want to automate the cleaning and analysis of the survey
 questions, we need to be able to separate out the single-response
 questions from the matrix questions, etc. The **question\_type**
-dataframe, built manually in Google Sheets and then imported into R.
+dataframe, built manually in Google Sheets and then imported into R. See the Lacn Google Sheets folder for this. The main sheets are the **response_key** tabs and the **progress** tabs. The **progress** tab contains the questions list, while the **response_key** tab is written into Google Sheets by R. Once this is in Google Sheets, edit column names to match previous years' tabs. 
 
 Now we can move to analyzing each question on its own terms.
 

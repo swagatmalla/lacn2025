@@ -10,7 +10,6 @@ output:
 params:
   plotfont: "Source Sans Pro"
   college: St Olaf College
-    
 editor_options: 
   chunk_output_type: console
 ---
@@ -229,8 +228,6 @@ singlePlot(reporting_data, q = "Q2",
 
 ### Performance Metrics
 
-#### N = 35
-
 ```{r performance-metrics}
 
 # MAYBE ADD A TOTAL RESPONSES
@@ -306,7 +303,7 @@ data |>
   gt::gt() |>
     
   gt::tab_header(title = "Which Performance Measures are Most Important?",
-                 subtitle = "Minimum 2 responses") |>
+                 subtitle = "Minimum 2 responses (n = 35)") |>
   
   
   gt::cols_label(Measure = "Performance Measure",
@@ -646,7 +643,8 @@ all_list$multi$Q8 |>
   left_join(
     serviceCustom(
       q = 'Q8',
-      dim = 'dim2'
+      dim = 'dim2',
+      college = params$college
     )
   ) |>
   
@@ -687,7 +685,8 @@ all_list$multi$Q9 |>
   left_join(
     serviceCustom(
       q = 'Q9',
-      dim = 'dim2'
+      dim = 'dim2',
+      college = params$college
     )
   ) |>
   
@@ -722,7 +721,8 @@ all_list$multi$Q10 |>
   left_join(
     serviceCustom(
       q = 'Q10',
-      dim = 'dim2'
+      dim = 'dim2',
+      college = params$college
     )
   ) |>
   
@@ -772,7 +772,8 @@ all_list$multi$Q12 |>
   left_join(
     serviceCustom(
       q = 'Q12',
-      dim = 'dim2'
+      dim = 'dim2',
+      college = params$college
     )
   ) |>
   
@@ -943,7 +944,6 @@ info_no_data |>
   group_by(`Institution Name`) |>
   summarise(amount = sum(amount)) |>
   tableViz(var = 'amount', 
-           subtitle = "All Sessions Virtual",
            college = params$college)
 ```
   
@@ -1002,8 +1002,7 @@ info_employ_data |>
 info_employ_data |>
   group_by(`Institution Name`) |>
   summarise(amount = sum(amount)) |>
-  tableViz(var = 'amount', 
-           subtitle = "All Sessions Virtual",
+  tableViz(var = 'amount',
            college = params$college)
 ```
   
