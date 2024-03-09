@@ -2,7 +2,7 @@
 #### -------- ANALYZE responses ----- ####
 
 
-all_questions <- unique(question_type$q_type)[c(2,3,5,6)]
+all_questions <- unique(question_type$q_type)[c(2,4,5,6)] #ommiting ranking
 
 all_list <- map(all_questions,
                 ~ analyzeFunction(

@@ -3,14 +3,14 @@ library(tidyverse)
 
 
 #### Total Funding ####
-funding_data <- question_list$Q23 |>
+funding_data <- question_list$Q26 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q23',dim1, dim2)
+    keyFunction('Q26',dim1, dim2)
     ) |>
   dplyr::select(`Institution Name`,dim1,dim2,amount) |>
   dplyr::mutate(amount = as.numeric(amount)) |>
@@ -37,14 +37,14 @@ funding_data <- question_list$Q23 |>
 
 #### Endowed Funds ####
 
-endow_exp_data <- question_list$Q23 |>
+endow_exp_data <- question_list$Q26 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q23',dim1,dim2)
+    keyFunction('Q26',dim1,dim2)
   ) |>
   dplyr::mutate(
     dim1 = stringr::str_to_title(
@@ -64,7 +64,7 @@ endow_exp_data <- question_list$Q23 |>
   ) |>
   
   dplyr::filter(
-    dplyr::if_any(`Amount utilized for funded internships ($)`:`Other ($)`,
+    dplyr::if_any(`Amount available for funded internships ($)`:`Other ($)`,
                   ~ .x > 0 & !is.na(.x)
                   )
     ) |>
@@ -91,14 +91,14 @@ endow_exp_data <- question_list$Q23 |>
 
 #### Expendable Gifts ####
 
-gift_data <- question_list$Q23 |>
+gift_data <- question_list$Q26 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
     values_to = "amount"
   ) |>
   dplyr::left_join(
-    keyFunction('Q23',dim1,dim2)
+    keyFunction('Q26',dim1,dim2)
   ) |>
   
   dplyr::filter(dim1 == "Expendable gifts" & dim2 != "Total") |>
@@ -140,7 +140,7 @@ gift_data <- question_list$Q23 |>
   
 #### Operating Budget ####
 
-OP_budget <- question_list$Q22 |>
+OP_budget <- question_list$Q25 |>
     
     tidyr::pivot_longer(
       cols = !(1:2),
@@ -157,14 +157,14 @@ OP_budget <- question_list$Q22 |>
 
 #### Non-Operating Budget ####
   
-NOP_budget <- question_list$Q23 |>
+NOP_budget <- question_list$Q26 |>
     tidyr::pivot_longer(
       cols = !(1:2),
       names_to = "Question",
       values_to = "amount"
     ) |>
     dplyr::left_join(
-      keyFunction('Q23',dim1,dim2)
+      keyFunction('Q26',dim1,dim2)
     ) |>
     
     dplyr::select(!Question) |>
@@ -176,7 +176,7 @@ NOP_budget <- question_list$Q23 |>
       values_from = amount
     ) |> 
     
-    dplyr::rename(intern = "Amount utilized for funded internships ($)",
+    dplyr::rename(intern = "Amount available for funded internships ($)",
                   other = "Other ($)") |>
     
     dplyr::mutate(

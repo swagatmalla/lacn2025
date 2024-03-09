@@ -4,10 +4,10 @@ library(tidyverse)
 list.files("data")
 # lacn_location <- file.path("data","OpsSurveyRawData4.14.22.csv")
 
-lacn_location <- file.path("data","UpdatedData5.8.23.csv")
+lacn_location <- file.path("data","RawData3.8.24.csv")
 
 # Read in the data
-lacn_master <- readr::read_csv(lacn_location, col_select = c(-(227:236))) # getting rid of duplicate columns
+lacn_master <- readr::read_csv(lacn_location, col_select = c(-(232:241))) # getting rid of duplicate columns, changed from c(-(227:236)))
 
 # Update column names so that the numeric columns start with Q and not a number
 colnames(lacn_master) <- ifelse(stringr::str_detect(colnames(lacn_master), "^[0-9]"), stringr::str_c("Q", colnames(lacn_master)), colnames(lacn_master))
@@ -69,15 +69,15 @@ lacn_master <- lacn_master |>
   
 
 # specify google sheets location
-ss <- "17gmSm6hF_T10sGQAjzDxztzWBsFNpWdfxYZMkZwFvSQ"
+ss <- "1KxN-IZ86dI7M7Z9jM_0AEaIba7qU18v0sP05VOAKops"
 
-googlesheets4::gs4_auth(email = "noecke2@stolaf.edu", token=ss)
+googlesheets4::gs4_auth(email = "malla1@stolaf.edu", token=ss)
 
 
 
 #### ---------- CREATE RESPONSE KEY ----------- ####
 response_key_messy <- lacn_master |>
- dplyr::select(Q1_1:Q25) |>
+ dplyr::select(Q1_1:Q28) |>  #was Q:25 before
  dplyr::slice(1L)|>
  tidyr::pivot_longer(
    cols = dplyr::everything(),
@@ -91,26 +91,26 @@ response_key_messy <- lacn_master |>
 
 
 #---------------ONLY RUN ONCE----------------------------------
-# send response_key_messy to google sheets for manual clean-up
-# googlesheets4::sheet_write(ss = ss,
-#                           response_key_messy,
-#                           sheet = 'response_key_23')
+ #send response_key_messy to google sheets for manual clean-up
+ #googlesheets4::sheet_write(ss = ss,
+  #                      response_key_messy,
+   #                       sheet = 'response_key_24')
 #--------------------------------------------------------------
 
 
 # retrieve manually cleaned response_key from google sheets
 response_key <- googlesheets4::read_sheet(ss = ss,
-                                          sheet = "response_key_23")
+                                         sheet = "response_key_24")
 
 # save response key to csv in data subdirectory
-readr::write_csv(response_key, file.path("data/response_key_23.csv"))
+readr::write_csv(response_key, file.path("data/response_key_24.csv"))
 
 
 
 #### REFERENCE TABLE of question types ####
-question_type <- googlesheets4::range_read(ss = "17gmSm6hF_T10sGQAjzDxztzWBsFNpWdfxYZMkZwFvSQ",
-                                        sheet = "progress_23",
-                                        range = "A1:C26") |>
+question_type <- googlesheets4::range_read(ss = "1KxN-IZ86dI7M7Z9jM_0AEaIba7qU18v0sP05VOAKops",
+                                        sheet = "progress_24",
+                                        range = "A1:C29") |>
   dplyr::rename(q_type = "# selections possible")
 
 

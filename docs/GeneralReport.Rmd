@@ -27,7 +27,7 @@ font_add_google(params$plotfont)
 showtext_auto()
 
 # load LACN analysis environment
-load("~/Desktop/lacn/lacn.RData")
+load("~/lacn2023/lacn.RData")
 # load("../lacn.RData")
 ```
 
@@ -612,24 +612,24 @@ all_list$multi$Q10 |>
   <div class="col-sm-7">
 ```{r service-grad-tab}
 
-write_in_gserve <- question_list$Q12$Q12_4_TEXT
+write_in_gserve <- question_list$Q15$Q15_4_TEXT
 
-q12_n <- question_list[['Q12']] |>
+q15_n <- question_list[['Q15']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-all_list$multi$Q12 |>
+all_list$multi$Q15 |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q12_n,
+         freq = n/q15_n,
          freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
   serviceTab(
-    q = "Q12",
+    q = "Q15",
     title = "Services Offered to Grad Students",
     subtitle = "",
     offer = "Services"
@@ -640,15 +640,15 @@ all_list$multi$Q12 |>
   <div class="col-sm-5">
   
 ```{r service-grad-plot}
-all_list$single$Q11 |>
+all_list$single$Q14 |>
   
   mutate(
-    Q11 = replace_na(Q11, 'No Response')
+    Q14 = replace_na(Q14, 'No Response')
   ) |>
   
-  ggplot(aes(factor(Q11, levels=c('No','Yes','No Response')), 
+  ggplot(aes(factor(Q14, levels=c('No','Yes','No Response')), 
              n, 
-             fill = Q11, 
+             fill = Q14, 
              label = n))+
   
   geom_hline(yintercept = seq(0,25,by=5), colour = "grey")+
@@ -686,21 +686,21 @@ all_list$single$Q11 |>
   <div class="col-sm-7">
 ```{r service-alum}
 
-q14_n <- question_list[['Q14']] |>
+q17_n <- question_list[['Q17']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-all_list$multi$Q14 |>
+all_list$multi$Q17 |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q14_n,
+         freq = n/q17_n,
          freq = round(freq*100,2)) |>
   
   dplyr::arrange(-n) |>
   
-  serviceTab(q = "Q14", title = "Services Offered to Alumni",
+  serviceTab(q = "Q17", title = "Services Offered to Alumni",
              subtitle = "No write-in responses",
              offer = "Services")
 
@@ -1467,6 +1467,6 @@ gift_data |>
 
 <hr/>
 
-*Published May 2023, St. Olaf College*
+*Published March 2024, St. Olaf College*
 
 

@@ -3,7 +3,7 @@
 rm(list = ls())
 
 # specify code location in parent dir
-code_location <- "~/Desktop/lacn/code"
+code_location <- "~/lacn2023/code"
 
 # source basic cleaning and set-up
 source(file.path(code_location, "1_read_data.R"))

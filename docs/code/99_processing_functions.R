@@ -142,7 +142,7 @@ continuousFunction <- function(list, element, method = "mean", ...) {
 analyzeFunction <- function(type, list = "question_list") {
   
   
-  questions <- selectFunction(type)
+  questions <- selectFunction(type) #questions for each type supplied
   
   list <- map(questions,
               ~ get(paste0(type,"Function"))(

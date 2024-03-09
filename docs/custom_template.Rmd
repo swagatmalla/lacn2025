@@ -28,7 +28,7 @@ font_add_google(params$plotfont)
 showtext_auto()
 
 # load LACN analysis environment
-load("~/Desktop/lacn/lacn.RData")
+load("~/lacn2023/lacn.RData")
 # load("../lacn.RData")
 ```
 
@@ -761,17 +761,17 @@ all_list$multi$Q10 |>
 
 write_in_gserve <- question_list$Q12$Q12_4_TEXT
 
-q12_n <- question_list[['Q12']] |>
+q15_n <- question_list[['Q15']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-all_list$multi$Q12 |>
+all_list$multi$Q15 |>
   
   left_join(
     serviceCustom(
-      q = 'Q12',
+      q = 'Q15',
       dim = 'dim2',
       college = params$college
     )
@@ -780,7 +780,7 @@ all_list$multi$Q12 |>
   suppressMessages() |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q12_n,
+         freq = n/q15_n,
          freq = round(freq*100,2),
          `Your School` = replace_na(`Your School`,"")
          ) |>
@@ -788,7 +788,7 @@ all_list$multi$Q12 |>
   dplyr::arrange(-n) |> 
   
   serviceTab(
-    q = "Q12",
+    q = "Q15",
     title = "Services Offered to Grad Students",
     subtitle = "",
     offer = "Services"
@@ -799,15 +799,15 @@ all_list$multi$Q12 |>
   <div class="col-sm-5">
   
 ```{r service-grad-plot}
-all_list$single$Q11 |>
+all_list$single$Q14 |>
   
   mutate(
-    Q11 = replace_na(Q11, 'No Response')
+    Q14 = replace_na(Q14, 'No Response')
   ) |>
   
-  ggplot(aes(factor(Q11, levels=c('No','Yes','No Response')), 
+  ggplot(aes(factor(Q14, levels=c('No','Yes','No Response')), 
              n, 
-             fill = Q11, 
+             fill = Q14, 
              label = n))+
   
   geom_hline(yintercept = seq(0,25,by=5), colour = "grey")+
@@ -845,34 +845,34 @@ all_list$single$Q11 |>
   <div class="col-sm-7">
 ```{r service-alum}
 
-q14_n <- question_list[['Q14']] |>
+q17_n <- question_list[['Q17']] |>
   
   dplyr::filter(dplyr::if_any(.cols = !(1:2), .fns = ~ !is.na(.x))) |>
   
   nrow()
 
-q14_custom <- question_list$Q14 |>
+q17_custom <- question_list$Q17 |>
   filter(`Institution Name` == params$college) |>
-  select(Q14) |>
-  rename(value = 'Q14') |>
+  select(Q17) |>
+  rename(value = 'Q17') |>
   add_column('Your School' = "Yes")
 
-all_list$multi$Q14 |>
+all_list$multi$Q17 |>
   
   left_join(
-    q14_custom
+    q17_custom
   ) |>
   
   suppressMessages() |>
   
   mutate(value = stringr::str_to_title(value),
-         freq = n/q14_n,
+         freq = n/q17_n,
          freq = round(freq*100,2),
          `Your School` = replace_na(`Your School`,"")) |>
   
   dplyr::arrange(-n) |>
   
-  serviceTab(q = "Q14", title = "Services Offered to Alumni",
+  serviceTab(q = "Q17", title = "Services Offered to Alumni",
              subtitle = "No write-in responses",
              offer = "Services")
 
@@ -1038,8 +1038,8 @@ appt_student_data |>
                                          `Institution Name` == params$college & Year == "Senior"),
                            mapping = ggplot2::aes(label = `Institution Name`),
                            nudge_y = 1500,
-                           nudge_x = -200,
-                           size = 13,
+                           nudge_x = -20, #was -200 before
+                           size = 10, #13
                            colour = "black",
                            family = params$plotfont)+
   
@@ -1058,12 +1058,12 @@ appt_student_data |>
            x = 5,
            y = 3500,
            label = "a)",
-           size = 15,
+           size = 10, #15
            family = params$plotfont)+
   
 
   ggplot2::theme(
-    text = ggplot2::element_text(size = 45, 
+    text = ggplot2::element_text(size = 35,#45 
                                  family = params$plotfont),
     axis.text.x = ggplot2::element_blank(),
     axis.ticks = ggplot2::element_blank(),
@@ -1782,6 +1782,6 @@ gift_data |>
 
 <hr/>
 
-**Published May 2023, St Olaf College**
+**Published March 2024, St Olaf College**
 
 

@@ -4,7 +4,7 @@ library(tidyverse)
 
 ## See sengage-year-plot code chunk
 
-sengage_year_data <- question_list$Q20 |> 
+sengage_year_data <- question_list$Q23 |> 
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = c('main','sub1','sub2'),
@@ -14,7 +14,7 @@ sengage_year_data <- question_list$Q20 |>
   dplyr::filter(sub2==4) |>
   dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q20',dim1)
+    keyFunction('Q23',dim1)
   ) |>
   dplyr::select(!c(main:sub2,Question))  |>
   dplyr::mutate(across(`Undergraduate enrollment`:engage, as.numeric))
@@ -23,7 +23,7 @@ sengage_year_data <- question_list$Q20 |>
 
 #### Student Engagement by Type ####
 
-sengage_type_data <- question_list$Q20 |> 
+sengage_type_data <- question_list$Q23 |> 
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = c('main','sub1','sub2'),
@@ -32,7 +32,7 @@ sengage_type_data <- question_list$Q20 |>
   ) |>
   dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q20',dim1,dim2)
+    keyFunction('Q23',dim1,dim2)
   )
 
 
@@ -40,7 +40,7 @@ sengage_type_data <- question_list$Q20 |>
 #### Appt w/ Student (dist) ####
 
 
-appt_student_data <- question_list$Q19 |>
+appt_student_data <- question_list$Q22 |>
   
   #initial matrix cleaning
   tidyr::pivot_longer(
@@ -51,7 +51,7 @@ appt_student_data <- question_list$Q19 |>
   ) |>
   dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q19',dim1, dim2)
+    keyFunction('Q22',dim1, dim2)
   ) |> 
   
   # mutate strings and engage chr to num
@@ -94,7 +94,7 @@ appt_student_data <- question_list$Q19 |>
 
 #### Appt Alumni ####
 
-appt_alum_data <- question_list$Q19 |>
+appt_alum_data <- question_list$Q22 |>
   
   #initial matrix cleaning
   tidyr::pivot_longer(
@@ -105,7 +105,7 @@ appt_alum_data <- question_list$Q19 |>
   ) |>
   dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q19',dim1, dim2)
+    keyFunction('Q22',dim1, dim2)
   ) |> 
   
   # mutate strings and engage chr to num
@@ -154,8 +154,8 @@ appt_alum_data <- question_list$Q19 |>
 
 
 
-appt_fte_data <- question_list$Q19 |> 
-  select(`Institution Name`, Q19_5_1:Q19_6_2) |>
+appt_fte_data <- question_list$Q22 |> 
+  select(`Institution Name`, Q22_5_1:Q22_6_2) |>
   tidyr::pivot_longer(
     cols = !(1),
     names_to = "Question",
@@ -178,7 +178,7 @@ appt_fte_data <- question_list$Q19 |>
 
 #### Experiential Learning ####
 
-exper_learning_data <- question_list$Q21 |>
+exper_learning_data <- question_list$Q24 |>
   tidyr::pivot_longer(
     cols = !(1:2),
     names_to = "Question",
@@ -186,7 +186,7 @@ exper_learning_data <- question_list$Q21 |>
   ) |>
   #dplyr::mutate(Question = paste(main,sub1,sub2, sep = "_")) |>
   dplyr::left_join(
-    keyFunction('Q21',dim1)
+    keyFunction('Q24',dim1)
   ) |>
   dplyr::select(`Institution Name`,dim1,exper) |>
   dplyr::mutate(exper = as.numeric(exper)) |>

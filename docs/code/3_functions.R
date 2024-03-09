@@ -76,7 +76,7 @@ matrixPlot <- function(data, breaks = NULL, college, title=NULL, font = "Source 
                                  nudge_x = -5,
                                  size = 13,
                                  colour = "black",
-                                 family = params$plotfont)
+                                 family = "Source Sans Pro")
     )
 
     
@@ -291,7 +291,7 @@ serviceTab <- function(data, q, title = "Title", subtitle = "Subtitle", offer) {
   
 }
 
-serviceCustom <- function(q,dim, college = params$college) {
+serviceCustom <- function(q,dim, college = "") {
   
   tbl <- question_list[[q]] |>
     pivot_longer(
