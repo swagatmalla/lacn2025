@@ -4,7 +4,7 @@ library(tidyverse)
 list.files("data")
 # lacn_location <- file.path("data","OpsSurveyRawData4.14.22.csv")
 
-lacn_location <- file.path("data","RawData3.8.24.csv")
+lacn_location <- file.path("data","OpsSurveyFinalRun3.4.csv")
 
 # Read in the data
 lacn_master <- readr::read_csv(lacn_location, col_select = c(-(232:241))) # getting rid of duplicate columns, changed from c(-(227:236)))
