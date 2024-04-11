@@ -4011,56 +4011,56 @@ In the first column, please indicate how many professional staff (i.e., not stud
 
 
 
-        Please do not enter fractions (e.g., 1/2) or numbers with decimal points (e.g., .5); enter only whole numbers. If your response is none to any portion of the question, please enter a ""0"". Do not leave blank.
+	Please do not enter fractions (e.g., 1/2) or numbers with decimal points (e.g., .5); enter only whole numbers. If your response is none to any portion of the question, please enter a ""0"". Do not leave blank.
 
 
 
 Example 1: If 8 people in your office are responsible for general counseling/advising and it is the primary responsibility of 4 individuals (3 are FT and 1 is PT) you would complete that line item as follows:
 
 
-        
-                
-                         
-                        Total # of staff
+	
+		
+			 
+			Total # of staff
 
-                        involved
-                        #FT staff primarily
+			involved
+			#FT staff primarily
 
-                        dedicated
-                        #PT staff primarily
+			dedicated
+			#PT staff primarily
 
-                        dedicated
-                
-                
-                        General Counseling/Advising
-                        8
-                        3
-                        1
-                
-        
+			dedicated
+		
+		
+			General Counseling/Advising
+			8
+			3
+			1
+		
+	
 
 
 Example 2: If 10 people in your office are involved with Program/Event Planning but it is not in anyone's ""top 3"" responsibilities, you would complete that line item as follows:
 
 
-        
-                
-                         
-                        Total # of staff
+	
+		
+			 
+			Total # of staff
 
-                        involved
-                        #FT staff primarily
+			involved
+			#FT staff primarily
 
-                        dedicated
-                        #PT staff primarily
+			dedicated
+			#PT staff primarily
 
-                        dedicated
-                
-                
-                        Program/Event Planning
-                        10
-                        0
-                        0",Supervision of Professional Staff,# FT staff primarily dedicated,NA
+			dedicated
+		
+		
+			Program/Event Planning
+			10
+			0
+			0",Supervision of Professional Staff,# FT staff primarily dedicated,NA
 Q7_11_3,Q7,11,3,"The following question is designed to measure how your career center allocates responsibilities.  Please read the following instructions and examples carefully.  
 In the first column, please indicate how many professional staff (i.e., not students) devote ANY level of time to the functional areas listed. In the 2nd and 3rd columns, please indicate how many full-time and/or part-time staff are exclusively or primarily dedicated (e.g., this is one of their top three responsibilities) to each functional area.
 
@@ -4120,56 +4120,56 @@ In the first column, please indicate how many professional staff (i.e., not stud
 
 
 
-        Please do not enter fractions (e.g., 1/2) or numbers with decimal points (e.g., .5); enter only whole numbers. If your response is none to any portion of the question, please enter a ""0"". Do not leave blank.
+	Please do not enter fractions (e.g., 1/2) or numbers with decimal points (e.g., .5); enter only whole numbers. If your response is none to any portion of the question, please enter a ""0"". Do not leave blank.
 
 
 
 Example 1: If 8 people in your office are responsible for general counseling/advising and it is the primary responsibility of 4 individuals (3 are FT and 1 is PT) you would complete that line item as follows:
 
 
-        
-                
-                         
-                        Total # of staff
+	
+		
+			 
+			Total # of staff
 
-                        involved
-                        #FT staff primarily
+			involved
+			#FT staff primarily
 
-                        dedicated
-                        #PT staff primarily
+			dedicated
+			#PT staff primarily
 
-                        dedicated
-                
-                
-                        General Counseling/Advising
-                        8
-                        3
-                        1
-                
-        
+			dedicated
+		
+		
+			General Counseling/Advising
+			8
+			3
+			1
+		
+	
 
 
 Example 2: If 10 people in your office are involved with Program/Event Planning but it is not in anyone's ""top 3"" responsibilities, you would complete that line item as follows:
 
 
-        
-                
-                         
-                        Total # of staff
+	
+		
+			 
+			Total # of staff
 
-                        involved
-                        #FT staff primarily
+			involved
+			#FT staff primarily
 
-                        dedicated
-                        #PT staff primarily
+			dedicated
+			#PT staff primarily
 
-                        dedicated
-                
-                
-                        Program/Event Planning
-                        10
-                        0
-                        0",Supervision of Professional Staff,# PT staff primarily dedicated,NA
+			dedicated
+		
+		
+			Program/Event Planning
+			10
+			0
+			0",Supervision of Professional Staff,# PT staff primarily dedicated,NA
 Q7_12_1,Q7,12,1,"The following question is designed to measure how your career center allocates responsibilities.  Please read the following instructions and examples carefully.  
 In the first column, please indicate how many professional staff (i.e., not students) devote ANY level of time to the functional areas listed. In the 2nd and 3rd columns, please indicate how many full-time and/or part-time staff are exclusively or primarily dedicated (e.g., this is one of their top three responsibilities) to each functional area.
 

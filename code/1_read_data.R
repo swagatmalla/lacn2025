@@ -91,7 +91,7 @@ response_key_messy <- lacn_master |>
 
 
 #---------------ONLY RUN ONCE----------------------------------
- #send response_key_messy to google sheets for manual clean-up
+# send response_key_messy to google sheets for manual clean-up
  #googlesheets4::sheet_write(ss = ss,
   #                      response_key_messy,
    #                       sheet = 'response_key_24')
