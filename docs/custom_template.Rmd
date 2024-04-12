@@ -1,5 +1,5 @@
 ---
-title: 'LACN Operations Survey Report for `r params$college`'
+title: 'LACN Operations Survey Report' 
 output: 
   html_document:
     css: "style.css"
@@ -1104,7 +1104,7 @@ appt_student_data |>
   
 </div>
 
-### Professional Staff Appointments + Email Consultations (Alumi only)
+### Professional Staff Appointments + Email Consultations (Alumni only)
 
 <div class="row">
 
