@@ -899,7 +899,7 @@ appt_student_data |>
   
 </div>
 
-### Professional Staff Appointments + Email Consultations (Alumi only)
+### Professional Staff Appointments + Email Consultations (Alumni only)
 
 <div class="row">
 
