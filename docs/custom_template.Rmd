@@ -1305,7 +1305,7 @@ sengage_year_data |>
   
   <div class="col-sm-3">
   
-`r nTab(question_list$Q20$Q20_5_4)`
+`r nTab(question_list$Q23$Q23_5_4)`
 
 \n \n Note: Engagement \n includes appointments \n w/ professional staff \n and peer advisors and \n programs and events
 
