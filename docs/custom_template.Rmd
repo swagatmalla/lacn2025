@@ -9,7 +9,7 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
-  college: St Olaf College
+  college: Smith College
 editor_options: 
   chunk_output_type: console
 ---
@@ -1336,7 +1336,7 @@ sengage_type_data |>
   dplyr::summarise(Mean = mean(engage, na.rm = TRUE), 
                    Median = median(engage, na.rm = TRUE),
                    Max = max(engage, na.rm = TRUE),
-                   `Your School` = mean(engage[`Institution Name`== "St Olaf College" & dim1 == "TOTAL (all classes)"], na.rm = TRUE)
+                   `Your School` = mean(engage[`Institution Name`== params$college & dim1 == "TOTAL (all classes)"], na.rm = TRUE)
   ) |>
   tidyr::pivot_longer(
     cols = !dim2,
@@ -1639,9 +1639,10 @@ endow_exp_data |>
   ggplot2::labs(
     y = "Total (in millions)",
     x = NULL
-  )+
-  
-  ggplot2::scale_y_continuous(labels = c("0","0.5","1","1.5","$2"))+
+  )+  # made changes to the labels because it wasn't working for some colleges
+  ggplot2::scale_y_continuous(labels =  scales::dollar_format(suffix = "M"))+ 
+
+ # ggplot2::scale_y_continuous(labels = #c("0","0.5","1","1.5","$2"))+
   
   ggplot2::theme(
     text = ggplot2::element_text(family = params$plotfont, size = 40),
