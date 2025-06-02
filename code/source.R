@@ -3,11 +3,11 @@
 rm(list = ls())
 
 # specify code location in parent dir
-code_location <- "~/lacn2023/code"
+code_location <- "~/lacn2025/code"
 
 # source basic cleaning and set-up
-source(file.path(code_location, "1_read_data.R"))
-source(file.path(code_location, "2_clean.R"))
+#source(file.path(code_location, "1_read_data.R"))
+#source(file.path(code_location, "2_clean.R"))
 source(file.path(code_location, "3_functions.R"))
 
 source(file.path(code_location, "99_processing_functions.R"))
@@ -28,3 +28,4 @@ source(file.path(code_location, "9_viz_budget.R"))
 
 # save global environment in project directory
 save.image(file = "lacn.RData")
+
