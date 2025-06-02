@@ -106,8 +106,8 @@ student_stustaff_ratio <- student_staff_data |>
 #### Professional Staff ####
 
 prof_staff_data <- question_list[['Q6']] |>
-  dplyr::select(`Institution Name`,Q6_1_10) |>
-  dplyr::mutate(n = as.numeric(Q6_1_10), .keep = "unused") |>
+  dplyr::select(`Institution Name`,Q6_1_5) |>
+  dplyr::mutate(n = as.numeric(Q6_1_5), .keep = "unused") |>
   dplyr::filter(n > 0 & !is.na(n) & !is.infinite(n))
 
 

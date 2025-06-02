@@ -9,12 +9,12 @@ output:
     toc_depth: 3
 params:
   plotfont: "Source Sans Pro"
-  college: Smith College
+  college: NULL
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include = FALSE}
 knitr::opts_chunk$set(echo = FALSE, message = FALSE, warning = FALSE)
 
 # load packages
@@ -28,11 +28,11 @@ font_add_google(params$plotfont)
 showtext_auto()
 
 # load LACN analysis environment
-load("~/lacn2023/lacn.RData")
+load("~/lacn2025/lacn.RData")
 # load("../lacn.RData")
 ```
 
-#### Data from 2022-2023 {#subtitle}
+#### Data from 2023-2024 {#subtitle}
 
 <hr/>
 
@@ -123,7 +123,11 @@ singlePlot(reporting_data, q = "Q2",
            size = 45,
            font = params$plotfont,
            college = params$college,
-           angle = 0)
+           angle = 0)+ 
+    geom_text(aes(label = paste0(round((n/sum(reporting_data$n)*100), 1), "%")),             
+            hjust = -0.5,
+            size = 9.5, 
+            font = params$plotfont)
 
 ```
 
@@ -151,7 +155,11 @@ singlePlot(reporting_data, q = "Q2",
            size = 45,
            font = params$plotfont,
            college = params$college,
-           angle = 270)
+           angle = 270)+ 
+    geom_text(aes(label = paste0(round((n/sum(steps_data$n)*100), 1), "%")),             
+            hjust = -0.5,
+            size = 9.5, 
+            font = params$plotfont)
 
 ```
 
@@ -197,9 +205,11 @@ data <-
          Measure = ifelse(str_detect(Measure, "er partnerships"), "employer engagement", Measure),
          Measure = ifelse(str_detect(Measure, "experiential learning"), "internship outcomes", Measure)
          ) |> 
-  mutate(Measure = str_to_title(Measure)) |>
+   mutate(Measure = str_to_title(Measure), 
+         Measure = ifelse(Measure == "Fds" | Measure == "Fds Outcomes", "First Destination Outcomes", Measure)) |>
   count(Measure, sort = TRUE) |>
-  filter(n >= 2)
+  filter(n >= 2) %>%
+  mutate(frequency = paste0(round(n/35 * 100, 1), "%"))
 
 ```
 
@@ -212,7 +222,8 @@ college_response <- question_list$Q4 |>
          measure3 = Q4_3) |>
   pivot_longer(3:5, names_to = "Measure #",
                values_to = "Measure") |>
-  drop_na() |> 
+  drop_na() |>
+  mutate(Actual_Response = Measure) |>
   mutate(Measure = str_to_lower(Measure),
          Measure = ifelse(str_detect(Measure, "destination"), "first destination outcomes", Measure),
          Measure = ifelse(str_detect(Measure, "student engagement"), "student engagement", Measure),
@@ -238,7 +249,7 @@ college_response <- question_list$Q4 |>
 
 ```{r performance-metrics-table}
 data |>
-  mutate(`Your School` = ifelse(`Measure` %in% college_response$Measure, "Yes", "")) |>
+  mutate(`Your School` = ifelse(`Measure` %in% college_response$Measure, college_response$`Actual_Response`[(match(`Measure`, college_response$Measure))], "")) |>
   
   gt::gt() |>
     
@@ -247,7 +258,7 @@ data |>
   
   
   gt::cols_label(Measure = "Performance Measure",
-                 n = "N")|>
+                 n = "N", frequency = "Frequency")|>
   
   gt::tab_style(
       style = list(
@@ -275,6 +286,8 @@ gt::cols_width(
       Measure ~ px(250)
     )
 ```
+
+Most important performance measures to your institution: 1. `r college_response$Actual_Response[1]`, 2. `r college_response$Actual_Response[2]`, and 3. `r college_response$Actual_Response[3]`.
 
 
 <!-- ### Advisory Boards -->
@@ -439,11 +452,16 @@ tableViz(data = student_para_data,'n', college = params$college)
   <div class="col-sm-7">
 
 ```{r ss-ratio-plot}
-
-matrixPlot(student_stustaff_ratio, breaks = c(0,250,500,750,1000),
+student_stustaff_ratio %>%
+  filter(n != max(student_stustaff_ratio$n)) |>
+matrixPlot(breaks = c(0,250,500,750),
            font = params$plotfont,
            size = 45,
-           college = params$college)
+           college = params$college)+ 
+  labs(caption = "* The max value (3069) is not represented in the bar chart.")+ 
+  theme(
+    plot.caption = element_text(size = 20) 
+  )
 
 ```
 
@@ -517,60 +535,921 @@ tableViz(student_prof_ratio, var='n', college = params$college)
   
 </div>
 
-### Professional Staff: Advising
+### Professional Staff: Responsibilities
 
-*(# who devote any level of time)*
+*(drop down selection applied to both "Number of FT staff primarily dedicated" and "Number of staff involved")*
+<br>
+<div>
+  <label for="ResponsibilityDropdown"> Responsibility: </label>
+  
+<select  id = "ResponsibilityDropdown">
+    <option value="Student Counseling/Advising" selected>Student Counseling/Advising</option>
+    <option value="Health Professions Advising">Health Professions Advising</option>
+    <option value="Alumni Counseling/Advising">Alumni Counseling/Advising</option>
+    <option value="Fellowship Advising">Fellowship Advising</option>
+    <option value="Pre-Law Advising">Pre-Law Advising</option>
+    <option value="Program/Event Planning">Program/Event Planning</option>
+    <option value="Marketing/Communications">Marketing/Communications</option>
+    <option value="Employer Relations">Employer Relations</option>
+    <option value="Internship Funding">Internship Funding</option>
+    <option value="Office Management/Front Desk">Office Management/Front Desk</option>
+    <option value="Supervision of Professional Staff">Supervision of Professional Staff</option>
+    <option value="Budget Management">Budget Management</option>
+    <option value="Technology Management">Technology Management</option>
+    <option value="Assessment (Data, Outcomes, Program)">Assessment (Data, Outcomes, Program)</option>
+</select>
+</div>
 
-<div class="row">
+#### Number of FT staff primarily dedicated
 
-  <div class="col-sm-7">
 
-```{r prof-advising-plot}
-matrixPlot(prof_advising_data, breaks = c(0,5,10,15,20), 
+<script>
+  const dropdown = document.getElementById('ResponsibilityDropdown');
+  dropdown.addEventListener('change', function(){
+     const selection = dropdown.value;
+  })
+</script>
+
+<div class="row" data-key="Q7">
+
+  <div class="col-sm-7" data-key = "Student Counseling/Advising" style="display:none;">
+
+```{r prof-advising-plot-Student-Counseling-Advising-FT}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_1_2") |> 
+  rename(n = "Q7_1_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
            font = params$plotfont,
-           size = 45,
-           college = params$college)
+           size = 45, college = params$college)
 ```
 
   </div>
   
-  <div class="col-sm-5">
+<div class="col-sm-7" data-key = "Health Professions Advising" style="display:none;">
 
-```{r prof-advising-table}
-tableViz(prof_advising_data, 'n', college = params$college)
+```{r prof-advising-plot-Health-Professions-Advising-FT}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_2_2") |> 
+  rename(n = "Q7_2_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
 ```
-  
-  </div>
-
 </div>
 
-### Professional Staff: Employer Relations
+<div class="col-sm-7" data-key = "Alumni Counseling/Advising" style="display:none;">
 
-*(# who devote any level of time)*
+```{r prof-advising-plot-Alumni-Counseling-Advising-FT}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_3_2") |> 
+  rename(n = "Q7_3_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
 
-<div class="row">
+<div class="col-sm-7" data-key = "Fellowship Advising" style="display:none;">
 
-  <div class="col-sm-7">
+```{r prof-advising-plot-Fellowship-Advising-FT}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_4_2") |> 
+  rename(n = "Q7_4_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
 
-```{r prof-employer-plot}
-matrixPlot(prof_employer_data,
-           breaks = c(0,5,10,15), 
-           font = params$plotfont, 
-           size = 45,
-           college = params$college)
+<div class="col-sm-7" data-key = "Pre-Law Advising" style="display:none;">
+
+```{r prof-advising-plot-Pre-Law-Advising-FT}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_5_2") |> 
+  rename(n = "Q7_5_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Program/Event Planning" style="display:none;">
+
+```{r prof-advising-plot-Program-Event-Planning-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_6_2") |> 
+  rename(n = "Q7_6_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Marketing/Communications" style="display:none;">
+
+```{r prof-advising-plot-Marketing-Communications-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_7_2") |> 
+  rename(n = "Q7_7_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Employer Relations" style="display:none;">
+
+```{r prof-advising-plot-Employer-Relations-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_8_2") |> 
+  rename(n = "Q7_8_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Internship Funding" style="display:none;">
+
+```{r prof-advising-plot-Internship-Funding-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_9_2") |> 
+  rename(n = "Q7_9_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Office Management/Front Desk" style="display:none;">
+
+```{r prof-advising-plot-Office-Management-Front Desk-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_10_2") |> 
+  rename(n = "Q7_10_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Supervision of Professional Staff" style="display:none;">
+
+```{r prof-advising-plot-Supervision-of-Professional-Staff-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_11_2") |> 
+  rename(n = "Q7_11_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Budget Management" style="display:none;">
+
+```{r prof-advising-plot-Budget-Management-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_12_2") |> 
+  rename(n = "Q7_12_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Technology Management" style="display:none;">
+
+```{r prof-advising-plot-Technology-Management-FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_13_2") |> 
+  rename(n = "Q7_13_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Assessment (Data, Outcomes, Program)" style="display:none;">
+
+```{r prof-advising-plot-Assessment (Data, Outcomes, Program) -FT}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_14_2") |> 
+  rename(n = "Q7_14_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+
+
+<div class="col-sm-5">
+
+```{r prof-Student-Counseling-Advising-FTE, results='asis'}
+
+advising_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_1_2") |> 
+  rename(n = "Q7_1_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Student Counseling/Advising",
+  style = "display:none;",
+  advising_table_FT
+)
+```
+
+```{r prof-Health-Professions-Advising-FTE, results='asis'}
+
+health_professions_advising_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_2_2") |> 
+  rename(n = "Q7_2_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Health Professions Advising",
+  style = "display:none;",
+  health_professions_advising_table_FT
+)
+```
+
+```{r prof-Alumni-Advising-FTE, results='asis'}
+
+alumni_advising_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_3_2") |> 
+  rename(n = "Q7_3_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Alumni Counseling/Advising",
+  style = "display:none;",
+  alumni_advising_table_FT
+)
+```
+
+```{r prof-Fellowship-Advising-FTE, results='asis'}
+
+fellowship_advising_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_4_2") |> 
+  rename(n = "Q7_4_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Fellowship Advising",
+  style = "display:none;",
+  fellowship_advising_table_FT
+)
+```
+
+```{r prof-Pre-Law-Advising-FTE, results='asis'}
+
+law_advising_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_5_2") |> 
+  rename(n = "Q7_5_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Pre-Law Advising",
+  style = "display:none;",
+  law_advising_table_FT
+)
+```
+
+```{r prof-Program/Event-Planning-FTE, results='asis'}
+
+program_planning_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_6_2") |> 
+  rename(n = "Q7_6_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Program/Event Planning",
+  style = "display:none;",
+  program_planning_table_FT
+)
+```
+
+```{r prof-Marketing/Communications-FTE, results='asis'}
+
+marketing_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_7_2") |> 
+  rename(n = "Q7_7_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Marketing/Communications",
+  style = "display:none;",
+  marketing_table_FT
+)
+```
+
+```{r prof-Employer-Relations-FTE, results='asis'}
+
+employer_relations_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_8_2") |> 
+  rename(n = "Q7_8_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Employer Relations",
+  style = "display:none;",
+  employer_relations_table_FT
+)
+```
+
+```{r prof-Internship-Funding-FTE, results='asis'}
+
+internship_funding_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_9_2") |> 
+  rename(n = "Q7_9_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Internship Funding",
+  style = "display:none;",
+  internship_funding_table_FT
+)
+```
+
+```{r prof-Office-Management/Front-Desk-FTE, results='asis'}
+
+office_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_10_2") |> 
+  rename(n = "Q7_10_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Office Management/Front Desk",
+  style = "display:none;",
+  office_table_FT
+)
+```
+
+```{r prof-Supervision-of-Professional-Staff-FTE, results='asis'}
+
+supervision_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_11_2") |> 
+  rename(n = "Q7_11_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Supervision of Professional Staff",
+  style = "display:none;",
+  supervision_table_FT
+)
+```
+
+```{r prof-Budget-Management-FTE, results='asis'}
+
+budget_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_12_2") |> 
+  rename(n = "Q7_12_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Budget Management",
+  style = "display:none;",
+  budget_table_FT
+)
+```
+
+
+```{r prof-Technology-Management-FTE, results='asis'}
+
+tech_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_13_2") |> 
+  rename(n = "Q7_13_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Technology Management",
+  style = "display:none;",
+  tech_table_FT
+)
+```
+
+```{r prof-Assessment-(Data, Outcomes, Program)-FTE, results='asis'}
+
+assessment_table_FT <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_14_2") |> 
+  rename(n = "Q7_14_2") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Assessment (Data, Outcomes, Program)",
+  style = "display:none;",
+  assessment_table_FT
+)
+```
+
+</div>
+</div>
+
+
+
+#### Number of staff involved
+
+<div class="row" data-key="Q7">
+
+ <div class="col-sm-7" data-key = "Student Counseling/Advising" style="display:none;">
+
+```{r prof-advising-plot-Student-Counseling-Advising-Total}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_1_1") |> 
+  rename(n = "Q7_1_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
 ```
 
   </div>
+  
+<div class="col-sm-7" data-key = "Health Professions Advising" style="display:none;">
+
+```{r prof-advising-plot-Health-Professions-Advising-Total}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_2_1") |> 
+  rename(n = "Q7_2_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+  
+  </div>
+  
+  
+<div class="col-sm-7" data-key = "Alumni Counseling/Advising" style="display:none;">
+
+```{r prof-advising-plot-Alumni-Counseling-Advising-Total}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_3_1") |> 
+  rename(n = "Q7_3_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Fellowship Advising" style="display:none;">
+
+```{r prof-advising-plot-Fellowship-Advising-Total}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_4_1") |> 
+  rename(n = "Q7_4_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Pre-Law Advising" style="display:none;">
+
+```{r prof-advising-plot-Pre-Law-Advising-Total}
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_5_1") |> 
+  rename(n = "Q7_5_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Program/Event Planning" style="display:none;">
+
+```{r prof-advising-plot-Program-Event-Planning-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_6_1") |> 
+  rename(n = "Q7_6_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Marketing/Communications" style="display:none;">
+
+```{r prof-advising-plot-Marketing-Communications-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_7_1") |> 
+  rename(n = "Q7_7_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Employer Relations" style="display:none;">
+
+```{r prof-advising-plot-Employer-Relations-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_8_1") |> 
+  rename(n = "Q7_8_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Internship Funding" style="display:none;">
+
+```{r prof-advising-plot-Internship-Funding-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_9_1") |> 
+  rename(n = "Q7_9_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Office Management/Front Desk" style="display:none;">
+
+```{r prof-advising-plot-Office-Management-Front Desk-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_10_1") |> 
+  rename(n = "Q7_10_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Supervision of Professional Staff" style="display:none;">
+
+```{r prof-advising-plot-Supervision-of-Professional-Staff-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_11_1") |> 
+  rename(n = "Q7_11_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Budget Management" style="display:none;">
+
+```{r prof-advising-plot-Budget-Management-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_12_1") |> 
+  rename(n = "Q7_12_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Technology Management" style="display:none;">
+
+```{r prof-advising-plot-Technology-Management-Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_13_1") |> 
+  rename(n = "Q7_13_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
+
+<div class="col-sm-7" data-key = "Assessment (Data, Outcomes, Program)" style="display:none;">
+
+```{r prof-advising-plot-Assessment (Data, Outcomes, Program) -Total}
+
+prof_employer_data |> 
+  select(`Institution Name`, "Q7_14_1") |> 
+  rename(n = "Q7_14_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+matrixPlot( breaks = c(0,5,10,15), 
+           font = params$plotfont,
+           size = 45, college = params$college)
+```
+</div>
   
   <div class="col-sm-5">
+  
+```{r prof-Student-Counseling-Advising-Total, results='asis'}
 
-```{r prof-employer-table}
-tableViz(prof_employer_data, 'n', college = params$college)
+advising_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_1_1") |> 
+  rename(n = "Q7_1_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Student Counseling/Advising",
+  style = "display:none;",
+  advising_table_Total
+)
 ```
 
+```{r prof-Health-Professions-Advising-Total, results='asis'}
+
+health_professions_advising_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_2_1") |> 
+  rename(n = "Q7_2_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Health Professions Advising",
+  style = "display:none;",
+  health_professions_advising_table_Total
+)
+```
+
+```{r prof-Alumni-Advising-Total, results='asis'}
+
+alumni_advising_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_3_1") |> 
+  rename(n = "Q7_3_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Alumni Counseling/Advising",
+  style = "display:none;",
+  alumni_advising_table_Total
+)
+```
+
+```{r prof-Fellowship-Advising-Total, results='asis'}
+
+fellowship_advising_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_4_1") |> 
+  rename(n = "Q7_4_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Fellowship Advising",
+  style = "display:none;",
+  fellowship_advising_table_Total
+)
+```
+
+```{r prof-Pre-Law-Advising-Total, results='asis'}
+
+law_advising_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_5_1") |> 
+  rename(n = "Q7_5_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Pre-Law Advising",
+  style = "display:none;",
+  law_advising_table_Total
+)
+```
+
+```{r prof-Program/Event-Planning-Total, results='asis'}
+
+program_planning_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_6_1") |> 
+  rename(n = "Q7_6_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Program/Event Planning",
+  style = "display:none;",
+  program_planning_table_Total
+)
+```
+
+```{r prof-Marketing/Communications-Total, results='asis'}
+
+marketing_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_7_1") |> 
+  rename(n = "Q7_7_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Marketing/Communications",
+  style = "display:none;",
+  marketing_table_Total
+)
+```
+
+```{r prof-Employer-Relations-Total, results='asis'}
+
+employer_relations_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_8_1") |> 
+  rename(n = "Q7_8_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Employer Relations",
+  style = "display:none;",
+  employer_relations_table_Total
+)
+```
+
+```{r prof-Internship-Funding-Total, results='asis'}
+
+internship_funding_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_9_1") |> 
+  rename(n = "Q7_9_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Internship Funding",
+  style = "display:none;",
+  internship_funding_table_Total
+)
+```
+
+```{r prof-Office-Management/Front-Desk-Total, results='asis'}
+
+office_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_10_1") |> 
+  rename(n = "Q7_10_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Office Management/Front Desk",
+  style = "display:none;",
+  office_table_Total
+)
+```
+
+```{r prof-Supervision-of-Professional-Staff-Total, results='asis'}
+
+supervision_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_11_1") |> 
+  rename(n = "Q7_11_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Supervision of Professional Staff",
+  style = "display:none;",
+  supervision_table_Total
+  )
+```
+
+```{r prof-Budget-Management-Total, results='asis'}
+
+budget_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_12_1") |> 
+  rename(n = "Q7_12_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Budget Management",
+  style = "display:none;",
+  budget_table_Total
+)
+```
+
+
+```{r prof-Technology-Management-Total, results='asis'}
+
+tech_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_13_1") |> 
+  rename(n = "Q7_13_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Technology Management",
+  style = "display:none;",
+  tech_table_Total
+)
+```
+
+```{r prof-Assessment-(Data, Outcomes, Program)-Total, results='asis'}
+
+assessment_table_Total <- 
+  prof_employer_data |> 
+  select(`Institution Name`, "Q7_14_1") |> 
+  rename(n = "Q7_14_1") |>
+  filter(n > 0 & !is.na(n) & !is.infinite(n)) |>
+  tableViz('n', college = params$college)
+
+htmltools::div(
+  `data-key` = "Assessment (Data, Outcomes, Program)",
+  style = "display:none;",
+  assessment_table_Total
+)
+```
   </div>
-  
 </div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+  const dropdown = document.getElementById("ResponsibilityDropdown");
+
+  function updatePlots() {
+    const selected = dropdown.value;
+    const divList = document.querySelectorAll('[data-key="Q7"]');
+    divList.forEach(div => {
+    Array.from(div.children).forEach(childDiv => {
+        childDiv.style.display = childDiv.dataset.key === selected || childDiv.className === "col-sm-5" ? "block" : "none";
+        if (childDiv.className === "col-sm-5") {
+            Array.from(childDiv.children).forEach(tableDiv => {
+    tableDiv.style.display = tableDiv.dataset.key === selected ? "block" : "none";
+            }); 
+        } 
+    }); 
+    });
+}
+
+
+  dropdown.addEventListener("change", updatePlots);
+  updatePlots(); // show correct set on load
+});
+</script>
+
 
 ### National/Regional Conferences and Workshops
 
@@ -950,8 +1829,91 @@ info_employ_data |>
 
 </div>
 
+### Number of Career "Treks"
+
+<div class="row">
+
+  <div class="col-sm-7">
+
+```{r careerTreks-employ-plot}
+# Create ordered institution names based on total counts
+institution_levels <- relations_activities %>%
+  mutate(total = `On Campus` + Virtual) %>%
+  arrange(total) %>%
+  pull(`Institution Name`)
+
+# Prepare the data
+mutated_rel_activities <- relations_activities |>
+  mutate(
+    total = `On Campus` + Virtual, 
+    `Institution Name` = factor(`Institution Name`, levels = institution_levels)
+  ) |>
+    pivot_longer(cols = c(`On Campus`, Virtual), 
+               names_to = "Mode",
+               values_to = "Count") 
+
+mutated_rel_activities|>
+  ggplot(aes(
+    x = `Institution Name`, 
+    y = Count, 
+    fill = Mode
+  ))+ 
+  geom_bar(stat = "identity")+
+  ggrepel::geom_text_repel(
+    data = subset(
+      mutated_rel_activities,
+      `Institution Name` == params$college & Mode == "On Campus"
+      ),
+    aes(
+      label=`Institution Name`
+    ),
+    nudge_y=2,
+    nudge_x = -3,
+    color = "black",
+    size = 10,
+    family = params$plotfont
+  )+
+  ggplot2::scale_fill_manual(
+    values=c(
+             `On Campus` = "#6AD4BF",
+              Virtual = "#F7BF66"))+
+  
+  ggplot2::labs(
+    y = "Total Treks",
+    x = "Institution")+
+  
+
+  ggplot2::theme(
+    panel.grid.major = element_line(color = "gray80"),
+    text = ggplot2::element_text(size = 45, 
+                                 family = params$plotfont),
+    panel.background = ggplot2::element_blank(),
+    axis.text.x = ggplot2::element_blank(),
+    axis.ticks = ggplot2::element_blank()
+    )
+```
+  </div>
+
+<div class="col-sm-3">
+
+```{r career-trek-table}
+
+tableViz(
+  data = relations_activities |>
+    dplyr::group_by(`Institution Name`) |>
+    dplyr::mutate(Total = `On Campus` + Virtual, .keep = "unused"),
+  
+  var = "Total", 
+  college = params$college
+)
+```
+
+  </div>
+</div>
 
 <hr/>
+
+
 
 ## Student and Alumni Engagement
 
@@ -1736,6 +2698,6 @@ gift_data |>
 
 <hr/>
 
-**Published April 2024, Data Analysis completed by St Olaf College**
+**Published May 2025, Data Analysis completed by St Olaf College**
 
 
